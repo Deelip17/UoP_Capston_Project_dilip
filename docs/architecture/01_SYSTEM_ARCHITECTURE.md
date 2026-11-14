@@ -157,7 +157,7 @@ Checklist before export: all 13 names match the canonical list exactly; no retir
 
 ## 6. Technology Mapping
 
-Status: **Approved** (ADR-000), **Standard** (ships with an approved tool or the Python standard library), **Proposed** (needs a decision, ADR-010), **Open** (to decide at the start of Unit 5).
+Status: **Approved** (ADR-000; tooling ADR-025), **Standard** (ships with an approved tool or the Python standard library), **Proposed** (needs a decision, ADR-010), **Open** (to decide at the start of Unit 5).
 
 | Component / concern | Technology | Status | Notes |
 |---|---|---|---|
@@ -166,7 +166,7 @@ Status: **Approved** (ADR-000), **Standard** (ships with an approved tool or the
 | LLM Gateway | Versioned prompt files; JSON-schema validation; mock/cache provider | Standard / Open | Validation library choice at Unit 5 (for example pydantic or jsonschema) |
 | Data Masking and Validation Layer | Python standard library (regular expressions, `ast` for script checks) | Standard | No external dependency needed for the prototype |
 | Script Generator | Template-based generation; Playwright and Selenium adapters | Approved | Adapter pattern; templates keep model output in safe slots |
-| Execution Engine | PyTest; Playwright (Python); Selenium WebDriver; JUnit XML output | Approved | Parallel workers via a PyTest plugin (pytest-xdist, **Proposed**) |
+| Execution Engine | PyTest; Playwright (Python); Selenium WebDriver; JUnit XML output | Approved | Parallel workers via a PyTest plugin (pytest-xdist, **Approved**, ADR-025) |
 | Self-Healing Engine | DOM parsing and similarity scoring in Python; LLM step via gateway | Standard | No machine-learning training (ADR-001) |
 | Failure Analyzer | Rule-based pre-classifier plus LLM for ambiguous cases | Approved / Standard | |
 | SQLite Persistence | SQLite via the Python standard-library driver, repository interface | Approved | Parameterised queries; replaceable (NFR-24) |
@@ -177,11 +177,11 @@ Status: **Approved** (ADR-000), **Standard** (ships with an approved tool or the
 | Pipeline Orchestrator and CLI | Python standard-library `argparse` (or equivalent) with a configuration file | Standard / Open | |
 | Version control | Git, GitHub | Approved | `project-management/GIT_STRATEGY.md` |
 | CI/CD | GitHub Actions | Approved | `08_CICD_DESIGN.md` |
-| Security scanning | pip-audit, CodeQL, secret scanning | **Proposed** | NFR-09, 12 depend on this decision |
-| Packaging and deployment | Docker | **Proposed** | Unit 6 Part C |
+| Security scanning | pip-audit; GitHub built-in secret scanning and push protection (CodeQL and gitleaks rejected) | **Approved** (ADR-025) | NFR-09, 12 |
+| Packaging and deployment | Docker | **Approved, conditional** (ADR-025: Dockerfile only, Unit 6, if Docker Desktop is available) | Unit 6 Part C |
 | Code quality | Linter, formatter, type checker, import-rule checker | Open | NFR-17, 19 |
 
-**Decisions needed (Technology):** ADR-010 items (Docker, pip-audit, secret scanning, xdist, Allure, CodeQL); Unit 5 choices for validation, templating, PDF and chart libraries, to be recorded as new ADRs when made.
+**Decisions (Technology):** ADR-010 is resolved by ADR-025 (accepted: pip-audit, pytest-xdist, GitHub secret scanning, Docker conditional; rejected: CodeQL, gitleaks, Allure); Unit 5 choices for validation, templating, PDF and chart libraries, to be recorded as new ADRs when made.
 
 ## 7. Requirement Coverage Check
 
@@ -199,6 +199,6 @@ Status: **Approved** (ADR-000), **Standard** (ships with an approved tool or the
 
 ## 8. Open Items
 
-1. Confirm ADR-010 technology additions and make the Unit 5 library choices (§6).
+1. Make the Unit 5 library choices (§6); ADR-010 is resolved by ADR-025.
 2. Check `architecture/image.png` and `dataflow_fig.png` against §5 and either reuse or redraw.
 3. `04_COMPONENT_ARCHITECTURE.md` §2 diagram and §3 text overlap partly with this file; keep §3 there for method detail, and treat this file as the overview used for Q1 and Report §3.1.

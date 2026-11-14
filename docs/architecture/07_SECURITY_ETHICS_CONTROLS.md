@@ -39,8 +39,8 @@ Data enters as requirement text from a file or the command line (trust boundary 
 |---|---|---|---|
 | LLM data egress (R14) | Requirement text or test data goes to a third-party API | Masking before every call; synthetic/public data only; DPO consulted if real data is ever proposed | Implemented (P) for masking; data policy Designed-only |
 | Prompt injection (R15) | Requirement text or page content contains instructions | Separate instructions from data; schema-validated outputs; approval gate | Implemented (P) |
-| API key exposure (R16) | Key in repository, log or screenshot | Environment variables and GitHub Secrets; `.gitignore`; secret scan | Implemented (P) for env vars; scanner pending ADR-010 |
-| Generated-code execution (R17) | LLM-written scripts run on the host | Static check; isolated environment; approval gate; public targets | Implemented (P): static check, approval; container isolation pending ADR-010 |
+| API key exposure (R16) | Key in repository, log or screenshot | Environment variables and GitHub Secrets; `.gitignore`; secret scan | Implemented (P) for env vars; scanner accepted in ADR-025 (GitHub secret scanning), to be enabled |
+| Generated-code execution (R17) | LLM-written scripts run on the host | Static check; isolated environment; approval gate; public targets | Implemented (P): static check, approval; container isolation: Dockerfile accepted in ADR-025 (Unit 6, conditional) |
 | Biased or wrong test output (R5) | Model omits cases or invents expectations | Human review; coverage ratio reported; limits stated | Implemented (P) |
 
 ## 5. Implemented versus designed controls

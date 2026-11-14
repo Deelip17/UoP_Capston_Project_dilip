@@ -181,14 +181,14 @@ erDiagram
 |---|---|---|
 | Language | Python 3.12 | Approved |
 | Data handling / metrics | Pandas | Approved (`MASTER_PLAN.md` §2; missing from the `CAPSTONE_MEMORY.md` list) |
-| Deployment | Docker (recommended for Unit 6 Part C, roadmap M13) | Proposed, not yet approved |
+| Deployment | Docker (recommended for Unit 6 Part C, roadmap M13) | Approved, conditional (ADR-025) |
 | Browser automation | Playwright, Selenium | Approved |
 | Test runner | PyTest (+ xdist, JUnit XML) | Approved (plugins are implementation detail) |
 | AI | OpenAI API | Approved |
 | Storage | SQLite | Approved |
 | VCS / CI | GitHub, GitHub Actions | Approved |
 | Reports | HTML, Markdown, PDF | Approved (MASTER_CONTEXT) |
-| Allure reports | — | ⚠ Appears in `cicd/PIPELINE_STRATEGY.md` but **not** in the approved stack; treated as *optional, unapproved* (see 08) |
+| Allure reports | — | ⚠ Appears in `cicd/PIPELINE_STRATEGY.md` but **not** in the approved stack; **rejected** (ADR-025) |
 
 ## 8. Open Items
 

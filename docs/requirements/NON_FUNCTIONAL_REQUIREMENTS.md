@@ -41,7 +41,7 @@
 | NFR-09 | API keys shall be loaded only from the environment or a secret store and shall never appear in code, logs, reports, the database or LLM prompts. | Secure API key storage is an approved principle and risk R16 (key exposure). | LLM Gateway, CI | Secret scan of the repository is clean; a grep test of logs, reports and the database finds no key pattern. Verified by T, A. |
 | NFR-10 | All external input (requirements, configuration, URLs) shall be validated, and LLM output shall be treated as untrusted and checked against a schema before use. | OWASP input validation; LLM output can be malformed or malicious. | Data Masking and Validation Layer | 100% of LLM outputs in tests pass through schema validation; invalid output is rejected. Verified by T. |
 | NFR-11 | Generated scripts shall run with least privilege: static checks (FR-15), allow-listed hosts (FR-21), no shell access, no writes outside the working and evidence directories. | Generated code is untrusted (R17). | SG, EE | All forbidden-construct fixtures are rejected; an attempted write outside the permitted directories fails. Verified by T. |
-| NFR-12 | Dependencies shall be pinned and scanned, and high or critical vulnerabilities shall block merging. | OWASP vulnerable-components risk; supply-chain hygiene (depends on ADR-010 decision for pip-audit). | CI | Zero open high or critical findings on `main`. Verified by T (CI). |
+| NFR-12 | Dependencies shall be pinned and scanned, and high or critical vulnerabilities shall block merging. | OWASP vulnerable-components risk; supply-chain hygiene (pip-audit accepted in ADR-025). | CI | Zero open high or critical findings on `main`. Verified by T (CI). |
 | NFR-13 | The system shall resist prompt injection in requirement text and DOM content sent to the LLM (delimiting, instruction hierarchy, output validation). | Untrusted content shares the prompt with instructions (R15). | LLM Gateway | An injection fixture set does not change pipeline behaviour or leak data. Verified by T. |
 | NFR-14 | Security-relevant events and LLM calls shall be logged for auditability, with log injection prevented. | Auditability is an approved principle; supports incident review. | Audit Logging | An audit record exists for each LLM call (FR-37); newline and control characters in input cannot forge log entries. Verified by T. |
 
@@ -136,5 +136,5 @@ Unit 3 AA Q1c asks for NFRs "such as performance, usability, reliability, scalab
 ## 7. Open Items
 
 1. Calibrate numeric targets after the Unit 5 pilot and log changes (ADR-017).
-2. ADR-010 decision needed for pip-audit and secret scanning (NFR-09, NFR-12 rely on them).
+2. Decided: pip-audit and GitHub secret scanning are accepted (ADR-025); NFR-09 and NFR-12 rely on them.
 3. Data Privacy Officer or Legal to confirm privacy wording (NFR-15, NFR-16).
