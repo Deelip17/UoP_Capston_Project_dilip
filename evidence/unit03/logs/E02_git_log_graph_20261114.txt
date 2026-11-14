@@ -1,0 +1,35 @@
+# git log --oneline --graph --all
+# captured: 2026-11-14 00:43:22 -0500
+# repository: https://github.com/Deelip17/UoP_Capston_Project_dilip
+
+*   1fd86ce (origin/main, main) chore: merge develop into main for the Unit 3 baseline
+|\  
+| *   75aaf9a (HEAD -> docs/unit3-evidence-guide, origin/develop, develop) docs: merge unit3-git-strategy into develop
+| |\  
+| | * 0ec9a3b (origin/docs/unit3-git-strategy, docs/unit3-git-strategy) docs(git): add Git strategy and branching overview
+| |/  
+| *   d1316ed docs: merge unit3-requirements into develop
+| |\  
+| | * 1bc921d (origin/docs/unit3-requirements, docs/unit3-requirements) docs(requirements): add functional and non-functional requirements
+| |/  
+| *   f1157c2 docs: merge unit3-architecture into develop
+| |\  
+| | * e8e9c83 (origin/docs/unit3-architecture, docs/unit3-architecture) docs(architecture): add data flow, sequence, security and CI/CD design
+| | * 728aeb5 docs(architecture): add system, component and repository architecture
+| |/  
+| * 5e47af4 chore: add folder skeleton with placeholder READMEs
+|/  
+* 652330e chore: initial commit with README, gitignore and contributing guide
+
+# git branch -a
+  develop
+  docs/unit3-architecture
+* docs/unit3-evidence-guide
+  docs/unit3-git-strategy
+  docs/unit3-requirements
+  main
+  remotes/origin/develop
+  remotes/origin/docs/unit3-architecture
+  remotes/origin/docs/unit3-git-strategy
+  remotes/origin/docs/unit3-requirements
+  remotes/origin/main
