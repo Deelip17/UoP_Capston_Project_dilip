@@ -4,7 +4,7 @@
 **Related:** `architecture/01_REPOSITORY_STRUCTURE.md` (full folder tree), `architecture/08_CICD_DESIGN.md` (workflows that enforce this strategy), `knowledge/PROJECT_DECISIONS.md` ADR-008 (status: **Proposed**, pending your confirmation), `knowledge/PROJECT_ROADMAP.md` (tag plan M9, M14, M22; evidence E01, E02, E17).
 **Design only:** no repository has been created and no commands have been run.
 
-*AI-generated draft: review before submission. Confirm the university's rules on AI-assisted work before using the optional commit trailer in §4.5.*
+*AI-generated draft: review before submission. Confirm the university's rules on AI-assisted work before submission.*
 
 ## 1. Executive Summary
 
