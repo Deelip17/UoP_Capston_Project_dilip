@@ -4,7 +4,7 @@
 **Related:** `architecture/01_REPOSITORY_STRUCTURE.md` (full folder tree), `architecture/08_CICD_DESIGN.md` (workflows that enforce this strategy), `knowledge/PROJECT_DECISIONS.md` ADR-008 (status: **Proposed**, pending your confirmation), `knowledge/PROJECT_ROADMAP.md` (tag plan M9, M14, M22; evidence E01, E02, E17).
 **Design only:** no repository has been created and no commands have been run.
 
-*AI-generated draft: review before submission. Confirm the university's rules on AI-assisted work before using the optional commit trailer in §4.5.*
+*AI-generated draft: review before submission. Confirm the university's rules on AI-assisted work before submission.*
 
 ## 1. Executive Summary
 
@@ -180,7 +180,6 @@ Canonical module names: `analyzer`, `testgen`, `scriptgen`, `executor`, `healing
 | `test(analyzer): cover injection-pattern rejection (FR-02)` | `tests added` |
 | `ci: add unit-test workflow on ubuntu and windows` | `workflow` |
 
-Optional AI-assistance trailer, if the course policy allows disclosure in commits: `Co-Authored-By: <AI tool>`. Decide once and apply consistently.
 
 ## 5. Tagging Strategy
 
@@ -306,5 +305,4 @@ Version control keeps documentation consistent because documents change in the s
 ## 13. Open Items
 
 1. Confirm ADR-008 (this strategy), repository name and visibility.
-2. Decide on the optional AI-assistance trailer after checking course policy.
-3. Confirm whether `develop` stays after Unit 3 or the model reduces to `main` plus feature branches (the two-branch requirement is met only while `develop` exists, so keep it at least through Unit 5 evidence capture).
+2. Confirm whether `develop` stays after Unit 3 or the model reduces to `main` plus feature branches (the two-branch requirement is met only while `develop` exists, so keep it at least through Unit 5 evidence capture).
