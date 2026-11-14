@@ -2,7 +2,7 @@
 
 **Version:** 1.0 · **Date:** 14 Nov 2026 · **Feeds:** Unit 4 CI/CD Reflection (source material only; the paper is written separately)
 **Design:** `architecture/08_CICD_DESIGN.md` · **Implementation:** repository `.github/workflows/ci.yml` (full text in the appendix) · **Decisions:** ADR-025, ADR-026
-**Status:** `ci.yml` is written; its commands pass locally and its YAML parses; **it has not run on GitHub yet** and evidence E03 does not exist yet.
+**Status:** `ci.yml` is written; its commands pass locally and its YAML parses; **it has run once on GitHub** (CI #1 on `feature/ci-workflow`, commit 872a1e8, green in 1 m 30 s; evidence E03a and E03d). A deliberate red run (CI #2) and its fix (CI #3) are evidenced by E03b and E03c, and the local command output by E03e.
 
 *AI-generated draft: review before use.*
 
@@ -115,7 +115,7 @@ Assignment aspects, minimum 850 and maximum 1,000 words, APA 7, double-spaced, T
 | Aspect | Project material to draw on | Course reading to connect to (cite explicitly) |
 |---|---|---|
 | 1. Define CI/CD and relevance | Pipeline overview (§1), quality gates (`08` §5) | Red Hat (2025) What is DevOps; Narasimhan et al. (2025) DevOps handbook; Parzych (2019) |
-| 2. Tools and technologies | Tool comparison (§7), why GitHub Actions | Knowledge Academy (2023) Azure DevOps video; Parzych (2019); official documentation of each tool if extra sources are needed |
+| 2. Tools and technologies | Tool comparison (§7), why GitHub Actions | Knowledge Academy (2023) Azure DevOps video (REF-016); Parzych (2019) (REF-011); official documentation, tested 14 Nov 2026: GitHub Actions (REF-212), Jenkins (REF-213), GitLab CI/CD (REF-214), Azure Pipelines (REF-215) |
 | 3. Collaboration, integration issues, delivery speed | Branch and pull-request flow with required checks (`08` §7, §10); concurrency, caching, parallel tests | Oguz (2025) Ch. 12 (Agile, Scrum, iterative delivery); Narasimhan et al. (2025); Laptick (2022) on prototypes validating a design |
 | 4. Application to this project | `ci.yml` jobs, module support table (`08` §6), roadmap (Unit 5 release workflow, Unit 6 integration and nightly), limits and honest status | Laptick (2022) prototype model; Oguz (2025) |
 

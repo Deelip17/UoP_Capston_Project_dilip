@@ -7,7 +7,7 @@
 
 ## 1. Executive Summary
 
-The project uses **GitHub Actions** (approved stack) for continuous integration: every push and pull request is automatically linted, type-checked, unit-tested on Windows and Linux with coverage, audited for vulnerable dependencies, built into a wheel, and published as downloadable artefacts. The first workflow, `ci.yml`, is **written and its commands pass locally**, but it **has not yet run on GitHub**; evidence E03 (one green run, one deliberate red run and its fix) is still to be captured. Continuous *delivery* is deliberately small: this is a prototype evaluated on public demo apps (ADR-001), so there is no deployment environment. "Delivery" means a versioned wheel and an evidence bundle attached to tagged releases.
+The project uses **GitHub Actions** (approved stack) for continuous integration: every push and pull request is automatically linted, type-checked, unit-tested on Windows and Linux with coverage, audited for vulnerable dependencies, built into a wheel, and published as downloadable artefacts. The first workflow, `ci.yml`, is **written and its commands pass locally**, and it has run once on GitHub (CI #1, green; evidence E03a, E03d); the deliberate red run (CI #2, E03b) and its fix (CI #3, E03c) are captured, with local output in E03e. Continuous *delivery* is deliberately small: this is a prototype evaluated on public demo apps (ADR-001), so there is no deployment environment. "Delivery" means a versioned wheel and an evidence bundle attached to tagged releases.
 
 Tooling follows ADR-025: pip-audit, pytest-xdist and GitHub's built-in secret scanning are used; CodeQL, gitleaks and Allure are not; Docker arrives in Unit 6 if available. Tests and CI use the mock LLM provider and no secrets (ADR-026).
 
@@ -43,7 +43,7 @@ flowchart LR
 
 | Workflow | Status | Trigger | Purpose |
 |---|---|---|---|
-| `ci.yml` | **Implemented** (Unit 4; passes locally, not yet run on GitHub) | push (all branches), pull request to `develop` or `main`, manual | Lint, type check, unit tests and coverage on two operating systems, dependency audit, build, artefacts |
+| `ci.yml` | **Implemented** (Unit 4; passes locally; CI #1 green on GitHub, E03a) | push (all branches), pull request to `develop` or `main`, manual | Lint, type check, unit tests and coverage on two operating systems, dependency audit, build, artefacts |
 | `release.yml` | Planned, Unit 5 | tag `v*` on `main` | Run all checks again, build wheel, create GitHub Release with changelog and evidence bundle |
 | `integration.yml` | Planned, Unit 6 | pull request to `develop` or `main`, manual | Real Playwright and Selenium runs against the local sample app, Ubuntu only, mock LLM, screenshots as artefacts |
 | `nightly-e2e.yml` | Planned, Unit 6 | schedule, manual with `llm_mode: mock or live` | Evaluation run with seeded locator mutations; metrics history; live mode only manually, in a protected environment, within the $5 cap |
@@ -162,6 +162,6 @@ Pip caching, concurrency cancellation, job timeouts and a small matrix keep run 
 
 ## 13. Open Items
 
-1. Run `ci.yml` on GitHub and capture E03a to E03c.
+1. Optional: capture run-page screenshots (E03f) showing job-level results. E03a to E03e are done.
 2. Decide whether to pin actions to commit hashes in Unit 7 hardening.
 3. Add the import-rule check when the first module packages exist (Unit 5).
