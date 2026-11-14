@@ -1,0 +1,41 @@
+# E03e: local equivalent of ci.yml (the five checks in cicd/CI_CD_WORKFLOW.md section 4)
+# captured: 2026-11-14 14:15:23 -0500
+# branch: feature/ci-workflow  commit: 872a1e8
+# python: Python 3.12.10
+
+## 1. ruff check .
+All checks passed!
+exit: 0
+
+## 2. ruff format --check .
+30 files already formatted
+exit: 0
+
+## 3. mypy src
+Success: no issues found in 1 source file
+exit: 0
+
+## 4. pytest -n auto --cov=aitaf --cov-fail-under=80
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.2.0, pluggy-1.7.0
+rootdir: c:\Users\dchennap\repos\UoP_Capston_Project_dilip
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, platformdirs-4.14.5, cov-7.1.0, xdist-3.8.0
+created: 12/12 workers
+12 workers [1 item]
+.                                                                        [100%]
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.10-final-0 _______________
+Name                    Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------
+src\aitaf\__init__.py       1      0      0      0   100%
+-------------------------------------------------------------------
+TOTAL                       1      0      0      0   100%
+Required test coverage of 80% reached. Total coverage: 100.00%
+============================== 1 passed in 8.38s ==============================
+exit: 0
+
+## 5. pip-audit -r requirements.txt
+No known vulnerabilities found
+exit: 0

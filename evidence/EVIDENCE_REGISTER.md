@@ -2,12 +2,18 @@
 
 | ID | Description | File | Date | Used in |
 |---|---|---|---|---|
-| E01a | Repository home page | unit03/screenshots/E01a_repository_home_20261126.png | pending | Unit 3 AA Q2 |
-| E01b | Folder structure (source, documentation, design): docs/ subfolders and full tree | unit03/screenshots/E01b_Folder_Structure_20261126.png | pending | Unit 3 AA Q2 |
-| E01c | Repository access (Public badge visible in E01a) | unit03/screenshots/E01a_repository_home_20261126.png | pending | Unit 3 AA Q2 |
-| E02a | Branch list | unit03/screenshots/E02a_branches_20261126.png | pending | Unit 3 AA Q2 |
-| E02b | Commit history | unit03/screenshots/E02b_commit_history_20261126.png | pending | Unit 3 AA Q2 |
-| E02c | Network graph | unit03/screenshots/E02c_network_graph_20261126.png | pending | Unit 3 AA Q2 |
-| E02d | Merged pull request | unit03/screenshots/E02d_pull_request_20261126.png | pending | Unit 3 AA Q2 |
-| E02e | Tag `Intial_folder_structure` (the `unit3-submitted` tag is created after submission) | unit03/screenshots/E02e_tag_20261126.png | pending | Unit 3 AA Q2 |
+| E01a | Repository home page | unit03/screenshots/E01a_repository_home_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E01b | Folder structure (source, documentation, design): docs/ subfolders and full tree | unit03/screenshots/E01b_Folder_Structure_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E01c | Repository access (Public badge visible in E01a) | unit03/screenshots/E01a_repository_home_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E02a | Branch list | unit03/screenshots/E02a_branches_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E02b | Commit history | unit03/screenshots/E02b_commit_history_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E02c | Network graph | unit03/screenshots/E02c_network_graph_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E02d | Merged pull request | unit03/screenshots/E02d_pull_request_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
+| E02e | Tag `Intial_folder_structure` (the `unit3-submitted` tag is created after submission) | unit03/screenshots/E02e_tag_20261114.png | 14 Nov 2026 | Unit 3 AA Q2 |
 | E02f | Git log graph (text) | unit03/logs/E02_git_log_graph_20261114.txt | 14 Nov 2026 | Unit 3 AA Q2 |
+| E03a | Unit 4: GitHub Actions run CI #1 completed (green), "Add CI/CD pipeline and workflow design", branch `feature/ci-workflow`, commit 872a1e8, 1 m 30 s. Shows overall run status only (no job logs, coverage or artifacts) | unit04/screenshots/E03a_pipeline_green_20261114.png | 14 Nov 2026 | Unit 4 reflection (Figure 1); Ch. 4 |
+| E03b | Unit 4: deliberately failing run CI #2 (red), branch `chore/ci-red-demo`, commit e453e7d. Verified via GitHub API: "Unit tests with coverage" failed on both operating systems and "Lint (ruff)" failed (rule B011, assert False); security job passed; format check and type check skipped after the lint failure; build not run. Run id 43631235014, https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43631235014. Screenshot (E03b_pipeline_red_20261114.png) shows run-level status only: red CI #2 on `chore/ci-red-demo`, "test(ci): add deliberately failing test to demonstrate the pipeline", 1 m 11 s, above green CI #1. The job and step details above come from the GitHub API, not the screenshot; take a run-page screenshot (E03f) before citing them | unit04/screenshots/E03b_pipeline_red_20261114.png | 14 Nov 2026 | Unit 4 reflection (Figure 1); Ch. 4 |
+| E03c | Unit 4: fix commit 7912566 removes the failing test; run CI #3 green (47 steps succeeded, 0 failed), same branch. Run id 43631417441, https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43631417441. Screenshot (E03c_pipeline_green_after_fix_20261114.png) shows run-level status only: green CI #3, "fix(ci): remove deliberately failing test after the red run (E03c)", 1 m 30 s. The 47-step count comes from the GitHub API, not the screenshot | unit04/screenshots/E03c_pipeline_green_after_fix_20261114.png | 14 Nov 2026 | Unit 4 reflection (Figure 1); Ch. 4 |
+| E03d | Unit 4: same run CI #1 in progress (supplementary, not in the paper figure) | unit04/screenshots/E03d_pipeline_running_20261114.png | 14 Nov 2026 | Supplementary |
+| E03e | Unit 4: local run of the five CI commands (ruff check, ruff format --check, mypy src, pytest with coverage 100%, pip-audit: no known vulnerabilities); all exit 0; text log captured 14 Nov 2026 14:15 on commit 872a1e8 | unit04/logs/E03e_local_checks_20261114.txt | 14 Nov 2026 | Unit 4 reflection (locally verified claim); Ch. 4 |
+| E03f | Unit 4 (optional): run-page screenshots showing job graph, failing step of CI #2, and artifacts | not captured | planned | would support job-level claims |
