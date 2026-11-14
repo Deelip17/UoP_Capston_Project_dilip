@@ -25,3 +25,9 @@ evidence/raw/
 .idea/
 .DS_Store
 Thumbs.db
+
+#claude
+CLAUDE.md
+# Build output
+build/
+dist/
