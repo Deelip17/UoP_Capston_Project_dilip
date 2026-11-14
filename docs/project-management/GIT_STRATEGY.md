@@ -180,7 +180,6 @@ Canonical module names: `analyzer`, `testgen`, `scriptgen`, `executor`, `healing
 | `test(analyzer): cover injection-pattern rejection (FR-02)` | `tests added` |
 | `ci: add unit-test workflow on ubuntu and windows` | `workflow` |
 
-Optional AI-assistance trailer, if the course policy allows disclosure in commits: `Co-Authored-By: <AI tool>`. Decide once and apply consistently.
 
 ## 5. Tagging Strategy
 
@@ -306,5 +305,4 @@ Version control keeps documentation consistent because documents change in the s
 ## 13. Open Items
 
 1. Confirm ADR-008 (this strategy), repository name and visibility.
-2. Decide on the optional AI-assistance trailer after checking course policy.
-3. Confirm whether `develop` stays after Unit 3 or the model reduces to `main` plus feature branches (the two-branch requirement is met only while `develop` exists, so keep it at least through Unit 5 evidence capture).
+2. Confirm whether `develop` stays after Unit 3 or the model reduces to `main` plus feature branches (the two-branch requirement is met only while `develop` exists, so keep it at least through Unit 5 evidence capture).
