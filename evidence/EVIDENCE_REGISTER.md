@@ -3,8 +3,8 @@
 | ID | Description | File | Date | Used in |
 |---|---|---|---|---|
 | E01a | Repository home page | unit03/screenshots/E01a_repository_home_20261126.png | pending | Unit 3 AA Q2 |
-| E01b | Folder structure (source, documentation, design) | covered by E01a: unit03/screenshots/E01a_repository_home_20261126.png | pending | Unit 3 AA Q2 |
-| E01c | Repository access (Public badge visible) | covered by E01a: unit03/screenshots/E01a_repository_home_20261126.png | pending | Unit 3 AA Q2 |
+| E01b | Folder structure (source, documentation, design): docs/ subfolders and full tree | unit03/screenshots/E01b_Folder_Structure_20261126.png | pending | Unit 3 AA Q2 |
+| E01c | Repository access (Public badge visible in E01a) | unit03/screenshots/E01a_repository_home_20261126.png | pending | Unit 3 AA Q2 |
 | E02a | Branch list | unit03/screenshots/E02a_branches_20261126.png | pending | Unit 3 AA Q2 |
 | E02b | Commit history | unit03/screenshots/E02b_commit_history_20261126.png | pending | Unit 3 AA Q2 |
 | E02c | Network graph | unit03/screenshots/E02c_network_graph_20261126.png | pending | Unit 3 AA Q2 |
