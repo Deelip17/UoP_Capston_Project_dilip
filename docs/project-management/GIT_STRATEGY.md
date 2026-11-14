@@ -57,6 +57,7 @@ UoP_Capston_Project_dilip/
 **Unit 3 state of the repository:** no code is written yet, so `src/` and `tests/` contain only placeholder files (a short README per folder) so the structure is visible and committed. Files that must never be committed: `.env`, `*.db`, raw evidence, secrets, client names or data (ADR-005).
 
 ## 3. Branch Structure
+> **Working-branch decision (ADR-028, 14 Nov 2026):** once setup and tests are done, day-to-day work is committed on `develop`; feature or fix branches are optional for risky slices; `main` changes only by pull request at submission and is tagged then.
 
 ```mermaid
 gitGraph
@@ -237,7 +238,7 @@ Rules: the version lives in one place (`pyproject.toml`) and is recorded in each
 | Milestones | One GitHub Milestone per unit (Unit 3 to Unit 8) aligned with `GANTT_SCHEDULE.md` |
 | Ownership | `CODEOWNERS`: repository author owns everything |
 | Templates | Pull-request template (§3.4), issue templates (bug, task) |
-| Dependencies | Pinned; Dependabot weekly (ADR-010 covers scanning tools) |
+| Dependencies | Pinned; Dependabot weekly (scanning tools: ADR-025) |
 | Secrets | Secret scanning and push protection enabled; `.env.example` lists variable names only |
 | Merge settings | Squash allowed (feature → develop), merge commits allowed (develop → main), rebase merging disabled, auto-delete merged branches |
 | Documentation | `README.md` (overview, quick start, architecture image, badges), `CONTRIBUTING.md` (this strategy in brief), `docs/adr/` for decisions |
