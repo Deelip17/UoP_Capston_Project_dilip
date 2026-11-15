@@ -1,0 +1,47 @@
+Real Chromium against the local sample shop. The login button's locator is the only primary-locator
+kind that the mutation breaks; no stored fallbacks. Baseline snapshots: data/dom/shop. Mock provider
+(the LLM rung of the healer is off). Five runs are a demonstration, not a healing success rate.
+
+=== no mutation (control); primary locator kind: id
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --heal --baseline data/dom/shop
+run 1431cdb3e2494a03af51680a6f614570 (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0, healing on)
+PASSED   SHOP-JOURNEY  639 ms  attempts=1
+summary: 1 passed, 0 failed, 0 errors, 0 skipped; evidence in <path>
+healing: 0 requested, 0 test(s) passed after healing, success rate n/a; events are proposed and need approval
+(exit code 0)
+
+=== M-login_submit-id; primary locator kind: id
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --heal --baseline data/dom/shop
+run 27e54ff4e5fe437cb154d3edcb4e2ce1 (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0, healing on)
+PASSED   SHOP-JOURNEY  486 ms  attempts=2  healed=1
+summary: 1 passed, 0 failed, 0 errors, 0 skipped; evidence in <path>
+healing: 1 requested, 1 test(s) passed after healing, success rate 100%; events are proposed and need approval
+(exit code 0)
+healed copy: login_submit primary = ('id', 'signin-btn'), kept as fallback = [('id', 'login-button')]
+
+=== M-login_submit-class; primary locator kind: css
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --heal --baseline data/dom/shop
+run d0b51472517e4765ad6ad47c4b266373 (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0, healing on)
+PASSED   SHOP-JOURNEY  490 ms  attempts=2  healed=1
+summary: 1 passed, 0 failed, 0 errors, 0 skipped; evidence in <path>
+healing: 1 requested, 1 test(s) passed after healing, success rate 100%; events are proposed and need approval
+(exit code 0)
+healed copy: login_submit primary = ('id', 'login-button'), kept as fallback = [('css', 'button.btn-login')]
+
+=== M-login_submit-xpath; primary locator kind: xpath
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --heal --baseline data/dom/shop
+run 6ca4bdc2564b495ba4b255ea0c3c9e7c (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0, healing on)
+PASSED   SHOP-JOURNEY  477 ms  attempts=2  healed=1
+summary: 1 passed, 0 failed, 0 errors, 0 skipped; evidence in <path>
+healing: 1 requested, 1 test(s) passed after healing, success rate 100%; events are proposed and need approval
+(exit code 0)
+healed copy: login_submit primary = ('id', 'login-button'), kept as fallback = [('xpath', "//button[@data-qa='login-submit']")]
+
+=== M-login_submit-text; primary locator kind: text
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --heal --baseline data/dom/shop
+run ec36e44358cb40899ae137fad9273c06 (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0, healing on)
+PASSED   SHOP-JOURNEY  492 ms  attempts=2  healed=1
+summary: 1 passed, 0 failed, 0 errors, 0 skipped; evidence in <path>
+healing: 1 requested, 1 test(s) passed after healing, success rate 100%; events are proposed and need approval
+(exit code 0)
+healed copy: login_submit primary = ('id', 'login-button'), kept as fallback = [('text', 'Log in')]

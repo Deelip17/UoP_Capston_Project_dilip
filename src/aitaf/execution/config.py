@@ -29,6 +29,8 @@ class RunConfig(BaseModel):
     workers: int = Field(default=1, ge=1, le=8)
     checkpoints: bool = False
     run_timeout_s: int = Field(default=600, ge=1, le=3600)
+    healing: bool = False
+    max_heal_passes: int = Field(default=5, ge=1, le=20)
 
     @field_validator("allowed_hosts")
     @classmethod

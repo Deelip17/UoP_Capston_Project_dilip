@@ -51,7 +51,7 @@ class __CLASS__:
             candidate = self._page.locator(_selector(strategy, value))
             if candidate.count() > 0:
                 return candidate.first
-        raise AssertionError("no locator strategy matched for " + name)
+        raise LookupError("no locator strategy matched for " + name + " on page __PAGE__")
 
     def click(self, name):
         self._find(name).click()
@@ -107,7 +107,7 @@ class __CLASS__:
             elements = self._driver.find_elements(by, selector)
             if elements:
                 return elements[0]
-        raise AssertionError("no locator strategy matched for " + name)
+        raise LookupError("no locator strategy matched for " + name + " on page __PAGE__")
 
     def click(self, name):
         self._find(name).click()

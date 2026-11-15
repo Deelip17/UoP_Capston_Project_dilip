@@ -1,6 +1,6 @@
 # healing (Self-Healing Engine)
 
-Repairs broken locators during execution without hiding real defects (FR-22 to FR-26). It works on an HTML snapshot taken at the moment of failure, so it needs no browser. The Execution Engine will call it through the `LocatorHealer` interface in `core`.
+Repairs broken locators during execution without hiding real defects (FR-22 to FR-26). It works on an HTML snapshot taken at the moment of failure, so it needs no browser. The Execution Engine calls it through the `LocatorHealer` interface in `core` (`aitaf execute --heal`).
 
 Ladder, cheapest first:
 
@@ -18,6 +18,7 @@ Every attempt is stored as a proposed, unapproved `HealingEvent`. A permanent ch
 | `engine` | `SelfHealingEngine`, `HealingConfig` | FR-22 to FR-24, FR-26, NFR-03 |
 | `dom`, `resolver`, `signature` | Snapshot parser, CSS/XPath-subset resolver, expected-element signature | FR-23 |
 | `approval`, `metrics` | `approve_healing_event`, `success_rates` | FR-25, FR-26 |
+| `baseline` | `BaselineSnapshots`: the original element's signature, recovered from approved DOM snapshots (a directory of HTML files); ambiguous locators are skipped | FR-23, FR-24 |
 
 ## Public API
 
@@ -29,7 +30,8 @@ Every attempt is stored as a proposed, unapproved `HealingEvent`. A permanent ch
 
 ## Not built
 
-- Not connected to a live Execution Engine, a real browser or the sample application; it has only been run on six hand-made DOM fixtures.
+- Run so far on six hand-made DOM fixtures and, through the Execution Engine in a real browser, on the sample shop's login button with four seeded mutations (a demonstration, not a rate).
+- Similarity healing needs a baseline snapshot: with only the locator text it found no candidate in the shop test. Without a baseline, only the stored-fallback rung is available, and generated page objects already try their fallbacks, so in practice that rung adds nothing at run time.
 - The seeded mutation harness (FR-38) and the healing success rate on it (FR-39) do not exist, so the thresholds (0.6 similarity, 0.5 text, 0.3 context) are initial values, and NFR-03 (repair within 3 s, LLM repair within 30 s) is not yet measured on a mutation catalogue.
 - Approving a healing event is available through the Python API only; there is no CLI command or report page for it yet.
 - The CSS and XPath resolver supports a subset; other selectors are skipped, not guessed.

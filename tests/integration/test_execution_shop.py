@@ -61,23 +61,36 @@ def repo() -> Iterator[InMemoryRepository]:
     set_run_id("")
 
 
-def write_project(root: Path, base_url: str, guard_test: bool = True) -> Path:
+def write_project(
+    root: Path,
+    base_url: str,
+    guard_test: bool = True,
+    primary_kinds: dict[str, str] | None = None,
+    fallbacks: bool = True,
+) -> Path:
     for folder in ("tests", "locators", "pages"):
         (root / folder).mkdir(parents=True)
     (root / "locators" / "__init__.py").write_text("", encoding="utf-8")
     (root / "pages" / "__init__.py").write_text("", encoding="utf-8")
-    locators = [
-        Locator(
-            loc_id=f"shop.{e.name}",
-            page="shop",
-            name=e.name,
-            primary=LocatorStrategy(kind="id", value=e.el_id),
-            fallbacks=[LocatorStrategy(kind="css", value=f"{e.tag}.{e.css_class}")],
-            model="test",
-            prompt_version="n/a",
+    kinds = primary_kinds or {}
+    locators = []
+    for e in ELEMENTS.values():
+        primary = e.locator(kinds.get(e.name, "id"))
+        locators.append(
+            Locator(
+                loc_id=f"shop.{e.name}",
+                page="shop",
+                name=e.name,
+                primary=LocatorStrategy(kind=primary.kind, value=primary.value),  # type: ignore[arg-type]
+                fallbacks=(
+                    [LocatorStrategy(kind="css", value=f"{e.tag}.{e.css_class}")]
+                    if fallbacks
+                    else []
+                ),
+                model="test",
+                prompt_version="n/a",
+            )
         )
-        for e in ELEMENTS.values()
-    ]
     (root / "locators" / "shop_locators.py").write_text(
         templates.render_locators("shop", locators), encoding="utf-8"
     )
@@ -155,3 +168,49 @@ def test_real_browser_run_stores_results_and_failure_evidence(
         encoding="utf-8"
     )
     assert (tmp_path / "evidence" / stored["SHOP-JOURNEY"].screenshot).exists()
+
+
+HEAL_CASES = [
+    ("M-login_submit-id", "id"),
+    ("M-login_submit-class", "css"),
+    ("M-login_submit-xpath", "xpath"),
+    ("M-login_submit-text", "text"),
+]
+
+
+@pytest.mark.parametrize(("mutation", "kind"), HEAL_CASES, ids=[m for m, _ in HEAL_CASES])
+def test_a_mutated_locator_is_healed_in_a_real_browser(
+    browser_ready: None, repo: InMemoryRepository, tmp_path: Path, mutation: str, kind: str
+) -> None:
+    """The login button's locator is broken by one mutation; the journey must still pass."""
+    from aitaf.healing import BaselineSnapshots, SelfHealingEngine
+
+    baseline = BaselineSnapshots(Path(__file__).resolve().parents[2] / "data" / "dom" / "shop")
+    with ShopServer(mutations=[mutation]) as shop:
+        root = write_project(
+            tmp_path / "scripts",
+            shop.url,
+            guard_test=False,
+            primary_kinds={"login_submit": kind},
+            fallbacks=False,
+        )
+        config = RunConfig(
+            scripts_dir=root,
+            base_url=shop.url,
+            allowed_hosts=["127.0.0.1"],
+            evidence_dir=tmp_path / "evidence",
+            timeout_ms=15_000,
+            run_timeout_s=240,
+            healing=True,
+        )
+        engine = ExecutionEngine(
+            repo, healer=SelfHealingEngine(repo), baseline=baseline.signature_for
+        )
+        summary = engine.execute(config)
+    results = {r.tc_id: r for r in repo.list_results("run-1")}
+    journey = results["SHOP-JOURNEY"]
+    assert summary.heal_attempts >= 1
+    assert journey.status == "passed" and journey.attempts == 2, journey.log[-400:]
+    proposed = [e for e in repo.list_healing_events("run-1") if e.outcome == "proposed"]
+    assert len(proposed) == 1 and not proposed[0].approved
+    assert proposed[0].old_strategy.kind == kind

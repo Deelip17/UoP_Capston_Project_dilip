@@ -21,6 +21,7 @@ LOCATOR = [
     ("Error", "Element is not attached to the DOM"),
     ("TimeoutException", "no such element: unable to locate element: css selector"),
     ("ElementNotInteractableException", "Message: element not interactable"),
+    ("LookupError", "no locator strategy matched for login_submit on page login"),
 ]
 DEFECT = [
     ("AssertionError", "assert 'Welcome' in 'Error: invalid password'"),

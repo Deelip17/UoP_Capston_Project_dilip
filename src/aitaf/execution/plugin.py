@@ -21,6 +21,7 @@ from typing import Any
 import pytest
 
 MAX_MESSAGE = 4000
+MAX_ERROR_TEXT = 500
 _UNSAFE = re.compile(r"[^A-Za-z0-9_.-]+")
 
 
@@ -109,6 +110,10 @@ def pytest_runtest_makereport(
         if evidence_dir and wants_evidence:
             shot, dom = _write_evidence(item, Path(evidence_dir), attempt)
         message = str(report.longrepr) if report.longrepr else ""
+        error_type, error_text = "", ""
+        if call.excinfo is not None and status in ("failed", "error"):
+            error_type = call.excinfo.typename
+            error_text = str(call.excinfo.value)[:MAX_ERROR_TEXT]
         _record(
             config,
             {
@@ -117,6 +122,8 @@ def pytest_runtest_makereport(
                 "when": report.when,
                 "duration_s": float(report.duration),
                 "message": message[:MAX_MESSAGE],
+                "error_type": error_type,
+                "error_text": error_text,
                 "screenshot": shot,
                 "dom": dom,
                 "attempt": attempt,

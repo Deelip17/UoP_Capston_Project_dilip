@@ -17,6 +17,8 @@ from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
+from pydantic import ValidationError as PydanticValidationError
+
 from aitaf.analyzer import COMPONENT as ANALYZER_COMPONENT
 from aitaf.analyzer import RequirementAnalyzer, load_requirements, mock_extraction_responder
 from aitaf.core.config import Settings
@@ -39,6 +41,7 @@ from aitaf.generator import (
 )
 from aitaf.healing import COMPONENT as HEALING_COMPONENT
 from aitaf.healing import (
+    BaselineSnapshots,
     HealingConfig,
     SelfHealingEngine,
     find_elements,
@@ -166,6 +169,17 @@ def _add_execute_options(stage: argparse.ArgumentParser) -> None:
     stage.add_argument("--workers", type=int, default=1, help="parallel workers (1 to 8)")
     stage.add_argument("--checkpoints", action="store_true", help="also screenshot passing tests")
     stage.add_argument("--run-timeout-s", type=int, default=600, help="time limit for the run")
+    stage.add_argument(
+        "--heal", action="store_true", help="offer locator failures to the Self-Healing Engine"
+    )
+    stage.add_argument(
+        "--baseline",
+        metavar="DIR",
+        help="approved DOM snapshots (HTML) used to recognise the original element when healing",
+    )
+    stage.add_argument(
+        "--max-heal-passes", type=int, default=5, help="healing reruns allowed in a run (1 to 20)"
+    )
 
 
 def _gateway(settings: Settings, repo: Repository, metrics: Metrics | None = None) -> LlmGateway:
@@ -328,9 +342,15 @@ def _execute(settings: Settings, args: argparse.Namespace) -> int:
             workers=args.workers,
             checkpoints=args.checkpoints,
             run_timeout_s=args.run_timeout_s,
+            healing=args.heal,
+            max_heal_passes=args.max_heal_passes,
         )
-    except ValueError as exc:
-        raise ConfigError(str(exc).splitlines()[0]) from exc
+    except PydanticValidationError as exc:
+        problems = "; ".join(
+            f"{'.'.join(str(part) for part in error['loc'])}: {error['msg']}"
+            for error in exc.errors()
+        )
+        raise ConfigError(problems) from exc
     repo = SqliteRepository(args.db)
     try:
         repo.recover_interrupted_runs()
@@ -345,7 +365,14 @@ def _execute(settings: Settings, args: argparse.Namespace) -> int:
             )
         )
         try:
-            summary = ExecutionEngine(repo, Metrics(repo)).execute(config)
+            metrics = Metrics(repo)
+            healer = (
+                SelfHealingEngine(repo, HealingConfig(), metrics=metrics) if args.heal else None
+            )
+            baseline = BaselineSnapshots(args.baseline).signature_for if args.baseline else None
+            summary = ExecutionEngine(repo, metrics, healer=healer, baseline=baseline).execute(
+                config
+            )
         except AitafError:
             repo.finish_run(run_id, RunStatus.FAILED, datetime.now(UTC))
             raise
@@ -356,6 +383,8 @@ def _execute(settings: Settings, args: argparse.Namespace) -> int:
     print(f"run {run_id} ({summary.environment})")
     for test in summary.executed:
         extra = f"  screenshot={test.screenshot}" if test.screenshot else ""
+        if test.healed:
+            extra += f"  healed={len(test.healed)}"
         print(
             f"{_STATUS_LABEL.get(test.status, test.status)}  {test.tc_id}  {test.duration_ms} ms  "
             f"attempts={test.attempts}{extra}"
@@ -364,6 +393,13 @@ def _execute(settings: Settings, args: argparse.Namespace) -> int:
         f"summary: {summary.passed} passed, {summary.failed} failed, {summary.errors} errors, "
         f"{summary.skipped} skipped; evidence in {config.evidence_dir}"
     )
+    if args.heal:
+        rate = summary.healing_success_rate
+        print(
+            f"healing: {summary.heal_attempts} requested, {summary.healed} test(s) passed after "
+            f"healing, success rate {'n/a' if rate is None else f'{rate:.0%}'}; events are "
+            "proposed and need approval"
+        )
     return EXIT_OK if summary.all_passed else EXIT_FAILURE
 
 

@@ -21,6 +21,7 @@ _LOCATOR_PHRASES = (
     "waiting for locator",
     "waiting for selector",
     "no such element",
+    "no locator strategy matched",
     "unable to locate element",
     "not attached to the dom",
     "stale element",

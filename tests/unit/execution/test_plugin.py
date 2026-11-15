@@ -255,3 +255,43 @@ def test_plugin_does_nothing_without_a_results_directory(
     pytester.makepyfile(test_sample="def test_ok():\n    pass\n")
     result = pytester.runpytest_inprocess("-p", "aitaf.execution.plugin")
     result.assert_outcomes(passed=1)
+
+
+@pytest.mark.blackbox
+def test_failures_record_the_exception_type_and_a_short_text(
+    pytester: pytest.Pytester, tmp_path: Path
+) -> None:
+    """The healer classifies a failure by exception type and message (FR-22)."""
+    records = by_name(run_plugin(pytester, tmp_path))
+    assert records["test_fails"]["error_type"] == "AssertionError"
+    assert "wrong total" in str(records["test_fails"]["error_text"])
+    assert records["test_setup_error"]["error_type"] == "RuntimeError"
+    assert records["test_passes"]["error_type"] == ""
+    assert records["test_passes"]["error_text"] == ""
+
+
+@pytest.mark.whitebox
+def test_a_locator_lookup_error_is_recorded_with_its_message(
+    pytester: pytest.Pytester, tmp_path: Path
+) -> None:
+    pytester.makepyfile(
+        test_sample=(
+            "def test_missing():\n"
+            "    raise LookupError('no locator strategy matched for submit on page login')\n"
+        )
+    )
+    pytester.runpytest_inprocess(
+        "-p",
+        "aitaf.execution.plugin",
+        "--aitaf-results",
+        str(tmp_path / "r"),
+        "--aitaf-evidence",
+        str(tmp_path / "e"),
+    )
+    (line,) = [
+        json.loads(text)
+        for file in (tmp_path / "r").glob("*.jsonl")
+        for text in file.read_text(encoding="utf-8").splitlines()
+    ]
+    assert line["error_type"] == "LookupError"
+    assert line["error_text"] == "no locator strategy matched for submit on page login"

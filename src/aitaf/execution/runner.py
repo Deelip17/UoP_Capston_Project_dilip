@@ -1,48 +1,61 @@
 """The Execution Engine: run generated scripts with PyTest and store the results.
 
-Flow (FR-17 to FR-21, NFR-04, NFR-11, NFR-23):
+Flow (FR-17 to FR-21, NFR-04, NFR-11, NFR-23; FR-22 to FR-26 for healing):
 
 1. the base URL is checked against the allow-list **before anything starts** (FR-21);
 2. PyTest runs in a subprocess with the engine's plugin, optionally with parallel
-   workers (pytest-xdist) and a hard time limit; failing tests are rerun up to
-   ``retries`` times and the attempt count is recorded (FR-20);
-3. the plugin's result lines are read back, failure text is masked, and one
-   :class:`~aitaf.core.models.TestResult` per test is stored with its screenshot and
-   DOM snapshot links (FR-18, FR-19).
+   workers (pytest-xdist) and a hard time limit (FR-20);
+3. a test that failed because no locator matched (``LookupError`` from the page
+   object) is offered to the healer through the ``LocatorHealer`` interface of
+   ``core``; if it proposes a new locator, the engine applies it to a **temporary
+   copy** of the scripts and reruns that test there. The original scripts and the
+   locator repository are never changed: a permanent change needs human approval
+   (FR-25);
+4. other failures are retried up to ``retries`` times; attempt counts are recorded;
+5. one :class:`~aitaf.core.models.TestResult` per test is stored with masked failure
+   text and links to its screenshot and DOM snapshot (FR-18, FR-19).
 
 The subprocess gets a copy of the environment without anything that looks like a
-secret, so generated tests never see the API key (NFR-11). The engine does not call
-the Self-Healing Engine yet; that integration is a later slice.
+secret, so generated tests never see the API key (NFR-11).
 """
 
 from __future__ import annotations
 
+import ast
 import json
 import os
 import platform
+import pprint
 import re
+import shutil
 import subprocess
 import sys
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import aitaf
 from aitaf.core.errors import ExecutionError, PolicyError
+from aitaf.core.healing import ElementSignature, FailureContext, HealStatus, LocatorHealer
 from aitaf.core.logging import current_run_id, get_logger
 from aitaf.core.masking import mask
 from aitaf.core.metrics import Metrics, timed
-from aitaf.core.models import TestResult
+from aitaf.core.models import Locator, LocatorStrategy, TestResult
 from aitaf.core.storage import Repository
 from aitaf.execution.allowlist import check_base_url
 from aitaf.execution.config import RunConfig
 
 _log = get_logger(__name__)
 _SECRET_NAME = re.compile(
-    r"KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|^(OPENAI|ANTHROPIC|AWS|AZURE|GITHUB)_", re.I
+    r"KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|^(OPENAI|ANTHROPIC|AWS|AZURE|GITHUB)_", re.IGNORECASE
 )
+_LOCATOR_MISS = re.compile(r"no locator strategy matched for (\w+) on page (\w+)")
 _PYTEST_FAILURES = 1  # exit code: some tests failed (not an engine error)
 _PYTEST_NO_TESTS = 5
+_KINDS = ("id", "css", "xpath", "text", "role", "attr")
+
+BaselineLookup = Callable[[Locator], ElementSignature | None]
 
 
 @dataclass(frozen=True)
@@ -57,6 +70,7 @@ class ExecutedTest:
     screenshot: str
     dom_snapshot: str
     log: str
+    healed: tuple[str, ...] = ()
 
 
 @dataclass
@@ -68,6 +82,7 @@ class RunSummary:
     executed: list[ExecutedTest] = field(default_factory=list)
     duration_ms: int = 0
     junit_path: Path = Path()
+    heal_attempts: int = 0
 
     def _count(self, status: str) -> int:
         return sum(1 for test in self.executed if test.status == status)
@@ -89,6 +104,16 @@ class RunSummary:
         return self._count("skipped")
 
     @property
+    def healed(self) -> int:
+        """Tests that passed after a healed locator was applied."""
+        return sum(1 for t in self.executed if t.healed and t.status == "passed")
+
+    @property
+    def healing_success_rate(self) -> float | None:
+        """Healed tests divided by healing requests; None if healing was never asked."""
+        return self.healed / self.heal_attempts if self.heal_attempts else None
+
+    @property
     def all_passed(self) -> bool:
         return self.failed == 0 and self.errors == 0
 
@@ -101,10 +126,11 @@ def clean_environment(environ: dict[str, str]) -> dict[str, str]:
 def describe_environment(config: RunConfig) -> str:
     """Environment text stored with the run (FR-19)."""
     mode = "headless" if config.headless else "headed"
+    healing = ", healing on" if config.healing else ""
     return (
         f"{config.driver} {mode}, python {platform.python_version()}, "
         f"{platform.system()} {platform.release()}, workers {config.workers}, "
-        f"timeout {config.timeout_ms} ms, retries {config.retries}"
+        f"timeout {config.timeout_ms} ms, retries {config.retries}{healing}"
     )
 
 
@@ -124,15 +150,70 @@ def _fallback_tc_id(nodeid: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "-", name).strip("-").upper() or "TEST"
 
 
+def _as_strategy(pair: object) -> LocatorStrategy | None:
+    if (
+        isinstance(pair, tuple | list)
+        and len(pair) == 2
+        and all(isinstance(part, str) for part in pair)
+        and pair[0] in _KINDS
+        and pair[1]
+    ):
+        return LocatorStrategy(kind=pair[0], value=pair[1])
+    return None
+
+
+def read_locator_module(path: Path) -> dict[str, dict[str, object]] | None:
+    """Parse a generated ``LOCATORS = {...}`` literal without executing the file."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        for node in tree.body:
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == "LOCATORS"
+            ):
+                value = ast.literal_eval(node.value)
+                return value if isinstance(value, dict) else None
+    except (OSError, SyntaxError, ValueError):
+        return None
+    return None
+
+
+def _locator_from(page: str, name: str, entry: object) -> Locator | None:
+    if not isinstance(entry, dict):
+        return None
+    primary = _as_strategy(entry.get("primary"))
+    fallbacks = [_as_strategy(item) for item in entry.get("fallbacks", [])]
+    if primary is None or any(item is None for item in fallbacks):
+        return None
+    return Locator(
+        loc_id=f"{page}.{name}",
+        page=page,
+        name=name,
+        primary=primary,
+        fallbacks=[item for item in fallbacks if item is not None],
+        model="n/a",
+        prompt_version="n/a",
+    )
+
+
 class ExecutionEngine:
     """Run a script directory and persist the results of the current run."""
 
     def __init__(
-        self, repo: Repository, metrics: Metrics | None = None, python: str = sys.executable
+        self,
+        repo: Repository,
+        metrics: Metrics | None = None,
+        python: str = sys.executable,
+        healer: LocatorHealer | None = None,
+        baseline: BaselineLookup | None = None,
     ) -> None:
         self._repo = repo
         self._metrics = metrics
         self._python = python
+        self._healer = healer
+        self._baseline = baseline
 
     def execute(self, config: RunConfig) -> RunSummary:
         run_id = current_run_id()
@@ -147,29 +228,47 @@ class ExecutionEngine:
 
         config.evidence_dir.mkdir(parents=True, exist_ok=True)
         summary = RunSummary(run_id=run_id, environment=describe_environment(config))
-        results_dir = config.evidence_dir / "results"
         # An empty config file keeps the project's own PyTest settings (markers, addopts) out
         # of the run, so test IDs are relative to the scripts directory.
         (config.evidence_dir / "pytest_engine.ini").write_text("[pytest]\n", encoding="utf-8")
-        for stale in results_dir.glob("*.jsonl"):
+        for stale in (config.evidence_dir / "results").glob("*.jsonl"):
             stale.unlink()
 
+        healing_on = self._healer is not None and config.healing
+        work_dir = scripts
+        healed_notes: dict[str, list[str]] = {}
+        attempt = 0
+        heal_passes = 0
+        retries_left = config.retries
+        targets: list[str] = ["tests" if (scripts / "tests").is_dir() else "."]
         with timed(self._metrics, "execution_engine", "run"):
-            targets: list[str] = ["tests" if (scripts / "tests").is_dir() else "."]
-            for attempt in range(1, config.retries + 2):
-                self._run_pytest(config, targets, attempt, summary)
+            while True:
+                attempt += 1
+                self._run_pytest(config, work_dir, targets, attempt)
                 latest = self._collect(config)
-                failing = [n for n, rec in latest.items() if rec["outcome"] in ("failed", "error")]
-                if not failing or attempt > config.retries:
+                failing = sorted(
+                    n for n, r in latest.items() if r["outcome"] in ("failed", "error")
+                )
+                if not failing:
                     break
-                targets = sorted(failing)
+                if healing_on and heal_passes < config.max_heal_passes:
+                    rerun = self._heal(config, work_dir, latest, failing, healed_notes, summary)
+                    if rerun is not None:
+                        heal_passes += 1
+                        work_dir, targets = rerun
+                        continue
+                if retries_left == 0:
+                    break
+                retries_left -= 1
+                targets = failing
                 _log.info("retrying %d failing test(s), attempt %d", len(failing), attempt + 1)
 
         manifest = _tc_ids(scripts)
         for nodeid, record in sorted(latest.items()):
-            path = nodeid.split("::")[0]
-            tc_id = manifest.get(path) or _fallback_tc_id(nodeid)
-            log = mask(str(record["message"])).text if record["message"] else ""
+            tc_id = manifest.get(nodeid.split("::")[0]) or _fallback_tc_id(nodeid)
+            notes = healed_notes.get(nodeid, [])
+            text = mask(str(record["message"])).text if record["message"] else ""
+            log = ("; ".join(notes) + ("\n" if text else "")) + text if notes else text
             executed = ExecutedTest(
                 tc_id=tc_id,
                 nodeid=nodeid,
@@ -179,6 +278,7 @@ class ExecutionEngine:
                 screenshot=str(record["screenshot"]),
                 dom_snapshot=str(record["dom"]),
                 log=log,
+                healed=tuple(notes),
             )
             summary.executed.append(executed)
             self._repo.add_result(
@@ -198,11 +298,105 @@ class ExecutionEngine:
         summary.junit_path = config.evidence_dir / f"junit_attempt{attempt}.xml"
         return summary
 
+    # ----------------------------------------------------------------- healing
+
+    def _heal(
+        self,
+        config: RunConfig,
+        work_dir: Path,
+        latest: dict[str, dict[str, object]],
+        failing: list[str],
+        notes: dict[str, list[str]],
+        summary: RunSummary,
+    ) -> tuple[Path, list[str]] | None:
+        """Ask the healer about each locator failure; return (copy, tests to rerun) or None."""
+        assert self._healer is not None
+        proposals: list[tuple[str, str, str, LocatorStrategy, float]] = []
+        decided: dict[
+            tuple[str, str], tuple[LocatorStrategy, float]
+        ] = {}  # one question per locator
+        for nodeid in failing:
+            record = latest[nodeid]
+            miss = _LOCATOR_MISS.search(str(record.get("error_text", "")))
+            if miss is None:
+                continue
+            name, page = miss.group(1), miss.group(2)
+            if (page, name) in decided:
+                strategy, confidence = decided[(page, name)]
+                proposals.append((nodeid, page, name, strategy, confidence))
+                continue
+            module = read_locator_module(work_dir / "locators" / f"{page}_locators.py")
+            locator = _locator_from(page, name, (module or {}).get(name))
+            dom = self._read_dom(config, str(record.get("dom", "")))
+            if locator is None or dom is None:
+                _log.info("cannot heal %s: locator or DOM snapshot unavailable", nodeid)
+                continue
+            baseline = self._baseline(locator) if self._baseline else None
+            summary.heal_attempts += 1
+            result = self._healer.heal(
+                FailureContext(
+                    step_ref=f"{nodeid}#{locator.loc_id}",
+                    action="locate",
+                    locator=locator,
+                    error_type=str(record.get("error_type", "")),
+                    error_message=str(record.get("error_text", "")),
+                    dom_html=dom,
+                    baseline=baseline,
+                )
+            )
+            if result.status is HealStatus.HEALED and result.strategy is not None:
+                decided[(page, name)] = (result.strategy, result.confidence)
+                proposals.append((nodeid, page, name, result.strategy, result.confidence))
+        if not proposals:
+            return None
+
+        healed_dir = config.evidence_dir / "healed_scripts"
+        if work_dir == config.scripts_dir:
+            shutil.rmtree(healed_dir, ignore_errors=True)
+            shutil.copytree(
+                config.scripts_dir,
+                healed_dir,
+                ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"),
+            )
+        for nodeid, page, name, strategy, confidence in proposals:
+            self._patch(healed_dir, page, name, strategy)
+            notes.setdefault(nodeid, []).append(
+                f"healed {page}.{name} -> {strategy.kind}={strategy.value} "
+                f"(confidence {confidence:.2f}, proposed, needs approval)"
+            )
+        return healed_dir, sorted({nodeid for nodeid, *_ in proposals})
+
+    @staticmethod
+    def _read_dom(config: RunConfig, name: str) -> str | None:
+        if not name or Path(name).name != name:
+            return None
+        try:
+            return (config.evidence_dir / name).read_text(encoding="utf-8")
+        except OSError:
+            return None
+
+    @staticmethod
+    def _patch(healed_dir: Path, page: str, name: str, strategy: LocatorStrategy) -> None:
+        """Make ``strategy`` the primary locator of ``name`` in the temporary copy only."""
+        path = healed_dir / "locators" / f"{page}_locators.py"
+        module = read_locator_module(path)
+        if module is None or name not in module:
+            return
+        current = module[name]
+        new = (strategy.kind, strategy.value)
+        fallbacks = current.get("fallbacks", [])
+        old = [current["primary"], *(fallbacks if isinstance(fallbacks, list) else [])]
+        current["primary"] = new
+        current["fallbacks"] = [pair for pair in old if tuple(pair) != new]
+        path.write_text(
+            f'"""Locator repository for {page!r}: healed copy, one run, needs approval."""\n\n'
+            f"LOCATORS = {pprint.pformat(module, sort_dicts=False)}\n",
+            encoding="utf-8",
+        )
+
     # ------------------------------------------------------------------ pytest
 
-    def _run_pytest(
-        self, config: RunConfig, targets: list[str], attempt: int, summary: RunSummary
-    ) -> None:
+    def _run_pytest(self, config: RunConfig, cwd: Path, targets: list[str], attempt: int) -> None:
         evidence = config.evidence_dir
         command = [
             self._python,
@@ -215,7 +409,7 @@ class ExecutionEngine:
             "-c",
             str(evidence / "pytest_engine.ini"),
             "--rootdir",
-            str(config.scripts_dir),
+            str(cwd),
             "-q",
             "--no-header",
             "--base-url",
@@ -247,7 +441,7 @@ class ExecutionEngine:
         try:
             done = subprocess.run(  # noqa: S603 - fixed argument list, no shell
                 command,
-                cwd=config.scripts_dir,
+                cwd=cwd,
                 env=env,
                 capture_output=True,
                 text=True,

@@ -1,6 +1,7 @@
 """Self-Healing Engine (FR-22 to FR-26)."""
 
 from aitaf.healing.approval import approve_healing_event, update_locator_from_event
+from aitaf.healing.baseline import BaselineSnapshots
 from aitaf.healing.classify import classify_failure
 from aitaf.healing.dom import Dom, DomElement, parse_dom, role_of, signature_of
 from aitaf.healing.engine import HealingConfig, SelfHealingEngine
@@ -15,6 +16,7 @@ from aitaf.healing.validate import Validation, validate_candidate
 __all__ = [
     "COMPONENT",
     "WEIGHTS",
+    "BaselineSnapshots",
     "Dom",
     "DomElement",
     "HealingConfig",
