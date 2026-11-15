@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 
 from aitaf.core.errors import PersistenceError
-from aitaf.core.models import LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import AnalyzedRequirement, LlmAudit, Run, RunStatus, TestResult
 
 MIGRATIONS: tuple[str, ...] = (
     """
@@ -48,6 +48,15 @@ MIGRATIONS: tuple[str, ...] = (
         status TEXT NOT NULL,
         mock INTEGER NOT NULL,
         created_at TEXT NOT NULL
+    );
+    """,
+    """
+    CREATE TABLE requirements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        req_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, req_id)
     );
     """,
 )
@@ -186,6 +195,19 @@ class SqliteRepository:
             LlmAudit(**{**dict(row), "mock": bool(row["mock"]), "created_at": row["created_at"]})
             for row in rows
         ]
+
+    def add_requirement(self, run_id: str, requirement: AnalyzedRequirement) -> None:
+        self._write(
+            "INSERT INTO requirements (run_id, req_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, req_id) DO UPDATE SET record = excluded.record",
+            (run_id, requirement.req_id, requirement.model_dump_json()),
+        )
+
+    def list_requirements(self, run_id: str) -> list[AnalyzedRequirement]:
+        rows = self._conn.execute(
+            "SELECT record FROM requirements WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [AnalyzedRequirement.model_validate_json(row["record"]) for row in rows]
 
     def close(self) -> None:
         self._conn.close()

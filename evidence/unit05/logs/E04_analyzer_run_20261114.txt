@@ -1,0 +1,21 @@
+$ python -m aitaf analyze --input data/requirements/sample_requirements.md --db demo.db
+run 2db8c0b9de854d6790ab4de826c92f9c (mock-generated output, review before use)
+READY    REQ-3F03EBEF  High    sample_requirements.md#1
+READY    REQ-2A794EAB  High    sample_requirements.md#2
+READY    REQ-E877946E  Medium  sample_requirements.md#3
+READY    REQ-A7571042  High    sample_requirements.md#5
+FLAGGED  REQ-850D9253  Low     sample_requirements.md#4
+           - vague wording: 'quickly'
+FLAGGED  REQ-CBCE96C5  High    sample_requirements.md#6
+           - vague wording: 'easy'
+           - no expected outcome stated
+FLAGGED  REQ-E3454027  High    sample_requirements.md#7
+           - possible contradiction: both 'always' and 'never'
+summary: 4 ready, 3 flagged, 0 rejected
+
+$ python -m aitaf analyze --input demo_injection.md  (one injected requirement, one clean)
+{"ts": "2026-11-15T01:41:17.904218+00:00", "level": "WARNING", "logger": "aitaf.core.masking.validation", "run_id": "84490d73501d4772be4307f6000ff6f1", "msg": "rejected inj.md#1: prompt-injection pattern override-instructions"}
+run 84490d73501d4772be4307f6000ff6f1 (mock-generated output, review before use)
+READY    REQ-4EE8FDDF  Medium  inj.md#2
+REJECTED inj.md#1: possible prompt injection (override-instructions)
+summary: 1 ready, 0 flagged, 1 rejected

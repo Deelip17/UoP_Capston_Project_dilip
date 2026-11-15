@@ -69,7 +69,7 @@ def test_valid_config_reaches_unimplemented_stage(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     path = write_config(tmp_path, {"llm_provider": "mock", "llm_call_cap": 5})
-    assert main(["analyze", "--config", str(path)]) == 3
+    assert main(["generate", "--config", str(path)]) == 3
     assert "not implemented" in capsys.readouterr().err
 
 
@@ -117,3 +117,49 @@ def test_config_file_must_hold_an_object(tmp_path: Path) -> None:
 def test_unreadable_config_path_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(ConfigError, match="cannot read"):
         Settings.from_file(tmp_path, env={})
+
+
+DATA = Path(__file__).resolve().parents[2] / "data" / "requirements"
+
+
+@pytest.mark.blackbox
+def test_analyze_command_runs_on_sample_and_reports(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    code = main(["analyze", "--input", str(DATA / "sample_requirements.md"), "--db", str(db)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "4 ready, 3 flagged, 0 rejected" in out
+    assert "mock-generated" in out
+    assert db.exists()
+
+
+@pytest.mark.blackbox
+def test_analyze_rejects_unsupported_input_with_clear_message(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bad = tmp_path / "reqs.docx"
+    bad.write_bytes(b"x")
+    assert main(["analyze", "--input", str(bad), "--db", str(tmp_path / "a.db")]) == 1
+    assert ".md" in capsys.readouterr().err
+
+
+@pytest.mark.blackbox
+def test_analyze_requires_input(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exit_info:
+        main(["analyze"])
+    assert exit_info.value.code == 2
+
+
+@pytest.mark.whitebox
+def test_analyze_refuses_openai_provider_until_implemented(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-placeholder-value")
+    code = main(
+        ["analyze", "--input", str(DATA / "sample_plain.txt"), "--db", str(tmp_path / "a.db")]
+    )
+    assert code == 2
+    assert "mock" in capsys.readouterr().err

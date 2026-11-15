@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Protocol
 
-from aitaf.core.models import LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import AnalyzedRequirement, LlmAudit, Run, RunStatus, TestResult
 
 
 class Repository(Protocol):
@@ -40,6 +40,12 @@ class Repository(Protocol):
 
     def list_audits(self, run_id: str) -> list[LlmAudit]:
         """Return the run's audit records in insertion order."""
+
+    def add_requirement(self, run_id: str, requirement: AnalyzedRequirement) -> None:
+        """Store (or replace) an analysed requirement for the run. Unknown run raises."""
+
+    def list_requirements(self, run_id: str) -> list[AnalyzedRequirement]:
+        """Return the run's analysed requirements in insertion order."""
 
     def close(self) -> None:
         """Release resources."""

@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from aitaf.core.errors import PersistenceError
-from aitaf.core.models import LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import AnalyzedRequirement, LlmAudit, Run, RunStatus, TestResult
 
 
 class InMemoryRepository:
@@ -15,6 +15,7 @@ class InMemoryRepository:
         self._runs: dict[str, Run] = {}
         self._results: list[TestResult] = []
         self._audits: list[LlmAudit] = []
+        self._requirements: dict[tuple[str, str], AnalyzedRequirement] = {}
 
     def _require_run(self, run_id: str) -> None:
         if run_id not in self._runs:
@@ -53,6 +54,13 @@ class InMemoryRepository:
 
     def list_audits(self, run_id: str) -> list[LlmAudit]:
         return [a for a in self._audits if a.run_id == run_id]
+
+    def add_requirement(self, run_id: str, requirement: AnalyzedRequirement) -> None:
+        self._require_run(run_id)
+        self._requirements[(run_id, requirement.req_id)] = requirement
+
+    def list_requirements(self, run_id: str) -> list[AnalyzedRequirement]:
+        return [r for (rid, _), r in self._requirements.items() if rid == run_id]
 
     def close(self) -> None:
         return None

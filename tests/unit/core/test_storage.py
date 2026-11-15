@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 from aitaf.core.errors import PersistenceError
-from aitaf.core.models import LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import AnalyzedRequirement, LlmAudit, RiskLevel, Run, RunStatus, TestResult
 from aitaf.core.storage import InMemoryRepository, Repository, SqliteRepository
 from aitaf.core.storage.sqlite import LATEST_SCHEMA_VERSION
 
@@ -59,6 +59,21 @@ def make_audit(call_id: str = "call-1", run_id: str = "run-1") -> LlmAudit:
         status="ok",
         mock=True,
         created_at=NOW,
+    )
+
+
+def make_requirement(req_id: str = "REQ-1") -> AnalyzedRequirement:
+    return AnalyzedRequirement(
+        req_id=req_id,
+        source_ref="f.md#1",
+        content_hash="h",
+        actors=["user"],
+        actions=["log in"],
+        outcomes=["logged in"],
+        risk=RiskLevel.HIGH,
+        risk_rationale="why",
+        ambiguity_flags=["vague"],
+        prompt_version="ra-v1",
     )
 
 
@@ -229,3 +244,26 @@ def test_killed_process_leaves_valid_database_and_incomplete_run(tmp_path: Path)
     run = repo.get_run("killed")
     assert run is not None and run.status is RunStatus.INCOMPLETE
     repo.close()
+
+
+@pytest.mark.blackbox
+def test_requirements_are_stored_per_run(repo: Repository) -> None:
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_requirement("run-1", make_requirement("REQ-1"))
+    repo.add_requirement("run-2", make_requirement("REQ-2"))
+    assert repo.list_requirements("run-1") == [make_requirement("REQ-1")]
+
+
+@pytest.mark.blackbox
+def test_adding_the_same_requirement_twice_keeps_one(repo: Repository) -> None:
+    repo.create_run(make_run())
+    repo.add_requirement("run-1", make_requirement())
+    repo.add_requirement("run-1", make_requirement())
+    assert len(repo.list_requirements("run-1")) == 1
+
+
+@pytest.mark.blackbox
+def test_requirement_for_unknown_run_rejected(repo: Repository) -> None:
+    with pytest.raises(PersistenceError):
+        repo.add_requirement("missing", make_requirement())

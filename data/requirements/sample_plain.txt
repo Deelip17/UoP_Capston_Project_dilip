@@ -1,0 +1,3 @@
+The system shall show the product price including tax.
+
+The system shall let a customer remove an item from the cart.
