@@ -1,0 +1,18 @@
+# Early metrics sample (mock provider, illustrative prices of $1.00 and $2.00 per 1,000 tokens).
+# The real evaluation dataset is produced in Unit 6.
+$ python -m aitaf analyze --input data/requirements/sample_requirements.md --db demo.db
+(exit code 0)
+$ python -m aitaf generate --db demo.db
+(exit code 0)
+$ python -m aitaf script --db demo.db --out-dir generated_tests
+(exit code 0)
+$ python -m aitaf metrics --db demo.db
+run <id>
+component             operation              count errors  median_ms tokens_in tokens_out  cost_usd
+llm_gateway           requirement_analyzer       7      0       2.25       752        260    1.2720
+llm_gateway           script_generator           1      0       6.87       255         70    0.3950
+llm_gateway           test_case_generator        4      0       2.63       706       1018    2.7420
+requirement_analyzer  analyze                    1      0      47.41         0          0    0.0000
+script_generator      generate                   1      0      54.52         0          0    0.0000
+test_case_generator   generate                   1      0     116.08         0          0    0.0000
+total cost: $4.4090

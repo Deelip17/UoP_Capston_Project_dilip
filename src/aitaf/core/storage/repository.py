@@ -16,6 +16,7 @@ from aitaf.core.models import (
     HealingEvent,
     LlmAudit,
     Locator,
+    MetricSample,
     ReviewStatus,
     Run,
     RunStatus,
@@ -101,6 +102,15 @@ class Repository(Protocol):
 
     def list_healing_events(self, run_id: str) -> list[HealingEvent]:
         """Return the healing events of the run in insertion order."""
+
+    def add_metric(self, run_id: str, sample: MetricSample) -> None:
+        """Store a metric sample. Unknown run raises PersistenceError."""
+
+    def list_metrics(self, run_id: str) -> list[MetricSample]:
+        """Return the run's metric samples in insertion order."""
+
+    def latest_run_with_metrics(self) -> str | None:
+        """Run ID of the most recent run that stored metric samples, or None."""
 
     def close(self) -> None:
         """Release resources."""

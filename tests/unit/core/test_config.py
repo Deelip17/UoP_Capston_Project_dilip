@@ -74,3 +74,32 @@ def test_from_env_ignores_unlisted_env_vars() -> None:
     s = Settings.from_env(env={"UNRELATED": "value", "LLM_CALL_CAP": "50"})
     assert s.llm_call_cap == 50
     assert s.llm_provider == "mock"
+
+
+@pytest.mark.blackbox
+def test_prices_default_to_zero_so_mock_runs_cost_nothing() -> None:
+    settings = Settings.from_env({})
+    assert settings.llm_price_in_per_1k == 0.0 and settings.llm_price_out_per_1k == 0.0
+
+
+@pytest.mark.blackbox
+def test_prices_are_read_from_the_environment() -> None:
+    settings = Settings.from_env({"LLM_PRICE_IN_PER_1K": "0.25", "LLM_PRICE_OUT_PER_1K": "1.5"})
+    assert (settings.llm_price_in_per_1k, settings.llm_price_out_per_1k) == (0.25, 1.5)
+
+
+@pytest.mark.blackbox
+@pytest.mark.parametrize("bad", ["abc", "-1", "nan", "inf"])
+def test_invalid_prices_are_rejected(bad: str) -> None:
+    with pytest.raises(ConfigError, match="LLM_PRICE_IN_PER_1K"):
+        Settings.from_env({"LLM_PRICE_IN_PER_1K": bad})
+
+
+@pytest.mark.whitebox
+def test_prices_can_come_from_a_config_file_and_the_environment_wins() -> None:
+    from_file = Settings.from_file_data({"llm_price_in_per_1k": 0.4}, env={})
+    assert from_file.llm_price_in_per_1k == 0.4
+    overridden = Settings.from_file_data(
+        {"llm_price_in_per_1k": 0.4}, env={"LLM_PRICE_IN_PER_1K": "0.9"}
+    )
+    assert overridden.llm_price_in_per_1k == 0.9

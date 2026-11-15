@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aitaf"
-version = "0.0.1"
 description = "AI-powered test automation framework (MSIT capstone prototype)"
 readme = "README.md"
 requires-python = ">=3.12"
-dynamic = ["dependencies"]
+dynamic = ["version", "dependencies"]
 
 [project.scripts]
 aitaf = "aitaf.cli:main"
 
 [tool.setuptools.dynamic]
+version = { attr = "aitaf.__version__" }
 dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools.packages.find]

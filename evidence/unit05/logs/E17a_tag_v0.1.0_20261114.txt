@@ -1,0 +1,17 @@
+$ git for-each-ref refs/tags/v0.1.0
+tag: v0.1.0
+object type: tag
+tagger: Deelip17
+date: 2026-11-14
+subject: v0.1.0: core, persistence, LLM gateway, masking layer and Requirement Analyzer (Unit 5 slices 1-3)
+commit: f31a76d
+
+$ git log --oneline v0.1.0 -8
+f31a76d feat(analyzer): add Data Masking and Validation Layer and Requirement Analyzer [slice 3]
+0a375f5 test(cli): isolate CLI tests from framework environment variables
+f1f5eb4 feat(core): add SQLite persistence, LLM gateway with mock provider, and CLI skeleton [slice 2]
+4d2073d feat(core): add thin core (config, logging, errors, models) with pytest markers [slice 1]
+7283c13 chore: merge feature/ci-workflow into develop (CI pipeline, Unit 4 evidence, ADR-025 alignment)
+0f9614f docs(evidence): add Unit 4 CI evidence and align Unit 3 screenshot names to the capture date
+a946471 docs(cicd): record CI run results and verified official tool sources
+46c0aac docs(architecture): align design documents with tooling decision ADR-025

@@ -20,6 +20,7 @@ from aitaf.core.errors import LlmValidationError
 from aitaf.core.llm import LlmGateway, LlmRequest
 from aitaf.core.logging import current_run_id, get_logger
 from aitaf.core.masking import find_injection, mask, validate_llm_json
+from aitaf.core.metrics import Metrics, timed
 from aitaf.core.models import AnalyzedRequirement, TestCase, TestData, TestScenario
 from aitaf.core.storage import Repository
 from aitaf.generator.prompts import PROMPT_VERSION, build_prompt, build_reask_prompt
@@ -106,11 +107,20 @@ class TestCaseGenerator:
 
     __test__ = False
 
-    def __init__(self, gateway: LlmGateway, repo: Repository) -> None:
+    def __init__(
+        self, gateway: LlmGateway, repo: Repository, metrics: Metrics | None = None
+    ) -> None:
         self._gateway = gateway
         self._repo = repo
+        self._metrics = metrics
 
     def generate(self, requirements: list[AnalyzedRequirement]) -> GenerationResult:
+        with timed(self._metrics, COMPONENT, "generate") as probe:
+            result = self._generate(requirements)
+            probe.detail = f"{len(result.cases)} cases, {result.duplicates_removed} duplicates"
+            return result
+
+    def _generate(self, requirements: list[AnalyzedRequirement]) -> GenerationResult:
         result = GenerationResult()
         data_by_case: dict[str, TestData] = {}
         for req in requirements:

@@ -1,0 +1,119 @@
+name: Release
+
+# Publishes a GitHub Release when a version tag is pushed (ADR-033: v* tags on
+# develop during Units 5 and 6, v1.0.0 on main at final submission).
+# Design: docs/architecture/08_CICD_DESIGN.md. Tests never call the live LLM API
+# (ADR-026) and no secrets other than the built-in GITHUB_TOKEN are used.
+
+on:
+  push:
+    tags: ["v*"]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+  LLM_PROVIDER: mock
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m pip install -e . --no-deps
+      - name: Tag matches the package version
+        run: python -m aitaf.quality.release check "$GITHUB_REF_NAME"
+      - name: Release notes exist in the changelog
+        run: python -m aitaf.quality.release notes CHANGELOG.md "$GITHUB_REF_NAME" > /dev/null
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Format check (ruff)
+        run: ruff format --check .
+      - name: Type check (mypy)
+        run: mypy src
+      - name: Import rules (NFR-17)
+        run: python -m aitaf.quality.import_rules
+      - name: Unit tests with coverage
+        run: >
+          pytest -n auto
+          --cov=aitaf
+          --cov-report=term-missing
+          --cov-report=xml:reports/coverage.xml
+          --cov-report=html:reports/htmlcov
+          --cov-fail-under=80
+          --junitxml=reports/junit.xml
+      - name: Dependency vulnerability audit (pip-audit)
+        run: pip-audit -r requirements.txt -f json -o reports/pip-audit.json
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-reports
+          path: reports/
+          retention-days: 90
+          if-no-files-found: warn
+
+  release:
+    name: release
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install the package
+        run: python -m pip install -e . --no-deps
+      - name: Download verification reports
+        uses: actions/download-artifact@v4
+        with:
+          name: release-reports
+          path: reports
+      - name: Build wheel
+        run: python -m pip wheel . --no-deps --wheel-dir dist
+      - name: Build evidence bundle
+        run: python -m zipfile -c "aitaf-${GITHUB_REF_NAME}-evidence.zip" evidence reports
+      - name: Write release notes
+        run: |
+          python -m aitaf.quality.release notes CHANGELOG.md "$GITHUB_REF_NAME" > release-notes.md
+          {
+            echo
+            echo "Attached: the built wheel and an evidence bundle (evidence folder plus"
+            echo "the coverage, test and dependency-audit reports of this release)."
+          } >> release-notes.md
+      - name: Create or update the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          flags=""
+          case "$GITHUB_REF_NAME" in *-*) flags="--prerelease" ;; esac
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.whl "aitaf-${GITHUB_REF_NAME}-evidence.zip" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.whl "aitaf-${GITHUB_REF_NAME}-evidence.zip" \
+              --title "aitaf ${GITHUB_REF_NAME}" \
+              --notes-file release-notes.md \
+              --verify-tag $flags
+          fi

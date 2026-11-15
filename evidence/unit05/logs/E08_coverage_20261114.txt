@@ -1,0 +1,70 @@
+$ pytest --cov=aitaf --cov-report=term-missing --cov-report=html:reports/htmlcov --cov-fail-under=80
+coverage: platform win32, python 3.12.10-final-0 _______________
+
+Name                                    Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------------------
+src\aitaf\__init__.py                       1      0      0      0   100%
+src\aitaf\__main__.py                       3      3      0      0     0%   3-7
+src\aitaf\analyzer\__init__.py              4      0      0      0   100%
+src\aitaf\analyzer\analyzer.py             96      0     14      0   100%
+src\aitaf\analyzer\intake.py               58      1     18      1    97%   83
+src\aitaf\analyzer\mock_responder.py       26      0      2      0   100%
+src\aitaf\analyzer\prompts.py              10      0      0      0   100%
+src\aitaf\cli.py                          259     10     64      5    95%   195, 232, 268-270, 304-305, 421-422, 463
+src\aitaf\core\__init__.py                  0      0      0      0   100%
+src\aitaf\core\config.py                   69      0     16      0   100%
+src\aitaf\core\errors.py                   10      0      0      0   100%
+src\aitaf\core\healing.py                  40      0      0      0   100%
+src\aitaf\core\llm\__init__.py              4      0      0      0   100%
+src\aitaf\core\llm\gateway.py              51      0      6      0   100%
+src\aitaf\core\llm\mock.py                 19      0      4      0   100%
+src\aitaf\core\llm\provider.py             18      0      0      0   100%
+src\aitaf\core\llm\util.py                  4      0      0      0   100%
+src\aitaf\core\logging.py                  30      1      4      1    94%   49
+src\aitaf\core\masking\__init__.py          3      0      0      0   100%
+src\aitaf\core\masking\masking.py          37      0      8      0   100%
+src\aitaf\core\masking\validation.py       50      0     14      0   100%
+src\aitaf\core\metrics.py                  62      0      6      0   100%
+src\aitaf\core\models.py                  155      0     10      0   100%
+src\aitaf\core\storage\__init__.py          4      0      0      0   100%
+src\aitaf\core\storage\memory.py           95      0      8      0   100%
+src\aitaf\core\storage\repository.py       33      0      0      0   100%
+src\aitaf\core\storage\sqlite.py          120      5     16      0    96%   169-171, 178-179
+src\aitaf\generator\__init__.py             5      0      0      0   100%
+src\aitaf\generator\export.py             114      4     40      2    96%   98-99, 117, 123
+src\aitaf\generator\generator.py          145      0     34      0   100%
+src\aitaf\generator\mock_responder.py      32      0      4      1    97%   30->28
+src\aitaf\generator\prompts.py             10      0      0      0   100%
+src\aitaf\generator\review.py              16      0      4      0   100%
+src\aitaf\generator\synthetic.py           14      2      8      2    82%   23, 25
+src\aitaf\healing\__init__.py              12      0      0      0   100%
+src\aitaf\healing\approval.py              32      0     10      0   100%
+src\aitaf\healing\classify.py              16      0      8      0   100%
+src\aitaf\healing\dom.py                  123      0     46      1    99%   154->exit
+src\aitaf\healing\engine.py               157      0     36      0   100%
+src\aitaf\healing\llm_step.py              50      0      8      3    95%   90->92, 92->94, 95->97
+src\aitaf\healing\locators.py              22      0      8      2    93%   34->38, 40->42
+src\aitaf\healing\metrics.py               16      0      8      0   100%
+src\aitaf\healing\mock_responder.py        33      0     12      1    98%   36->30
+src\aitaf\healing\resolver.py             158      1     86      4    98%   62->51, 78, 144->141, 146->137
+src\aitaf\healing\signature.py             52      0     38      5    94%   28->27, 41->exit, 42->exit, 61->52, 67->52
+src\aitaf\healing\similarity.py            61      0     22      0   100%
+src\aitaf\healing\validate.py              54      0     30      0   100%
+src\aitaf\quality\__init__.py               0      0      0      0   100%
+src\aitaf\quality\import_rules.py          82      2     34      2    97%   55, 135
+src\aitaf\quality\release.py               46      1     10      1    96%   65
+src\aitaf\scriptgen\__init__.py             5      0      0      0   100%
+src\aitaf\scriptgen\files.py               11      0      2      0   100%
+src\aitaf\scriptgen\generator.py          132      2     36      2    98%   131-132, 210->209
+src\aitaf\scriptgen\mock_responder.py      20      0      4      1    96%   26->28
+src\aitaf\scriptgen\plan.py                43      2     12      2    93%   57, 70
+src\aitaf\scriptgen\prompts.py             10      0      0      0   100%
+src\aitaf\scriptgen\templates.py           40      0      4      0   100%
+src\aitaf\scriptgen\validator.py           83      2     56      3    96%   137, 144, 163->126
+-----------------------------------------------------------------------------------
+TOTAL                                    2855     36    750     39    98%
+Coverage HTML written to dir reports/htmlcov
+Coverage XML written to file reports/coverage.xml
+Required test coverage of 80% reached. Total coverage: 97.86%
+552 passed in 36.54s
+HTML report: reports/htmlcov/index.html

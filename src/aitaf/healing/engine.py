@@ -30,6 +30,7 @@ from aitaf.core.healing import (
 from aitaf.core.llm import LlmGateway, LlmRequest
 from aitaf.core.logging import current_run_id, get_logger
 from aitaf.core.masking import validate_llm_json
+from aitaf.core.metrics import Metrics, timed
 from aitaf.core.models import HealingEvent, LocatorStrategy
 from aitaf.core.storage import Repository
 from aitaf.healing import llm_step
@@ -80,14 +81,22 @@ class SelfHealingEngine:
         repo: Repository,
         config: HealingConfig | None = None,
         gateway: LlmGateway | None = None,
+        metrics: Metrics | None = None,
     ) -> None:
         self._repo = repo
         self._config = config or HealingConfig()
         self._gateway = gateway
+        self._metrics = metrics
         self._step_attempts: Counter[str] = Counter()
         self._run_attempts = 0
 
     def heal(self, ctx: FailureContext) -> HealResult:
+        with timed(self._metrics, "self_healing", "heal") as probe:
+            result = self._heal(ctx)
+            probe.detail = result.status.value
+            return result
+
+    def _heal(self, ctx: FailureContext) -> HealResult:
         run_id = current_run_id()
         if not run_id:
             raise PolicyError("no run ID is set; start a run before healing")

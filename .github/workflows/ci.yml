@@ -43,6 +43,10 @@ jobs:
         run: ruff format --check .
       - name: Type check (mypy)
         run: mypy src
+      - name: Import rules (NFR-17)
+        run: python -m aitaf.quality.import_rules
+        env:
+          PYTHONPATH: src
 
   test:
     name: test (${{ matrix.os }})

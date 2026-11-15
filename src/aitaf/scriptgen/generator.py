@@ -18,6 +18,7 @@ from aitaf.core.errors import LlmValidationError, PolicyError
 from aitaf.core.llm import LlmGateway, LlmRequest
 from aitaf.core.logging import current_run_id, get_logger
 from aitaf.core.masking import find_injection, mask, validate_llm_json
+from aitaf.core.metrics import Metrics, timed
 from aitaf.core.models import Locator, LocatorStrategy, Script, TestCase, TestData
 from aitaf.core.storage import Repository
 from aitaf.scriptgen import templates
@@ -84,6 +85,7 @@ class ScriptGenerator:
         base_url: str,
         allowed_hosts: frozenset[str],
         output_dir: Path,
+        metrics: Metrics | None = None,
     ) -> None:
         host = (urlparse(base_url).hostname or "").lower()
         hosts = frozenset(h.lower() for h in allowed_hosts)
@@ -97,9 +99,18 @@ class ScriptGenerator:
         self._base_url = base_url
         self._hosts = hosts
         self._out = Path(output_dir)
+        self._metrics = metrics
 
     def generate(
         self, cases: list[TestCase], test_data: list[TestData] | None = None
+    ) -> ScriptGenerationResult:
+        with timed(self._metrics, COMPONENT, "generate") as probe:
+            result = self._generate(cases, test_data)
+            probe.detail = f"{len(result.scripts)} scripts, {len(result.rejected)} rejected"
+            return result
+
+    def _generate(
+        self, cases: list[TestCase], test_data: list[TestData] | None
     ) -> ScriptGenerationResult:
         result = ScriptGenerationResult()
         data = {d.tc_id: d for d in test_data or []}

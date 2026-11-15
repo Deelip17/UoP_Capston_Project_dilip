@@ -18,6 +18,7 @@ from aitaf.core.models import (
     HealingEvent,
     LlmAudit,
     Locator,
+    MetricSample,
     ReviewStatus,
     Run,
     RunStatus,
@@ -119,6 +120,21 @@ MIGRATIONS: tuple[str, ...] = (
         event_id TEXT NOT NULL,
         record TEXT NOT NULL,
         UNIQUE (run_id, event_id)
+    );
+    """,
+    """
+    CREATE TABLE metric_samples (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        component TEXT NOT NULL,
+        operation TEXT NOT NULL,
+        outcome TEXT NOT NULL,
+        detail TEXT NOT NULL,
+        duration_ms REAL NOT NULL,
+        tokens_in INTEGER NOT NULL,
+        tokens_out INTEGER NOT NULL,
+        cost_usd REAL NOT NULL,
+        created_at TEXT NOT NULL
     );
     """,
 )
@@ -372,6 +388,39 @@ class SqliteRepository:
             "SELECT record FROM healing_events WHERE run_id = ? ORDER BY id", (run_id,)
         ).fetchall()
         return [HealingEvent.model_validate_json(row["record"]) for row in rows]
+
+    def add_metric(self, run_id: str, sample: MetricSample) -> None:
+        self._write(
+            "INSERT INTO metric_samples (run_id, component, operation, outcome, detail,"
+            " duration_ms, tokens_in, tokens_out, cost_usd, created_at)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                run_id,
+                sample.component,
+                sample.operation,
+                sample.outcome,
+                sample.detail,
+                sample.duration_ms,
+                sample.tokens_in,
+                sample.tokens_out,
+                sample.cost_usd,
+                sample.created_at.isoformat(),
+            ),
+        )
+
+    def list_metrics(self, run_id: str) -> list[MetricSample]:
+        rows = self._conn.execute(
+            "SELECT run_id, component, operation, outcome, detail, duration_ms, tokens_in,"
+            " tokens_out, cost_usd, created_at FROM metric_samples WHERE run_id = ? ORDER BY id",
+            (run_id,),
+        ).fetchall()
+        return [MetricSample(**dict(row)) for row in rows]
+
+    def latest_run_with_metrics(self) -> str | None:
+        row = self._conn.execute(
+            "SELECT run_id FROM metric_samples ORDER BY id DESC LIMIT 1"
+        ).fetchone()
+        return str(row["run_id"]) if row else None
 
     def close(self) -> None:
         self._conn.close()

@@ -13,6 +13,7 @@ storage), ADR-026 (budget).
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -26,7 +27,20 @@ _FILE_KEYS = {
     "llm_provider": "LLM_PROVIDER",
     "llm_call_cap": "LLM_CALL_CAP",
     "log_level": "LOG_LEVEL",
+    "llm_price_in_per_1k": "LLM_PRICE_IN_PER_1K",
+    "llm_price_out_per_1k": "LLM_PRICE_OUT_PER_1K",
 }
+
+
+def _price(source: dict[str, str], name: str) -> float:
+    raw = source.get(name, "0")
+    try:
+        value = float(raw)
+    except ValueError as exc:
+        raise ConfigError(f"{name} must be a non-negative number, got {raw!r}") from exc
+    if not math.isfinite(value) or value < 0:
+        raise ConfigError(f"{name} must be a non-negative number, got {raw!r}")
+    return value
 
 
 class Settings(BaseModel):
@@ -38,6 +52,8 @@ class Settings(BaseModel):
     openai_api_key: SecretStr | None = Field(default=None)
     llm_call_cap: int = Field(default=100, ge=0)
     log_level: str = Field(default="INFO")
+    llm_price_in_per_1k: float = Field(default=0.0, ge=0.0, allow_inf_nan=False)
+    llm_price_out_per_1k: float = Field(default=0.0, ge=0.0, allow_inf_nan=False)
 
     @classmethod
     def from_env(cls, env: dict[str, str] | None = None) -> Settings:
@@ -65,11 +81,17 @@ class Settings(BaseModel):
                 f"LLM_CALL_CAP must be a non-negative integer, got {cap_str!r}"
             ) from exc
 
+        prices = {
+            name: _price(source, name) for name in ("LLM_PRICE_IN_PER_1K", "LLM_PRICE_OUT_PER_1K")
+        }
+
         return cls(
             llm_provider=provider,
             openai_api_key=SecretStr(key_str) if key_str else None,
             llm_call_cap=cap,
             log_level=source.get("LOG_LEVEL", "INFO"),
+            llm_price_in_per_1k=prices["LLM_PRICE_IN_PER_1K"],
+            llm_price_out_per_1k=prices["LLM_PRICE_OUT_PER_1K"],
         )
 
     @classmethod

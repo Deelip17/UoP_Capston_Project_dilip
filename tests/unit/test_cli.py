@@ -418,3 +418,52 @@ def test_heal_command_needs_the_primary_to_resolve_in_the_before_page(
     args[args.index("id=login-button")] = "id=not-on-the-page"
     assert main(args) == 1
     assert "--before" in capsys.readouterr().err
+
+
+@pytest.mark.blackbox
+def test_metrics_command_reports_latency_tokens_and_cost_per_component(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    analyze_sample(db)
+    assert main(["generate", "--db", str(db)]) == 0
+    capsys.readouterr()
+    assert main(["metrics", "--db", str(db)]) == 0
+    out = capsys.readouterr().out
+    for name in ("requirement_analyzer", "test_case_generator", "llm_gateway"):
+        assert name in out
+    assert "median_ms" in out and "tokens_in" in out and "cost_usd" in out
+    assert "total cost" in out
+
+
+@pytest.mark.blackbox
+def test_metrics_command_prices_tokens_from_the_configuration(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    db = tmp_path / "aitaf.db"
+    monkeypatch.setenv("LLM_PRICE_IN_PER_1K", "1.0")
+    monkeypatch.setenv("LLM_PRICE_OUT_PER_1K", "2.0")
+    analyze_sample(db)
+    capsys.readouterr()
+    assert main(["metrics", "--db", str(db)]) == 0
+    out = capsys.readouterr().out
+    assert "total cost: $0.0000" not in out and "total cost: $" in out
+
+
+@pytest.mark.blackbox
+def test_metrics_command_without_data_fails_clearly(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main(["metrics", "--db", str(tmp_path / "empty.db")]) == 1
+    assert "no metrics" in capsys.readouterr().err
+
+
+@pytest.mark.blackbox
+def test_metrics_command_for_an_unknown_run_fails_clearly(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    analyze_sample(db)
+    capsys.readouterr()
+    assert main(["metrics", "--db", str(db), "--run", "nope"]) == 1
+    assert "no metrics" in capsys.readouterr().err

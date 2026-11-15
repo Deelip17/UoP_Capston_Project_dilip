@@ -10,6 +10,7 @@ from aitaf.core.models import (
     HealingEvent,
     LlmAudit,
     Locator,
+    MetricSample,
     ReviewStatus,
     Run,
     RunStatus,
@@ -35,6 +36,7 @@ class InMemoryRepository:
         self._scripts: dict[tuple[str, str], Script] = {}
         self._locators: dict[tuple[str, str], Locator] = {}
         self._healing: dict[tuple[str, str], HealingEvent] = {}
+        self._metrics: list[MetricSample] = []
 
     def _require_run(self, run_id: str) -> None:
         if run_id not in self._runs:
@@ -135,6 +137,16 @@ class InMemoryRepository:
 
     def list_healing_events(self, run_id: str) -> list[HealingEvent]:
         return [e for (rid, _), e in self._healing.items() if rid == run_id]
+
+    def add_metric(self, run_id: str, sample: MetricSample) -> None:
+        self._require_run(run_id)
+        self._metrics.append(sample)
+
+    def list_metrics(self, run_id: str) -> list[MetricSample]:
+        return [m for m in self._metrics if m.run_id == run_id]
+
+    def latest_run_with_metrics(self) -> str | None:
+        return self._metrics[-1].run_id if self._metrics else None
 
     def close(self) -> None:
         return None

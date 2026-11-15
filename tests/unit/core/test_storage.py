@@ -23,6 +23,7 @@ from aitaf.core.models import (
     LlmAudit,
     Locator,
     LocatorStrategy,
+    MetricSample,
     ReviewStatus,
     RiskLevel,
     Run,
@@ -467,3 +468,47 @@ def test_updating_a_healing_event_replaces_it(repo: Repository) -> None:
 def test_healing_event_for_unknown_run_rejected(repo: Repository) -> None:
     with pytest.raises(PersistenceError):
         repo.add_healing_event("missing", make_healing_event())
+
+
+def make_metric(component: str = "requirement_analyzer", run_id: str = "run-1") -> MetricSample:
+    return MetricSample(
+        run_id=run_id,
+        component=component,
+        operation="analyze",
+        outcome="ok",
+        detail="d",
+        duration_ms=12.5,
+        tokens_in=3,
+        tokens_out=4,
+        cost_usd=0.002,
+        created_at=NOW,
+    )
+
+
+@pytest.mark.blackbox
+def test_metric_samples_are_stored_per_run_in_order(repo: Repository) -> None:
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_metric("run-1", make_metric("a"))
+    repo.add_metric("run-1", make_metric("b"))
+    repo.add_metric("run-2", make_metric("c", "run-2"))
+    stored = repo.list_metrics("run-1")
+    assert [m.component for m in stored] == ["a", "b"]
+    assert stored[0] == make_metric("a")
+
+
+@pytest.mark.blackbox
+def test_metric_for_unknown_run_rejected(repo: Repository) -> None:
+    with pytest.raises(PersistenceError):
+        repo.add_metric("missing", make_metric())
+
+
+@pytest.mark.blackbox
+def test_latest_run_with_metrics(repo: Repository) -> None:
+    assert repo.latest_run_with_metrics() is None
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_metric("run-1", make_metric())
+    assert repo.latest_run_with_metrics() == "run-1"
+    repo.add_metric("run-2", make_metric(run_id="run-2"))
+    assert repo.latest_run_with_metrics() == "run-2"

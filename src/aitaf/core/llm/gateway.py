@@ -2,8 +2,9 @@
 
 The gateway enforces the per-run call cap, falls back to a deterministic
 provider when the primary one fails (FR-36) and writes exactly one audit record
-per call (FR-37, NFR-14). Retry with back-off (NFR-06) is added with the OpenAI
-provider; masking (FR-30) is applied by callers before the request is built.
+per call (FR-37, NFR-14). With a metrics recorder it also logs latency, outcome,
+tokens and cost per call (NFR-35). Retry with back-off (NFR-06) is added with the
+OpenAI provider; masking (FR-30) is applied by callers before the request is built.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ from aitaf.core.errors import LlmError, PolicyError
 from aitaf.core.llm.provider import LlmProvider, LlmRequest, LlmResponse
 from aitaf.core.llm.util import input_hash
 from aitaf.core.logging import current_run_id, get_logger
+from aitaf.core.metrics import Metrics, Probe, timed, token_cost
 from aitaf.core.models import LlmAudit
 from aitaf.core.storage import Repository
 
@@ -31,11 +33,17 @@ class LlmGateway:
         repo: Repository,
         call_cap: int,
         fallback: LlmProvider | None = None,
+        metrics: Metrics | None = None,
+        price_in_per_1k: float = 0.0,
+        price_out_per_1k: float = 0.0,
     ) -> None:
         self._provider = provider
         self._repo = repo
         self._call_cap = call_cap
         self._fallback = fallback
+        self._metrics = metrics
+        self._price_in = price_in_per_1k
+        self._price_out = price_out_per_1k
         self._calls = 0
 
     def complete(self, req: LlmRequest) -> LlmResponse:
@@ -46,18 +54,29 @@ class LlmGateway:
             raise PolicyError(f"LLM call cap of {self._call_cap} reached for this run (ADR-026)")
         self._calls += 1
 
-        try:
-            response = self._provider.complete(req)
-            self._audit(req, run_id, self._provider.name, response, "ok")
-            return response
-        except LlmError as exc:
-            if self._fallback is None:
-                self._audit(req, run_id, self._provider.name, None, "error")
-                raise
-            _log.warning("primary LLM provider failed, using fallback: %s", exc)
-            response = self._fallback.complete(req)
-            self._audit(req, run_id, self._fallback.name, response, "fallback")
-            return response
+        with timed(self._metrics, "llm_gateway", req.component) as probe:
+            try:
+                response = self._provider.complete(req)
+                self._audit(req, run_id, self._provider.name, response, "ok")
+                self._note(probe, response, "mock" if response.mock else "live")
+                return response
+            except LlmError as exc:
+                if self._fallback is None:
+                    self._audit(req, run_id, self._provider.name, None, "error")
+                    raise
+                _log.warning("primary LLM provider failed, using fallback: %s", exc)
+                response = self._fallback.complete(req)
+                self._audit(req, run_id, self._fallback.name, response, "fallback")
+                self._note(probe, response, "fallback")
+                return response
+
+    def _note(self, probe: Probe, response: LlmResponse, detail: str) -> None:
+        probe.tokens_in = response.tokens_in
+        probe.tokens_out = response.tokens_out
+        probe.cost_usd = token_cost(
+            response.tokens_in, response.tokens_out, self._price_in, self._price_out
+        )
+        probe.detail = detail
 
     def _audit(
         self,

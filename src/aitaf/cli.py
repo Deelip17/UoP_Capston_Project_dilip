@@ -2,9 +2,9 @@
 
 ``aitaf run`` runs the whole pipeline and one command exists per stage. Every
 command validates the configuration file first and rejects invalid settings with
-a clear message (exit code 2). ``analyze``, ``generate``, ``review``, ``script``
-and ``heal`` (a stand-alone demonstration of the Self-Healing Engine on DOM
-snapshots) are implemented; the other stages report that they are not implemented
+a clear message (exit code 2). ``analyze``, ``generate``, ``review``, ``script``,
+``metrics`` and ``heal`` (a stand-alone demonstration of the Self-Healing Engine on
+DOM snapshots) are implemented; the other stages report that they are not implemented
 yet (exit code 3) until their slices land.
 """
 
@@ -24,6 +24,7 @@ from aitaf.core.errors import AitafError, ConfigError, PersistenceError, Validat
 from aitaf.core.healing import FailureContext, FailureKind, HealStatus
 from aitaf.core.llm import LlmGateway, MockProvider
 from aitaf.core.logging import configure_root, new_run_id, set_run_id
+from aitaf.core.metrics import Metrics, run_cost, summarise
 from aitaf.core.models import Locator, LocatorStrategy, ReviewStatus, Run, RunStatus
 from aitaf.core.storage import Repository, SqliteRepository
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
@@ -117,6 +118,10 @@ def build_parser() -> argparse.ArgumentParser:
     heal.add_argument("--error", default="NoSuchElementException", help="exception type")
     heal.add_argument("--message", default="", help="exception message")
     heal.add_argument("--llm", action="store_true", help="enable the LLM rung (mock provider)")
+    report = commands.add_parser("metrics", help="show latency, token and cost metrics of a run")
+    report.add_argument("--config", help="path to the JSON configuration file")
+    report.add_argument("--db", default="aitaf.db", help="SQLite database path")
+    report.add_argument("--run", help="run ID (default: the latest run with metrics)")
     review = commands.add_parser("review", help="review generated test cases (human gate)")
     review.add_argument("--config", help="path to the JSON configuration file")
     review.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -132,7 +137,7 @@ def _require_mock(settings: Settings) -> None:
         raise ConfigError("only the mock LLM provider is available in this build")
 
 
-def _gateway(settings: Settings, repo: Repository) -> LlmGateway:
+def _gateway(settings: Settings, repo: Repository, metrics: Metrics | None = None) -> LlmGateway:
     provider = MockProvider(
         responders={
             ANALYZER_COMPONENT: mock_extraction_responder,
@@ -141,7 +146,14 @@ def _gateway(settings: Settings, repo: Repository) -> LlmGateway:
             HEALING_COMPONENT: mock_healing_responder,
         }
     )
-    return LlmGateway(provider, repo, call_cap=settings.llm_call_cap)
+    return LlmGateway(
+        provider,
+        repo,
+        call_cap=settings.llm_call_cap,
+        metrics=metrics,
+        price_in_per_1k=settings.llm_price_in_per_1k,
+        price_out_per_1k=settings.llm_price_out_per_1k,
+    )
 
 
 def _analyze(settings: Settings, args: argparse.Namespace) -> int:
@@ -161,9 +173,10 @@ def _analyze(settings: Settings, args: argparse.Namespace) -> int:
             )
         )
         try:
-            result = RequirementAnalyzer(_gateway(settings, repo), repo).analyze(
-                load_requirements(args.input)
-            )
+            metrics = Metrics(repo)
+            result = RequirementAnalyzer(
+                _gateway(settings, repo, metrics), repo, metrics=metrics
+            ).analyze(load_requirements(args.input))
         except AitafError:
             repo.finish_run(run_id, RunStatus.FAILED, datetime.now(UTC))
             raise
@@ -201,7 +214,10 @@ def _generate(settings: Settings, args: argparse.Namespace) -> int:
         run_id = _latest_run(repo)
         set_run_id(run_id)
         requirements = repo.list_requirements(run_id)
-        result = TestCaseGenerator(_gateway(settings, repo), repo).generate(requirements)
+        metrics = Metrics(repo)
+        result = TestCaseGenerator(
+            _gateway(settings, repo, metrics), repo, metrics=metrics
+        ).generate(requirements)
         if args.export_dir:
             export_cases(result.cases, Path(args.export_dir))
     finally:
@@ -231,13 +247,15 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
         set_run_id(run_id)
         cases = cases_for_scripting(repo, run_id, review_mode=not args.no_review)
         hosts = frozenset({"localhost", "127.0.0.1", *args.allow_host})
+        metrics = Metrics(repo)
         generator = ScriptGenerator(
-            _gateway(settings, repo),
+            _gateway(settings, repo, metrics),
             repo,
             framework=args.framework,
             base_url=args.base_url,
             allowed_hosts=hosts,
             output_dir=Path(args.out_dir),
+            metrics=metrics,
         )
         result = generator.generate(cases, repo.list_test_data(run_id))
     finally:
@@ -322,10 +340,12 @@ def _heal(settings: Settings, args: argparse.Namespace) -> int:
                 environment=f"python{platform.python_version()}-{platform.system()}",
             )
         )
+        metrics = Metrics(repo)
         engine = SelfHealingEngine(
             repo,
             HealingConfig(llm_enabled=args.llm),
-            _gateway(settings, repo) if args.llm else None,
+            _gateway(settings, repo, metrics) if args.llm else None,
+            metrics=metrics,
         )
         result = engine.heal(
             FailureContext(
@@ -366,6 +386,30 @@ def _heal(settings: Settings, args: argparse.Namespace) -> int:
     return EXIT_FAILURE
 
 
+def _metrics(args: argparse.Namespace) -> int:
+    repo = SqliteRepository(args.db)
+    try:
+        run_id = args.run or repo.latest_run_with_metrics()
+        samples = repo.list_metrics(run_id) if run_id else []
+    finally:
+        repo.close()
+    if not samples:
+        suffix = f" for run {args.run}" if args.run else ""
+        raise PersistenceError(f"no metrics recorded{suffix}")
+    print(f"run {run_id}")
+    print(
+        f"{'component':<22}{'operation':<22}{'count':>6}{'errors':>7}"
+        f"{'median_ms':>11}{'tokens_in':>10}{'tokens_out':>11}{'cost_usd':>10}"
+    )
+    for row in summarise(samples):
+        print(
+            f"{row.component:<22}{row.operation:<22}{row.count:>6}{row.errors:>7}"
+            f"{row.median_ms:>11.2f}{row.tokens_in:>10}{row.tokens_out:>11}{row.cost_usd:>10.4f}"
+        )
+    print(f"total cost: ${run_cost(samples):.4f}")
+    return EXIT_OK
+
+
 def _review(args: argparse.Namespace) -> int:
     repo = SqliteRepository(args.db)
     try:
@@ -399,6 +443,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "review": lambda: _review(args),
         "script": lambda: _script(settings, args),
         "heal": lambda: _heal(settings, args),
+        "metrics": lambda: _metrics(args),
     }
     handler = handlers.get(args.command)
     if handler is None:

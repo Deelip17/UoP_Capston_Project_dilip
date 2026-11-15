@@ -21,6 +21,7 @@ from aitaf.core.errors import LlmValidationError, ValidationError
 from aitaf.core.llm import LlmGateway, LlmRequest
 from aitaf.core.logging import current_run_id, get_logger
 from aitaf.core.masking import mask, sanitize_requirement_text, validate_llm_json
+from aitaf.core.metrics import Metrics, timed
 from aitaf.core.models import AnalyzedRequirement, RiskLevel
 from aitaf.core.storage import Repository
 
@@ -92,11 +93,20 @@ def _ambiguity_flags(text: str, extraction: ExtractionSchema) -> list[str]:
 class RequirementAnalyzer:
     """Turns raw requirements into structured, risk-rated records."""
 
-    def __init__(self, gateway: LlmGateway, repo: Repository) -> None:
+    def __init__(
+        self, gateway: LlmGateway, repo: Repository, metrics: Metrics | None = None
+    ) -> None:
         self._gateway = gateway
         self._repo = repo
+        self._metrics = metrics
 
     def analyze(self, items: list[RawRequirement]) -> AnalysisResult:
+        with timed(self._metrics, COMPONENT, "analyze") as probe:
+            result = self._analyze(items)
+            probe.detail = f"{len(result.ready)} ready, {len(result.flagged)} flagged"
+            return result
+
+    def _analyze(self, items: list[RawRequirement]) -> AnalysisResult:
         result = AnalysisResult()
         for item in items:
             try:

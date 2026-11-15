@@ -10,7 +10,7 @@ Later slices add further records (``TestScenario``, ``TestData``, ``Script``,
 ``Locator``, ``Artifact``, ``HealingEvent``, ``FailureAnalysis``). So far:
 ``AnalyzedRequirement`` and ``TestCase`` (slice 1), ``Run``, ``TestResult`` and
 ``LlmAudit`` (slice 2), ``TestScenario`` and ``TestData`` (slice 4), ``Script``, ``Locator`` and
-``LocatorStrategy`` (slice 5), ``HealingEvent`` (slice 6).
+``LocatorStrategy`` (slice 5), ``HealingEvent`` (slice 6), ``MetricSample`` (slice 7).
 """
 
 from __future__ import annotations
@@ -239,3 +239,18 @@ class HealingEvent(_BaseRecord):
         if self.approved and self.outcome != "proposed":
             raise ValueError("only a proposed event can be approved")
         return self
+
+
+class MetricSample(_BaseRecord):
+    """One timed operation: latency, outcome, tokens and cost (NFR-35, FR-33)."""
+
+    run_id: str = Field(min_length=1)
+    component: str = Field(min_length=1)
+    operation: str = Field(min_length=1)
+    outcome: Literal["ok", "error"]
+    detail: str = ""
+    duration_ms: float = Field(ge=0.0)
+    tokens_in: int = Field(default=0, ge=0)
+    tokens_out: int = Field(default=0, ge=0)
+    cost_usd: float = Field(default=0.0, ge=0.0)
+    created_at: datetime
