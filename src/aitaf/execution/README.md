@@ -4,10 +4,10 @@ The Execution Engine: it runs generated test scripts with PyTest, keeps the brow
 
 | Module | Purpose | Requirements |
 |---|---|---|
-| `config` | `RunConfig`: scripts directory, base URL, allowed hosts, driver, headless, timeout, retries, workers, checkpoints, run time limit; every value bounded | FR-17, FR-20 |
+| `config` | `RunConfig`: scripts directory, base URL, allowed hosts, driver, headless, timeout, retries, workers, checkpoints, run time limit, healing on or off and its pass limit; every value bounded | FR-17, FR-20 |
 | `allowlist` | `check_base_url`: refuses a run before anything starts if the host is not on the allow-list (parsed host, http and https only, no credentials, no look-alike hosts) | FR-21, NFR-11 |
 | `plugin` | PyTest plugin (`-p aitaf.execution.plugin`): one result line per test, screenshot and DOM snapshot of a failing test (Playwright `page` or Selenium `driver`), evidence names confined to the evidence directory | FR-18, FR-19 |
-| `runner` | `ExecutionEngine.execute`: allow-list check, PyTest subprocess (optional xdist workers, hard time limit, secrets removed from the environment), retries of failing tests, locator failures offered to a healer and reran on a temporary copy of the scripts, masked failure text, results stored with attempts and evidence links | FR-17 to FR-21, FR-22 to FR-26, NFR-04, NFR-11, NFR-23 |
+| `runner` | `ExecutionEngine.execute`: allow-list check, PyTest subprocess (optional xdist workers, hard time limit, secrets removed from the environment), retries of failing tests, locator failures offered to a healer and rerun on a temporary copy of the scripts, masked failure text, results stored with attempts and evidence links | FR-17 to FR-21, FR-22 to FR-26, NFR-04, NFR-11, NFR-23 |
 
 ## Use
 
