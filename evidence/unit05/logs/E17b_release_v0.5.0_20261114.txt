@@ -1,0 +1,33 @@
+# Release v0.5.0 as published (read from the public GitHub API)
+release page: https://github.com/Deelip17/UoP_Capston_Project_dilip/releases/tag/v0.5.0
+tag: v0.5.0   draft: False   prerelease: False
+title: aitaf v0.5.0
+published: 2026-11-15T03:08:36Z
+author: github-actions[bot]
+assets:
+  - aitaf-0.5.0-py3-none-any.whl (84327 bytes)
+  - aitaf-v0.5.0-evidence.zip (817591 bytes)
+
+release notes (from CHANGELOG.md):
+  ### Added
+  - Unit 5 slice 4: Test Case Generator (`aitaf.generator`): positive, negative and boundary scenarios, complete traceable test cases, synthetic data with a personal-data check, near-duplicate removal, coverage-gap report, human r
+  - Unit 5 slice 5: Script Generator (`aitaf.scriptgen`): structured automation plans rendered by templates into PyTest scripts, page objects and a per-page locator repository for Playwright and Selenium, locators with primary and
+  - Unit 5 slice 6: Self-Healing core (`aitaf.healing`, interface in `aitaf.core.healing`): failure classification (locator failure versus application defect), cost-ordered repair ladder (stored fallbacks, DOM-similarity matching,
+  - Unit 5 slice 7: metrics hooks (`aitaf.core.metrics`): timers, outcome counters, token and cost logging written per run to persistence (schema migration 6) from the LLM gateway, Requirement Analyzer, Test Case Generator, Script
+  
+  Attached: the built wheel and an evidence bundle (evidence folder plus
+  the coverage, test and dependency-audit reports of this release).
+
+release workflow run #1: success  https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43670876225
+  job verify: success
+    steps succeeded: 16
+  job release: success
+    steps succeeded: 12
+
+$ git for-each-ref refs/tags/v0.5.0
+tag: v0.5.0
+object type: tag
+tagger: Deelip17
+date: 2026-11-14
+subject: v0.5.0: core pipeline complete (analyzer, test case generator, script generator, self-healing core), metrics hooks, import-rule check and release workflow (Unit 5 slices 1-7)
+commit: 581f082
