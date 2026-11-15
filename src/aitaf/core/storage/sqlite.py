@@ -137,6 +137,11 @@ MIGRATIONS: tuple[str, ...] = (
         created_at TEXT NOT NULL
     );
     """,
+    """
+    ALTER TABLE test_results ADD COLUMN attempts INTEGER NOT NULL DEFAULT 1;
+    ALTER TABLE test_results ADD COLUMN screenshot TEXT NOT NULL DEFAULT '';
+    ALTER TABLE test_results ADD COLUMN dom_snapshot TEXT NOT NULL DEFAULT ''
+    """,
 )
 LATEST_SCHEMA_VERSION = len(MIGRATIONS)
 
@@ -221,8 +226,8 @@ class SqliteRepository:
 
     def add_result(self, result: TestResult) -> None:
         self._write(
-            "INSERT INTO test_results (result_id, run_id, tc_id, status, duration_ms, log)"
-            " VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO test_results (result_id, run_id, tc_id, status, duration_ms, log,"
+            " attempts, screenshot, dom_snapshot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 result.result_id,
                 result.run_id,
@@ -230,12 +235,16 @@ class SqliteRepository:
                 result.status,
                 result.duration_ms,
                 result.log,
+                result.attempts,
+                result.screenshot,
+                result.dom_snapshot,
             ),
         )
 
     def list_results(self, run_id: str) -> list[TestResult]:
         rows = self._conn.execute(
-            "SELECT result_id, run_id, tc_id, status, duration_ms, log"
+            "SELECT result_id, run_id, tc_id, status, duration_ms, log, attempts, screenshot,"
+            " dom_snapshot"
             " FROM test_results WHERE run_id = ? ORDER BY id",
             (run_id,),
         ).fetchall()

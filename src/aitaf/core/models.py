@@ -114,7 +114,11 @@ class Run(_BaseRecord):
 
 
 class TestResult(_BaseRecord):
-    """Outcome, duration and log of one executed test (FR-19, FR-34)."""
+    """Outcome, duration, log and evidence links of one executed test (FR-18, FR-19, FR-20, FR-34).
+
+    ``attempts`` counts the runs of the test including retries; ``screenshot`` and
+    ``dom_snapshot`` are file names relative to the run's evidence directory.
+    """
 
     __test__: ClassVar[bool] = False
 
@@ -124,6 +128,9 @@ class TestResult(_BaseRecord):
     status: Literal["passed", "failed", "skipped", "error"]
     duration_ms: int = Field(ge=0)
     log: str = ""
+    attempts: int = Field(default=1, ge=1)
+    screenshot: str = ""
+    dom_snapshot: str = ""
 
 
 class LlmAudit(_BaseRecord):

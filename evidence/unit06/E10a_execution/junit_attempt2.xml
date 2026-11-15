@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.708" timestamp="2026-11-15T17:03:59.880614-05:00" hostname="LUS-5CG4363BTN"><testcase classname="tests.test_shop" name="test_wrong_expected_text" time="1.346"><failure message="AssertionError">page = &lt;Page url='http://127.0.0.1:8765/'&gt;, base_url = 'http://127.0.0.1:8765'
+
+    def test_wrong_expected_text(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+&gt;       screen.assert_text('login_submit', 'Sign in')
+
+tests\test_shop.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000027C81DDADB0&gt;
+name = 'login_submit', expected = 'Sign in'
+
+    def assert_text(self, name, expected):
+&gt;       assert expected in self._find(name).inner_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+pages\shop_page.py:47: AssertionError</failure></testcase></testsuite></testsuites>

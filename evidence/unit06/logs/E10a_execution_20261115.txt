@@ -1,0 +1,23 @@
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --db demo.db --checkpoints --retries 1
+run f20bf588e4e14673b9b4635d3e2609ed (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 1)
+PASSED   SHOP-JOURNEY  495 ms  attempts=1  screenshot=tests_test_shop.py_test_shop_journey.a1.png
+FAILED   WRONG-EXPECTED-TEXT  67 ms  attempts=2  screenshot=tests_test_shop.py_test_wrong_expected_text.a2.png
+summary: 1 passed, 1 failed, 0 errors, 0 skipped; evidence in <work>\runs\f20bf588e4e14673b9b4635d3e2609ed
+(exit code 1; 1 means at least one test failed, as designed)
+
+evidence files:
+  junit_attempt1.xml  1185 bytes
+  junit_attempt2.xml  1107 bytes
+  pytest_engine.ini  10 bytes
+  tests_test_shop.py_test_shop_journey.a1.html  636 bytes
+  tests_test_shop.py_test_shop_journey.a1.png  11537 bytes
+  tests_test_shop.py_test_wrong_expected_text.a1.html  1075 bytes
+  tests_test_shop.py_test_wrong_expected_text.a1.png  14633 bytes
+  tests_test_shop.py_test_wrong_expected_text.a2.html  1075 bytes
+  tests_test_shop.py_test_wrong_expected_text.a2.png  14633 bytes
+
+$ aitaf metrics --db demo.db
+run f20bf588e4e14673b9b4635d3e2609ed
+component             operation              count errors  median_ms tokens_in tokens_out  cost_usd
+execution_engine      run                        1      0    9839.16         0          0    0.0000
+total cost: $0.0000

@@ -40,6 +40,10 @@ class LlmValidationError(LlmError):
     """LLM output failed schema validation (NFR-10)."""
 
 
+class ExecutionError(AitafError):
+    """Test execution could not be carried out or its output was unusable (FR-17)."""
+
+
 class PersistenceError(AitafError):
     """Storage error, including interrupted runs (NFR-07)."""
 

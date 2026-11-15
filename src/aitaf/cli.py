@@ -27,6 +27,8 @@ from aitaf.core.logging import configure_root, new_run_id, set_run_id
 from aitaf.core.metrics import Metrics, run_cost, summarise
 from aitaf.core.models import Locator, LocatorStrategy, ReviewStatus, Run, RunStatus
 from aitaf.core.storage import Repository, SqliteRepository
+from aitaf.execution import ExecutionEngine, RunConfig
+from aitaf.execution.runner import describe_environment
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
 from aitaf.generator import (
     TestCaseGenerator,
@@ -85,7 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
     for name, description in STAGES.items():
         stage = commands.add_parser(name, help=description)
         stage.add_argument("--config", help="path to the JSON configuration file")
-        if name in ("analyze", "generate", "script"):
+        if name in ("analyze", "generate", "script", "execute"):
             stage.add_argument("--db", default="aitaf.db", help="SQLite database path")
         if name == "analyze":
             stage.add_argument("--input", required=True, help="requirements file (.txt, .md)")
@@ -108,6 +110,7 @@ def build_parser() -> argparse.ArgumentParser:
                 action="store_true",
                 help="also script Pending cases (Rejected cases are never scripted)",
             )
+    _add_execute_options(commands.choices["execute"])
     heal = commands.add_parser("heal", help="demonstrate locator healing on two DOM snapshots")
     heal.add_argument("--config", help="path to the JSON configuration file")
     heal.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -144,6 +147,25 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--approve", metavar="TC_ID", help="approve a test case")
     review.add_argument("--reject", metavar="TC_ID", help="reject a test case")
     return parser
+
+
+def _add_execute_options(stage: argparse.ArgumentParser) -> None:
+    stage.add_argument("--scripts", required=True, help="directory written by 'aitaf script'")
+    stage.add_argument("--base-url", required=True, help="system under test (must be allow-listed)")
+    stage.add_argument(
+        "--allow-host",
+        action="append",
+        default=[],
+        help="host the run may target (repeatable); localhost and 127.0.0.1 are always allowed",
+    )
+    stage.add_argument("--evidence", default="reports/runs", help="screenshots, DOM, JUnit output")
+    stage.add_argument("--driver", choices=["playwright", "selenium"], default="playwright")
+    stage.add_argument("--headed", action="store_true", help="show the browser (default headless)")
+    stage.add_argument("--timeout-ms", type=int, default=10_000, help="default action timeout")
+    stage.add_argument("--retries", type=int, default=0, help="reruns of a failing test (0 to 5)")
+    stage.add_argument("--workers", type=int, default=1, help="parallel workers (1 to 8)")
+    stage.add_argument("--checkpoints", action="store_true", help="also screenshot passing tests")
+    stage.add_argument("--run-timeout-s", type=int, default=600, help="time limit for the run")
 
 
 def _gateway(settings: Settings, repo: Repository, metrics: Metrics | None = None) -> LlmGateway:
@@ -286,6 +308,63 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
     else:
         print(f"run them with: pytest {args.out_dir} --base-url {args.base_url}")
     return EXIT_OK
+
+
+_STATUS_LABEL = {"passed": "PASSED ", "failed": "FAILED ", "error": "ERROR  ", "skipped": "SKIPPED"}
+
+
+def _execute(settings: Settings, args: argparse.Namespace) -> int:
+    run_id = new_run_id()
+    try:
+        config = RunConfig(
+            scripts_dir=Path(args.scripts),
+            base_url=args.base_url,
+            allowed_hosts=tuple({"localhost", "127.0.0.1", *args.allow_host}),
+            evidence_dir=Path(args.evidence) / run_id,
+            driver=args.driver,
+            headless=not args.headed,
+            timeout_ms=args.timeout_ms,
+            retries=args.retries,
+            workers=args.workers,
+            checkpoints=args.checkpoints,
+            run_timeout_s=args.run_timeout_s,
+        )
+    except ValueError as exc:
+        raise ConfigError(str(exc).splitlines()[0]) from exc
+    repo = SqliteRepository(args.db)
+    try:
+        repo.recover_interrupted_runs()
+        set_run_id(run_id)
+        repo.create_run(
+            Run(
+                run_id=run_id,
+                started_at=datetime.now(UTC),
+                status=RunStatus.RUNNING,
+                provider=settings.llm_provider,
+                environment=describe_environment(config),
+            )
+        )
+        try:
+            summary = ExecutionEngine(repo, Metrics(repo)).execute(config)
+        except AitafError:
+            repo.finish_run(run_id, RunStatus.FAILED, datetime.now(UTC))
+            raise
+        repo.finish_run(run_id, RunStatus.COMPLETED, datetime.now(UTC))
+    finally:
+        repo.close()
+
+    print(f"run {run_id} ({summary.environment})")
+    for test in summary.executed:
+        extra = f"  screenshot={test.screenshot}" if test.screenshot else ""
+        print(
+            f"{_STATUS_LABEL.get(test.status, test.status)}  {test.tc_id}  {test.duration_ms} ms  "
+            f"attempts={test.attempts}{extra}"
+        )
+    print(
+        f"summary: {summary.passed} passed, {summary.failed} failed, {summary.errors} errors, "
+        f"{summary.skipped} skipped; evidence in {config.evidence_dir}"
+    )
+    return EXIT_OK if summary.all_passed else EXIT_FAILURE
 
 
 _STRATEGY_KINDS = ("id", "css", "xpath", "text", "role", "attr")
@@ -449,6 +528,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "generate": lambda: _generate(settings, args),
         "review": lambda: _review(args),
         "script": lambda: _script(settings, args),
+        "execute": lambda: _execute(settings, args),
         "heal": lambda: _heal(settings, args),
         "metrics": lambda: _metrics(args),
     }
