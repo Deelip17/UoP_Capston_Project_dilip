@@ -65,6 +65,7 @@ Label every output **mock** in captions. Capture code (VS Code, larger font) bes
 ## 6. Version control (Part C facts)
 
 - **Branching:** `main` and `develop`; day-to-day work on `develop` (ADR-028), merged to `main` by pull request at submission; earlier work used `feature/ci-workflow` and a `chore/ci-red-demo` branch for the CI failure evidence. Conventional Commits with a `Refs:` line citing FR and NFR IDs; about one commit per slice (two slices needed a follow-up fix commit); no AI co-author lines (ADR-021).
+- **Pull requests:** #1 to #4 (closed, merged) moved the Unit 3 documentation branches into `develop` and `main` and synchronised them back; later work was committed directly on `develop` (ADR-028).
 - **Tags (annotated, on `develop` by ADR-033):** `v0.1.0` at `f31a76d` (slices 1 to 3: 156 tests, CI run 9 green, **tag only, no release page**); `v0.5.0` at `581f082` (slices 1 to 7: 552 tests then, CI run 14 green). The older tag `Intial_folder_structure` is from Unit 3 (the spelling is as created).
 - **Release:** https://github.com/Deelip17/UoP_Capston_Project_dilip/releases/tag/v0.5.0, published by `release.yml` (run https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43670876225): re-runs lint, types, import rules, tests with the 80% gate and the dependency audit; refuses a tag that does not match `aitaf.__version__` or has no changelog section; attaches the wheel and an evidence bundle; notes come from `CHANGELOG.md`.
 - **CI:** https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43670668717 (run 14, Ubuntu and Windows matrix).
@@ -94,7 +95,7 @@ No new external references unless the rubric requires one.
 - That the metrics cover all components (four plus the gateway), or that prices in E13a are real.
 - That masking finds names or addresses, or that prompt-injection resistance is guaranteed (fixtures only).
 - That retry with back-off (NFR-06) or a CLI or report page for approving healing events exists.
-- That `v0.1.0` has a release page, or that `main` contains this work (it is on `develop`).
+- That `v0.1.0` has a release page, or that `main` contains this work: `main` holds only the Unit 3 baseline (pull requests #1 to #4); Unit 4 and 5 work is on `develop`.
 - Any legal or privacy conclusion (GDPR wording needs the Data Privacy Officer).
 
 ## 10. Author to-do before submission

@@ -54,6 +54,7 @@ Also show the marker definitions once (can be merged into figure 9 or its own im
 | 17 | `E17b_release_v0.5.0.png` | `.../releases/tag/v0.5.0`, scroll so the notes **and** the two assets (wheel, evidence zip) are visible | Figure 14. GitHub Release v0.5.0 with release notes, wheel and evidence bundle | Yes |
 | 18 | `E17_compare_tags.png` | `.../compare/v0.1.0...v0.5.0` | Optional: what changed between the two milestones | Optional |
 | 19 | `E17_commit_history.png` | `.../commits/develop` | Optional: Conventional Commit history citing FR/NFR IDs | Optional |
+| 21 | `E17_pull_requests.png` | `.../pulls?q=is%3Apr+is%3Aclosed` (merged pull requests #1 to #4) | Optional: pull requests that merged the Unit 3 work into `develop` and `main` | Optional |
 | 20 | `E17b_release_workflow.png` | `.../actions/runs/43670876225` (the Release run: verify and release jobs green) | Optional: release automation | Optional |
 
 If the paper cannot hold every "Yes" item, ask Cowork to keep the code and output pairs of the three strongest modules and all of Part C figures 11 to 14, and leave the rest in the evidence folder.
@@ -84,7 +85,7 @@ Every task of the assignment, where its content comes from, and which figures su
 | **B3** Types of unit tests and how unit testing improves reliability and modular development | Course references REF-018 (isolation, mocks and stubs) and REF-006 (verification and validation); project examples: fake repository and mock provider (modularity), kill-process durability test, fault injection, 97.86% coverage gate | none | Ready (author's reading needed) |
 | **C1** Tags and releases for major milestones | Figures 13, 14 (optional 18, 20); handoff section 6: `v0.1.0` initial development (core, persistence, gateway, Analyzer), `v0.5.0` core complete with tests and release automation; `v1.0.0` planned for the final release | 13, 14 | Needs your screenshots |
 | **C2** Repository link with public access | `https://github.com/Deelip17/UoP_Capston_Project_dilip` (public); figure 11 | 11 | Needs your screenshot |
-| **C3** Branching model, and how tags and releases help monitoring | `docs/project-management/GIT_STRATEGY.md` (model), handoff section 6 (actual practice: `develop` as working branch, ADR-028; tags on `develop`, ADR-033); REF-019; honest note that `main` is behind `develop` until submission | 12 (optional 19) | Needs your screenshots |
+| **C3** Branching model, and how tags and releases help monitoring | `docs/project-management/GIT_STRATEGY.md` (model), handoff section 6 (actual practice: `develop` as working branch, ADR-028; tags on `develop`, ADR-033); REF-019; honest note that `main` holds only the Unit 3 baseline (merged by pull requests #1 to #4) while Unit 4 and 5 work is on `develop` until submission | 12 (optional 19) | Needs your screenshots |
 
 ## 4. Alignment with the project objectives (for A1; state only what holds)
 
@@ -120,7 +121,7 @@ Structure and format:
 - Double-spaced Times New Roman 12 pt. Screenshots go inside the document as numbered figures with the captions from the guide (and "(mock provider)" on every generated output). Use the real PNG files; where a file is missing insert a visible placeholder "[Figure n: expected file name]" and list it in your final report.
 - Cover every sub-task A1, A2, A3, B1, B2, B3, C1, C2, C3 of the assignment, in that order, with the headings used in the assignment. Part A must align the implementation with the objectives using the table in section 4 of the guide, and must say what is not yet measured.
 - Part B must state the testing types performed (black-box and white-box, with the counts from the handoff), summarise the issues from the log and what each changed, and explain unit-test types and reliability and modularity with REF-018 and REF-006.
-- Part C must give the repository link, the tags v0.1.0 and v0.5.0 with the release link, the branching model actually used (develop as working branch, main updated at submission) and how tags and releases support monitoring (REF-019). Say plainly that v0.1.0 is a tag without a release page, and that main does not yet contain this work.
+- Part C must give the repository link, the tags v0.1.0 and v0.5.0 with the release link, the branching model actually used (develop as working branch, main updated at submission) and how tags and releases support monitoring (REF-019). Say plainly that v0.1.0 is a tag without a release page, and that main holds only the Unit 3 baseline (pull requests #1 to #4) and does not yet contain the Unit 4 and 5 work, which is on develop until submission.
 
 Rules:
 - Quote only issues and challenges that appear in PROGRESS_LOG.md. Do not invent results, numbers, quotes or references.
