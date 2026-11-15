@@ -2,6 +2,8 @@
 
 Written as work happens. It is the source for the progress documentation and for Parts A and B of the Unit 5 report, so record only what actually occurred.
 
+Unit 6 work is logged in the same tables (Unit column 6, slices U6-0 to U6-11). Plan, decisions and evaluation design: `UNIT6_PLAN.md`. Record the provider (mock or live) next to every measured number.
+
 ## Slice log
 
 | Date | Unit | Slice | Requirements | Commit | Tests (total, black-box, white-box) | Coverage | Evidence | Notes |

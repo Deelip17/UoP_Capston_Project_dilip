@@ -5,6 +5,7 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 ## [Unreleased]
 
 ### Added
+- Unit 6 planning: `docs/project-management/UNIT6_PLAN.md` (decisions, artefact checklist, evaluation design, slices U6-0 to U6-11, three-session workflow) and `docs/project-management/EVIDENCE_SESSION_BRIEF.md` (instructions for the screenshot-only session); Unit 5 screenshots registered (E04 to E17b).
 - Unit 5 slice 8: a README for every top-level package (each with a "Not built" section), documentation tests, the Unit 5 handoff document for writing the paper (`docs/project-management/UNIT5_HANDOFF.md`) an updated top-level README with a quick start, and a screenshot guide with the assignment coverage matrix and the Cowork prompt (`docs/project-management/UNIT5_SCREENSHOT_GUIDE.md`).
 
 ## [0.5.0] - 2026-11-14
