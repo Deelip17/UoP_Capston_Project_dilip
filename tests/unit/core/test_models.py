@@ -12,6 +12,8 @@ from aitaf.core.models import (
     ReviewStatus,
     RiskLevel,
     TestCase,
+    TestData,
+    TestScenario,
 )
 
 
@@ -42,6 +44,8 @@ def _tc(**overrides: Any) -> TestCase:
         "steps": ["open login page", "enter valid credentials", "submit"],
         "expected": ["session established"],
         "priority": "M",
+        "model": "mock-1",
+        "prompt_version": "tg-v1",
     }
     data.update(overrides)
     return TestCase(**data)
@@ -106,3 +110,45 @@ def test_test_case_requires_at_least_one_step() -> None:
 def test_test_case_priority_rejects_invalid_value() -> None:
     with pytest.raises(PydanticValidationError):
         _tc(priority="X")
+
+
+@pytest.mark.blackbox
+@pytest.mark.parametrize("field", ["model", "prompt_version"])
+def test_test_case_requires_model_and_prompt_version(field: str) -> None:
+    with pytest.raises(PydanticValidationError):
+        _tc(**{field: ""})
+
+
+@pytest.mark.blackbox
+def test_test_case_carries_ai_label() -> None:
+    assert _tc().ai_label == "ai-generated"
+
+
+@pytest.mark.blackbox
+def test_test_scenario_requires_known_type_and_label() -> None:
+    scenario = TestScenario(
+        scenario_id="REQ-1-S1",
+        req_id="REQ-1",
+        scenario_type="boundary",
+        description="limit values",
+        model="mock-1",
+        prompt_version="tg-v1",
+    )
+    assert scenario.ai_label == "ai-generated"
+    with pytest.raises(PydanticValidationError):
+        TestScenario(
+            scenario_id="x",
+            req_id="REQ-1",
+            scenario_type="sideways",  # type: ignore[arg-type]
+            description="d",
+            model="m",
+            prompt_version="p",
+        )
+
+
+@pytest.mark.whitebox
+def test_test_data_is_always_marked_synthetic() -> None:
+    data = TestData(tc_id="TC-1", dataset={"email": "a@example.com"})
+    assert data.synthetic is True
+    with pytest.raises(PydanticValidationError):
+        TestData(tc_id="TC-1", dataset={}, synthetic=False)  # type: ignore[arg-type]

@@ -11,7 +11,17 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Protocol
 
-from aitaf.core.models import AnalyzedRequirement, LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import (
+    AnalyzedRequirement,
+    LlmAudit,
+    ReviewStatus,
+    Run,
+    RunStatus,
+    TestCase,
+    TestData,
+    TestResult,
+    TestScenario,
+)
 
 
 class Repository(Protocol):
@@ -46,6 +56,30 @@ class Repository(Protocol):
 
     def list_requirements(self, run_id: str) -> list[AnalyzedRequirement]:
         """Return the run's analysed requirements in insertion order."""
+
+    def latest_run_with_requirements(self) -> str | None:
+        """Run ID of the most recent run that stored requirements, or None."""
+
+    def add_scenario(self, run_id: str, scenario: TestScenario) -> None:
+        """Store (or replace) a scenario. Unknown run raises PersistenceError."""
+
+    def list_scenarios(self, run_id: str) -> list[TestScenario]:
+        """Return the scenarios of the run in insertion order."""
+
+    def add_test_case(self, run_id: str, case: TestCase) -> None:
+        """Store (or replace) a test case. Unknown run raises PersistenceError."""
+
+    def list_test_cases(self, run_id: str, status: ReviewStatus | None = None) -> list[TestCase]:
+        """Return the test cases of the run in insertion order, optionally by review status."""
+
+    def set_review_status(self, run_id: str, tc_id: str, status: ReviewStatus) -> None:
+        """Change the review status of a case. Unknown case raises PersistenceError."""
+
+    def add_test_data(self, run_id: str, data: TestData) -> None:
+        """Store (or replace) the synthetic data of a case. Unknown run raises."""
+
+    def list_test_data(self, run_id: str) -> list[TestData]:
+        """Return the test data of the run in insertion order."""
 
     def close(self) -> None:
         """Release resources."""

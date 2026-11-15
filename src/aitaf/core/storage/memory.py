@@ -5,7 +5,17 @@ from __future__ import annotations
 from datetime import datetime
 
 from aitaf.core.errors import PersistenceError
-from aitaf.core.models import AnalyzedRequirement, LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import (
+    AnalyzedRequirement,
+    LlmAudit,
+    ReviewStatus,
+    Run,
+    RunStatus,
+    TestCase,
+    TestData,
+    TestResult,
+    TestScenario,
+)
 
 
 class InMemoryRepository:
@@ -16,6 +26,9 @@ class InMemoryRepository:
         self._results: list[TestResult] = []
         self._audits: list[LlmAudit] = []
         self._requirements: dict[tuple[str, str], AnalyzedRequirement] = {}
+        self._scenarios: dict[tuple[str, str], TestScenario] = {}
+        self._cases: dict[tuple[str, str], TestCase] = {}
+        self._data: dict[tuple[str, str], TestData] = {}
 
     def _require_run(self, run_id: str) -> None:
         if run_id not in self._runs:
@@ -61,6 +74,40 @@ class InMemoryRepository:
 
     def list_requirements(self, run_id: str) -> list[AnalyzedRequirement]:
         return [r for (rid, _), r in self._requirements.items() if rid == run_id]
+
+    def latest_run_with_requirements(self) -> str | None:
+        return next(reversed(self._requirements))[0] if self._requirements else None
+
+    def add_scenario(self, run_id: str, scenario: TestScenario) -> None:
+        self._require_run(run_id)
+        self._scenarios[(run_id, scenario.scenario_id)] = scenario
+
+    def list_scenarios(self, run_id: str) -> list[TestScenario]:
+        return [s for (rid, _), s in self._scenarios.items() if rid == run_id]
+
+    def add_test_case(self, run_id: str, case: TestCase) -> None:
+        self._require_run(run_id)
+        self._cases[(run_id, case.tc_id)] = case
+
+    def list_test_cases(self, run_id: str, status: ReviewStatus | None = None) -> list[TestCase]:
+        return [
+            c
+            for (rid, _), c in self._cases.items()
+            if rid == run_id and (status is None or c.review_status is status)
+        ]
+
+    def set_review_status(self, run_id: str, tc_id: str, status: ReviewStatus) -> None:
+        case = self._cases.get((run_id, tc_id))
+        if case is None:
+            raise PersistenceError(f"unknown test case: {tc_id!r}")
+        self._cases[(run_id, tc_id)] = case.model_copy(update={"review_status": status})
+
+    def add_test_data(self, run_id: str, data: TestData) -> None:
+        self._require_run(run_id)
+        self._data[(run_id, data.tc_id)] = data
+
+    def list_test_data(self, run_id: str) -> list[TestData]:
+        return [d for (rid, _), d in self._data.items() if rid == run_id]
 
     def close(self) -> None:
         return None

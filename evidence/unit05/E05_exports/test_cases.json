@@ -1,0 +1,266 @@
+[
+  {
+    "tc_id": "TC-3F03EBEF-01",
+    "req_id": "REQ-3F03EBEF",
+    "scenario_id": "REQ-3F03EBEF-S1",
+    "title": "Verify that a system can allow a registered customer to log in with an email address and password",
+    "preconditions": [
+      "Role under test: system"
+    ],
+    "steps": [
+      "Open the application as a system",
+      "Perform the action with valid input: allow a registered customer to log in with an email address and password",
+      "Observe the result"
+    ],
+    "expected": [
+      "The system shall allow a registered customer to log in with an email address and password"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-3F03EBEF-02",
+    "req_id": "REQ-3F03EBEF",
+    "scenario_id": "REQ-3F03EBEF-S2",
+    "title": "Reject invalid input when a system tries to allow a registered customer to log in with an email address and password",
+    "preconditions": [
+      "Role under test: system"
+    ],
+    "steps": [
+      "Open the application as a system",
+      "Attempt the action with invalid or missing input: allow a registered customer to log in with an email address and password",
+      "Observe the error handling"
+    ],
+    "expected": [
+      "The system rejects the input with a clear error message and changes no data"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-3F03EBEF-03",
+    "req_id": "REQ-3F03EBEF",
+    "scenario_id": "REQ-3F03EBEF-S3",
+    "title": "Check boundary values when a system tries to allow a registered customer to log in with an email address and password",
+    "preconditions": [
+      "Role under test: system"
+    ],
+    "steps": [
+      "Open the application as a system",
+      "Repeat the action with values at and just beyond each limit: allow a registered customer to log in with an email address and password",
+      "Observe the result at each limit"
+    ],
+    "expected": [
+      "Values at the limit are accepted and values beyond it are rejected"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-2A794EAB-01",
+    "req_id": "REQ-2A794EAB",
+    "scenario_id": "REQ-2A794EAB-S1",
+    "title": "Verify that a system can lock an account for 15 minutes after 5 failed login attempts",
+    "preconditions": [
+      "Role under test: system"
+    ],
+    "steps": [
+      "Open the application as a system",
+      "Perform the action with valid input: lock an account for 15 minutes after 5 failed login attempts",
+      "Observe the result"
+    ],
+    "expected": [
+      "The system shall lock an account for 15 minutes after 5 failed login attempts"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-2A794EAB-02",
+    "req_id": "REQ-2A794EAB",
+    "scenario_id": "REQ-2A794EAB-S2",
+    "title": "Reject invalid input when a system tries to lock an account for 15 minutes after 5 failed login attempts",
+    "preconditions": [
+      "Role under test: system"
+    ],
+    "steps": [
+      "Open the application as a system",
+      "Attempt the action with invalid or missing input: lock an account for 15 minutes after 5 failed login attempts",
+      "Observe the error handling"
+    ],
+    "expected": [
+      "The system rejects the input with a clear error message and changes no data"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-2A794EAB-03",
+    "req_id": "REQ-2A794EAB",
+    "scenario_id": "REQ-2A794EAB-S3",
+    "title": "Check boundary values when a system tries to lock an account for 15 minutes after 5 failed login attempts",
+    "preconditions": [
+      "Role under test: system"
+    ],
+    "steps": [
+      "Open the application as a system",
+      "Repeat the action with values at and just beyond each limit: lock an account for 15 minutes after 5 failed login attempts",
+      "Observe the result at each limit"
+    ],
+    "expected": [
+      "Values at the limit are accepted and values beyond it are rejected"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-E877946E-01",
+    "req_id": "REQ-E877946E",
+    "scenario_id": "REQ-E877946E-S1",
+    "title": "Verify that a visitor can search the product catalogue by keyword and see matching products",
+    "preconditions": [
+      "Role under test: visitor"
+    ],
+    "steps": [
+      "Open the application as a visitor",
+      "Perform the action with valid input: search the product catalogue by keyword and see matching products",
+      "Observe the result"
+    ],
+    "expected": [
+      "A visitor can search the product catalogue by keyword and see matching products"
+    ],
+    "priority": "S",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-E877946E-02",
+    "req_id": "REQ-E877946E",
+    "scenario_id": "REQ-E877946E-S2",
+    "title": "Reject invalid input when a visitor tries to search the product catalogue by keyword and see matching products",
+    "preconditions": [
+      "Role under test: visitor"
+    ],
+    "steps": [
+      "Open the application as a visitor",
+      "Attempt the action with invalid or missing input: search the product catalogue by keyword and see matching products",
+      "Observe the error handling"
+    ],
+    "expected": [
+      "The system rejects the input with a clear error message and changes no data"
+    ],
+    "priority": "S",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-E877946E-03",
+    "req_id": "REQ-E877946E",
+    "scenario_id": "REQ-E877946E-S3",
+    "title": "Check boundary values when a visitor tries to search the product catalogue by keyword and see matching products",
+    "preconditions": [
+      "Role under test: visitor"
+    ],
+    "steps": [
+      "Open the application as a visitor",
+      "Repeat the action with values at and just beyond each limit: search the product catalogue by keyword and see matching products",
+      "Observe the result at each limit"
+    ],
+    "expected": [
+      "Values at the limit are accepted and values beyond it are rejected"
+    ],
+    "priority": "S",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-A7571042-01",
+    "req_id": "REQ-A7571042",
+    "scenario_id": "REQ-A7571042-S1",
+    "title": "Verify that a customer can pay for my cart by credit card",
+    "preconditions": [
+      "Role under test: customer"
+    ],
+    "steps": [
+      "Open the application as a customer",
+      "Perform the action with valid input: pay for my cart by credit card",
+      "Observe the result"
+    ],
+    "expected": [
+      "I can complete my order"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-A7571042-02",
+    "req_id": "REQ-A7571042",
+    "scenario_id": "REQ-A7571042-S2",
+    "title": "Reject invalid input when a customer tries to pay for my cart by credit card",
+    "preconditions": [
+      "Role under test: customer"
+    ],
+    "steps": [
+      "Open the application as a customer",
+      "Attempt the action with invalid or missing input: pay for my cart by credit card",
+      "Observe the error handling"
+    ],
+    "expected": [
+      "The system rejects the input with a clear error message and changes no data"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  },
+  {
+    "tc_id": "TC-A7571042-03",
+    "req_id": "REQ-A7571042",
+    "scenario_id": "REQ-A7571042-S3",
+    "title": "Check boundary values when a customer tries to pay for my cart by credit card",
+    "preconditions": [
+      "Role under test: customer"
+    ],
+    "steps": [
+      "Open the application as a customer",
+      "Repeat the action with values at and just beyond each limit: pay for my cart by credit card",
+      "Observe the result at each limit"
+    ],
+    "expected": [
+      "Values at the limit are accepted and values beyond it are rejected"
+    ],
+    "priority": "M",
+    "review_status": "Pending",
+    "model": "mock-1",
+    "prompt_version": "tg-v1",
+    "ai_label": "ai-generated"
+  }
+]

@@ -1,0 +1,47 @@
+$ python -m aitaf analyze --input data/requirements/sample_requirements.md --db demo.db
+summary: 4 ready, 3 flagged, 0 rejected
+
+$ python -m aitaf generate --db demo.db --export-dir exports
+run 10e9d86b09da4b288738850c6f4807be (mock-generated output, review before use)
+TC-3F03EBEF-01  M  Pending   Verify that a system can allow a registered customer to log in with an email address and password
+TC-3F03EBEF-02  M  Pending   Reject invalid input when a system tries to allow a registered customer to log in with an email address and password
+TC-3F03EBEF-03  M  Pending   Check boundary values when a system tries to allow a registered customer to log in with an email address and password
+TC-2A794EAB-01  M  Pending   Verify that a system can lock an account for 15 minutes after 5 failed login attempts
+TC-2A794EAB-02  M  Pending   Reject invalid input when a system tries to lock an account for 15 minutes after 5 failed login attempts
+TC-2A794EAB-03  M  Pending   Check boundary values when a system tries to lock an account for 15 minutes after 5 failed login attempts
+TC-E877946E-01  S  Pending   Verify that a visitor can search the product catalogue by keyword and see matching products
+TC-E877946E-02  S  Pending   Reject invalid input when a visitor tries to search the product catalogue by keyword and see matching products
+TC-E877946E-03  S  Pending   Check boundary values when a visitor tries to search the product catalogue by keyword and see matching products
+TC-A7571042-01  M  Pending   Verify that a customer can pay for my cart by credit card
+TC-A7571042-02  M  Pending   Reject invalid input when a customer tries to pay for my cart by credit card
+TC-A7571042-03  M  Pending   Check boundary values when a customer tries to pay for my cart by credit card
+SKIPPED  REQ-850D9253: flagged as ambiguous; clarify before generation
+SKIPPED  REQ-CBCE96C5: flagged as ambiguous; clarify before generation
+SKIPPED  REQ-E3454027: flagged as ambiguous; clarify before generation
+summary: 12 test cases, 12 scenarios, 3 skipped, 0 duplicates removed, 0 data values replaced, 0 coverage gaps
+all new cases are Pending; approve with: aitaf review --approve TC_ID
+
+$ python -m aitaf review --db demo.db --list --status Approved
+(no output: no case is Approved, so none can be scripted in review mode)
+
+$ python -m aitaf review --db demo.db --list
+TC-3F03EBEF-01  Pending   Verify that a system can allow a registered customer to log in with an email address and password
+TC-3F03EBEF-02  Pending   Reject invalid input when a system tries to allow a registered customer to log in with an email address and password
+TC-3F03EBEF-03  Pending   Check boundary values when a system tries to allow a registered customer to log in with an email address and password
+TC-2A794EAB-01  Pending   Verify that a system can lock an account for 15 minutes after 5 failed login attempts
+TC-2A794EAB-02  Pending   Reject invalid input when a system tries to lock an account for 15 minutes after 5 failed login attempts
+TC-2A794EAB-03  Pending   Check boundary values when a system tries to lock an account for 15 minutes after 5 failed login attempts
+TC-E877946E-01  Pending   Verify that a visitor can search the product catalogue by keyword and see matching products
+TC-E877946E-02  Pending   Reject invalid input when a visitor tries to search the product catalogue by keyword and see matching products
+TC-E877946E-03  Pending   Check boundary values when a visitor tries to search the product catalogue by keyword and see matching products
+TC-A7571042-01  Pending   Verify that a customer can pay for my cart by credit card
+TC-A7571042-02  Pending   Reject invalid input when a customer tries to pay for my cart by credit card
+TC-A7571042-03  Pending   Check boundary values when a customer tries to pay for my cart by credit card
+
+$ python -m aitaf review --db demo.db --approve TC-3F03EBEF-01
+TC-3F03EBEF-01 -> Approved
+log: review status of TC-3F03EBEF-01 changed Pending -> Approved
+
+$ python -m aitaf review --db demo.db --list --status Approved
+TC-3F03EBEF-01  Approved  Verify that a system can allow a registered customer to log in with an email address and password
+

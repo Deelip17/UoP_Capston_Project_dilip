@@ -13,7 +13,17 @@ from datetime import datetime
 from pathlib import Path
 
 from aitaf.core.errors import PersistenceError
-from aitaf.core.models import AnalyzedRequirement, LlmAudit, Run, RunStatus, TestResult
+from aitaf.core.models import (
+    AnalyzedRequirement,
+    LlmAudit,
+    ReviewStatus,
+    Run,
+    RunStatus,
+    TestCase,
+    TestData,
+    TestResult,
+    TestScenario,
+)
 
 MIGRATIONS: tuple[str, ...] = (
     """
@@ -57,6 +67,30 @@ MIGRATIONS: tuple[str, ...] = (
         req_id TEXT NOT NULL,
         record TEXT NOT NULL,
         UNIQUE (run_id, req_id)
+    );
+    """,
+    """
+    CREATE TABLE scenarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        scenario_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, scenario_id)
+    );
+    CREATE TABLE test_cases (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        tc_id TEXT NOT NULL,
+        review_status TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, tc_id)
+    );
+    CREATE TABLE test_data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        tc_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, tc_id)
     );
     """,
 )
@@ -208,6 +242,69 @@ class SqliteRepository:
             "SELECT record FROM requirements WHERE run_id = ? ORDER BY id", (run_id,)
         ).fetchall()
         return [AnalyzedRequirement.model_validate_json(row["record"]) for row in rows]
+
+    def latest_run_with_requirements(self) -> str | None:
+        row = self._conn.execute(
+            "SELECT run_id FROM requirements ORDER BY id DESC LIMIT 1"
+        ).fetchone()
+        return str(row["run_id"]) if row else None
+
+    def add_scenario(self, run_id: str, scenario: TestScenario) -> None:
+        self._write(
+            "INSERT INTO scenarios (run_id, scenario_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, scenario_id) DO UPDATE SET record = excluded.record",
+            (run_id, scenario.scenario_id, scenario.model_dump_json()),
+        )
+
+    def list_scenarios(self, run_id: str) -> list[TestScenario]:
+        rows = self._conn.execute(
+            "SELECT record FROM scenarios WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [TestScenario.model_validate_json(row["record"]) for row in rows]
+
+    def add_test_case(self, run_id: str, case: TestCase) -> None:
+        self._write(
+            "INSERT INTO test_cases (run_id, tc_id, review_status, record) VALUES (?, ?, ?, ?)"
+            " ON CONFLICT (run_id, tc_id) DO UPDATE SET"
+            " review_status = excluded.review_status, record = excluded.record",
+            (run_id, case.tc_id, case.review_status.value, case.model_dump_json()),
+        )
+
+    def list_test_cases(self, run_id: str, status: ReviewStatus | None = None) -> list[TestCase]:
+        sql = "SELECT record FROM test_cases WHERE run_id = ?"
+        params: tuple[object, ...] = (run_id,)
+        if status is not None:
+            sql += " AND review_status = ?"
+            params = (run_id, status.value)
+        rows = self._conn.execute(sql + " ORDER BY id", params).fetchall()
+        return [TestCase.model_validate_json(row["record"]) for row in rows]
+
+    def set_review_status(self, run_id: str, tc_id: str, status: ReviewStatus) -> None:
+        row = self._conn.execute(
+            "SELECT record FROM test_cases WHERE run_id = ? AND tc_id = ?", (run_id, tc_id)
+        ).fetchone()
+        if row is None:
+            raise PersistenceError(f"unknown test case: {tc_id!r}")
+        updated = TestCase.model_validate_json(row["record"]).model_copy(
+            update={"review_status": status}
+        )
+        self._write(
+            "UPDATE test_cases SET review_status = ?, record = ? WHERE run_id = ? AND tc_id = ?",
+            (status.value, updated.model_dump_json(), run_id, tc_id),
+        )
+
+    def add_test_data(self, run_id: str, data: TestData) -> None:
+        self._write(
+            "INSERT INTO test_data (run_id, tc_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, tc_id) DO UPDATE SET record = excluded.record",
+            (run_id, data.tc_id, data.model_dump_json()),
+        )
+
+    def list_test_data(self, run_id: str) -> list[TestData]:
+        rows = self._conn.execute(
+            "SELECT record FROM test_data WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [TestData.model_validate_json(row["record"]) for row in rows]
 
     def close(self) -> None:
         self._conn.close()

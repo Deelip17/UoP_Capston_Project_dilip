@@ -9,7 +9,7 @@ them with human-authored artefacts (NFR-30).
 Later slices add further records (``TestScenario``, ``TestData``, ``Script``,
 ``Locator``, ``Artifact``, ``HealingEvent``, ``FailureAnalysis``). So far:
 ``AnalyzedRequirement`` and ``TestCase`` (slice 1), ``Run``, ``TestResult`` and
-``LlmAudit`` (slice 2).
+``LlmAudit`` (slice 2), ``TestScenario`` and ``TestData`` (slice 4).
 """
 
 from __future__ import annotations
@@ -96,6 +96,8 @@ class TestCase(_BaseRecord):
     expected: list[str] = Field(min_length=1)
     priority: Literal["M", "S", "C"]
     review_status: ReviewStatus = ReviewStatus.PENDING
+    model: str = Field(min_length=1)
+    prompt_version: str = Field(min_length=1)
     ai_label: Literal["ai-generated"] = "ai-generated"
 
 
@@ -142,3 +144,27 @@ class LlmAudit(_BaseRecord):
     status: Literal["ok", "fallback", "error"]
     mock: bool
     created_at: datetime
+
+
+class TestScenario(_BaseRecord):
+    """Positive, negative or boundary scenario for a requirement (FR-06, FR-34, NFR-30)."""
+
+    __test__: ClassVar[bool] = False
+
+    scenario_id: str = Field(min_length=1)
+    req_id: str = Field(min_length=1)
+    scenario_type: Literal["positive", "negative", "boundary"]
+    description: str = Field(min_length=1)
+    model: str = Field(min_length=1)
+    prompt_version: str = Field(min_length=1)
+    ai_label: Literal["ai-generated"] = "ai-generated"
+
+
+class TestData(_BaseRecord):
+    """Synthetic data for one test case; real personal data is never allowed (FR-08)."""
+
+    __test__: ClassVar[bool] = False
+
+    tc_id: str = Field(min_length=1)
+    dataset: dict[str, str]
+    synthetic: Literal[True] = True

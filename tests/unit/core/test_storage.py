@@ -17,7 +17,18 @@ from pathlib import Path
 import pytest
 
 from aitaf.core.errors import PersistenceError
-from aitaf.core.models import AnalyzedRequirement, LlmAudit, RiskLevel, Run, RunStatus, TestResult
+from aitaf.core.models import (
+    AnalyzedRequirement,
+    LlmAudit,
+    ReviewStatus,
+    RiskLevel,
+    Run,
+    RunStatus,
+    TestCase,
+    TestData,
+    TestResult,
+    TestScenario,
+)
 from aitaf.core.storage import InMemoryRepository, Repository, SqliteRepository
 from aitaf.core.storage.sqlite import LATEST_SCHEMA_VERSION
 
@@ -267,3 +278,90 @@ def test_adding_the_same_requirement_twice_keeps_one(repo: Repository) -> None:
 def test_requirement_for_unknown_run_rejected(repo: Repository) -> None:
     with pytest.raises(PersistenceError):
         repo.add_requirement("missing", make_requirement())
+
+
+def make_scenario(scenario_id: str = "REQ-1-S1") -> TestScenario:
+    return TestScenario(
+        scenario_id=scenario_id,
+        req_id="REQ-1",
+        scenario_type="positive",
+        description="happy path",
+        model="mock-1",
+        prompt_version="tg-v1",
+    )
+
+
+def make_case(tc_id: str = "TC-1") -> TestCase:
+    return TestCase(
+        tc_id=tc_id,
+        req_id="REQ-1",
+        scenario_id="REQ-1-S1",
+        title="t",
+        steps=["a"],
+        expected=["b"],
+        priority="M",
+        model="mock-1",
+        prompt_version="tg-v1",
+    )
+
+
+@pytest.mark.blackbox
+def test_scenarios_cases_and_data_are_stored_per_run(repo: Repository) -> None:
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_scenario("run-1", make_scenario())
+    repo.add_test_case("run-1", make_case("TC-1"))
+    repo.add_test_case("run-2", make_case("TC-2"))
+    repo.add_test_data("run-1", TestData(tc_id="TC-1", dataset={"email": "a@example.test"}))
+    assert repo.list_scenarios("run-1") == [make_scenario()]
+    assert [c.tc_id for c in repo.list_test_cases("run-1")] == ["TC-1"]
+    assert repo.list_test_data("run-1")[0].dataset == {"email": "a@example.test"}
+    assert repo.list_scenarios("run-2") == []
+
+
+@pytest.mark.blackbox
+def test_adding_the_same_case_twice_keeps_one(repo: Repository) -> None:
+    repo.create_run(make_run())
+    repo.add_test_case("run-1", make_case())
+    repo.add_test_case("run-1", make_case())
+    assert len(repo.list_test_cases("run-1")) == 1
+
+
+@pytest.mark.blackbox
+def test_review_status_update_and_filter(repo: Repository) -> None:
+    repo.create_run(make_run())
+    repo.add_test_case("run-1", make_case("TC-1"))
+    repo.add_test_case("run-1", make_case("TC-2"))
+    repo.set_review_status("run-1", "TC-2", ReviewStatus.APPROVED)
+    approved = repo.list_test_cases("run-1", ReviewStatus.APPROVED)
+    assert [c.tc_id for c in approved] == ["TC-2"]
+    pending = repo.list_test_cases("run-1", ReviewStatus.PENDING)
+    assert [c.tc_id for c in pending] == ["TC-1"]
+
+
+@pytest.mark.blackbox
+def test_review_status_update_for_unknown_case_raises(repo: Repository) -> None:
+    repo.create_run(make_run())
+    with pytest.raises(PersistenceError):
+        repo.set_review_status("run-1", "TC-404", ReviewStatus.APPROVED)
+
+
+@pytest.mark.blackbox
+def test_generated_records_for_unknown_run_rejected(repo: Repository) -> None:
+    with pytest.raises(PersistenceError):
+        repo.add_test_case("missing", make_case())
+    with pytest.raises(PersistenceError):
+        repo.add_scenario("missing", make_scenario())
+    with pytest.raises(PersistenceError):
+        repo.add_test_data("missing", TestData(tc_id="TC-1", dataset={}))
+
+
+@pytest.mark.blackbox
+def test_latest_run_with_requirements(repo: Repository) -> None:
+    assert repo.latest_run_with_requirements() is None
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_requirement("run-1", make_requirement())
+    assert repo.latest_run_with_requirements() == "run-1"
+    repo.add_requirement("run-2", make_requirement())
+    assert repo.latest_run_with_requirements() == "run-2"

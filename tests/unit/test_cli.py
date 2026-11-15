@@ -69,7 +69,7 @@ def test_valid_config_reaches_unimplemented_stage(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     path = write_config(tmp_path, {"llm_provider": "mock", "llm_call_cap": 5})
-    assert main(["generate", "--config", str(path)]) == 3
+    assert main(["script", "--config", str(path)]) == 3
     assert "not implemented" in capsys.readouterr().err
 
 
@@ -163,3 +163,61 @@ def test_analyze_refuses_openai_provider_until_implemented(
     )
     assert code == 2
     assert "mock" in capsys.readouterr().err
+
+
+def analyze_sample(db: Path) -> None:
+    assert main(["analyze", "--input", str(DATA / "sample_requirements.md"), "--db", str(db)]) == 0
+
+
+@pytest.mark.blackbox
+def test_generate_command_builds_cases_for_ready_requirements_and_exports(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    analyze_sample(db)
+    capsys.readouterr()
+    out_dir = tmp_path / "export"
+    code = main(["generate", "--db", str(db), "--export-dir", str(out_dir)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "12 test cases" in out
+    assert "3 skipped" in out
+    assert "0 duplicates removed" in out
+    assert "mock-generated" in out
+    assert sorted(p.suffix for p in out_dir.iterdir()) == [".csv", ".json", ".md"]
+
+
+@pytest.mark.blackbox
+def test_generate_without_analysed_requirements_fails_clearly(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main(["generate", "--db", str(tmp_path / "empty.db")]) == 1
+    assert "analyze" in capsys.readouterr().err
+
+
+@pytest.mark.blackbox
+def test_review_command_changes_status_and_scripting_list(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    analyze_sample(db)
+    assert main(["generate", "--db", str(db)]) == 0
+    capsys.readouterr()
+    assert main(["review", "--db", str(db), "--list"]) == 0
+    first_id = capsys.readouterr().out.split()[0]
+    assert main(["review", "--db", str(db), "--approve", first_id]) == 0
+    capsys.readouterr()
+    assert main(["review", "--db", str(db), "--list", "--status", "Approved"]) == 0
+    assert capsys.readouterr().out.split()[0] == first_id
+
+
+@pytest.mark.blackbox
+def test_review_of_unknown_case_fails_clearly(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    analyze_sample(db)
+    assert main(["generate", "--db", str(db)]) == 0
+    capsys.readouterr()
+    assert main(["review", "--db", str(db), "--approve", "TC-NOPE"]) == 1
+    assert "TC-NOPE" in capsys.readouterr().err
