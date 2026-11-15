@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from typing import Any
 
 import pytest
@@ -9,6 +10,7 @@ from pydantic import ValidationError as PydanticValidationError
 
 from aitaf.core.models import (
     AnalyzedRequirement,
+    HealingEvent,
     Locator,
     LocatorStrategy,
     ReviewStatus,
@@ -203,3 +205,58 @@ def test_script_record_requires_label_fields() -> None:
             model="m",
             prompt_version="p",
         )
+
+
+def _event(**overrides: Any) -> HealingEvent:
+    data: dict[str, Any] = {
+        "event_id": "e1",
+        "run_id": "run-1",
+        "step_ref": "TC-1:step3",
+        "loc_id": "login.login_button",
+        "old_strategy": LocatorStrategy(kind="id", value="a"),
+        "new_strategy": LocatorStrategy(kind="css", value="button"),
+        "strategy_used": "fallback",
+        "confidence": 0.9,
+        "validated": True,
+        "outcome": "proposed",
+        "duration_ms": 5,
+        "created_at": datetime(2026, 11, 14, tzinfo=UTC),
+    }
+    data.update(overrides)
+    return HealingEvent(**data)
+
+
+@pytest.mark.blackbox
+def test_healing_event_starts_proposed_and_unapproved() -> None:
+    event = _event()
+    assert event.approved is False and event.outcome == "proposed"
+
+
+@pytest.mark.blackbox
+@pytest.mark.parametrize("confidence", [-0.1, 1.1])
+def test_healing_event_confidence_must_be_between_zero_and_one(confidence: float) -> None:
+    with pytest.raises(PydanticValidationError):
+        _event(confidence=confidence)
+
+
+@pytest.mark.whitebox
+def test_a_proposed_event_needs_a_new_locator_and_validation() -> None:
+    with pytest.raises(PydanticValidationError):
+        _event(new_strategy=None)
+    with pytest.raises(PydanticValidationError):
+        _event(validated=False)
+
+
+@pytest.mark.whitebox
+def test_only_a_proposed_event_can_be_approved() -> None:
+    assert _event(approved=True).approved
+    with pytest.raises(PydanticValidationError):
+        _event(outcome="rejected", validated=False, approved=True)
+
+
+@pytest.mark.whitebox
+def test_rejected_and_no_candidate_events_are_never_validated() -> None:
+    assert _event(outcome="rejected", validated=False).outcome == "rejected"
+    assert _event(outcome="no_candidate", validated=False, new_strategy=None).new_strategy is None
+    with pytest.raises(PydanticValidationError):
+        _event(outcome="rejected", validated=True)

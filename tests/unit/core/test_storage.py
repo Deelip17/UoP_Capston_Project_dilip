@@ -19,6 +19,7 @@ import pytest
 from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
+    HealingEvent,
     LlmAudit,
     Locator,
     LocatorStrategy,
@@ -422,3 +423,47 @@ def test_script_or_locator_for_unknown_run_rejected(repo: Repository) -> None:
         repo.add_script("missing", make_script())
     with pytest.raises(PersistenceError):
         repo.add_locator("missing", make_locator())
+
+
+def make_healing_event(event_id: str = "e1", outcome: str = "proposed") -> HealingEvent:
+    proposed = outcome == "proposed"
+    return HealingEvent(
+        event_id=event_id,
+        run_id="run-1",
+        step_ref="TC-1:step3",
+        loc_id="login.login_button",
+        old_strategy=LocatorStrategy(kind="id", value="a"),
+        new_strategy=LocatorStrategy(kind="css", value="button") if proposed else None,
+        strategy_used="fallback",
+        confidence=0.9,
+        validated=proposed,
+        outcome=outcome,  # type: ignore[arg-type]
+        duration_ms=3,
+        created_at=NOW,
+    )
+
+
+@pytest.mark.blackbox
+def test_healing_events_are_stored_per_run(repo: Repository) -> None:
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_healing_event("run-1", make_healing_event("e1"))
+    repo.add_healing_event("run-1", make_healing_event("e2", "no_candidate"))
+    repo.add_healing_event("run-2", make_healing_event("e3").model_copy(update={"run_id": "run-2"}))
+    assert [e.event_id for e in repo.list_healing_events("run-1")] == ["e1", "e2"]
+    assert repo.list_healing_events("run-1")[1].new_strategy is None
+
+
+@pytest.mark.blackbox
+def test_updating_a_healing_event_replaces_it(repo: Repository) -> None:
+    repo.create_run(make_run())
+    repo.add_healing_event("run-1", make_healing_event())
+    repo.add_healing_event("run-1", make_healing_event().model_copy(update={"approved": True}))
+    stored = repo.list_healing_events("run-1")
+    assert len(stored) == 1 and stored[0].approved
+
+
+@pytest.mark.blackbox
+def test_healing_event_for_unknown_run_rejected(repo: Repository) -> None:
+    with pytest.raises(PersistenceError):
+        repo.add_healing_event("missing", make_healing_event())

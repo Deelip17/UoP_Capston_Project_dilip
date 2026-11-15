@@ -7,6 +7,7 @@ from datetime import datetime
 from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
+    HealingEvent,
     LlmAudit,
     Locator,
     ReviewStatus,
@@ -33,6 +34,7 @@ class InMemoryRepository:
         self._data: dict[tuple[str, str], TestData] = {}
         self._scripts: dict[tuple[str, str], Script] = {}
         self._locators: dict[tuple[str, str], Locator] = {}
+        self._healing: dict[tuple[str, str], HealingEvent] = {}
 
     def _require_run(self, run_id: str) -> None:
         if run_id not in self._runs:
@@ -126,6 +128,13 @@ class InMemoryRepository:
 
     def list_locators(self, run_id: str) -> list[Locator]:
         return [loc for (rid, _), loc in self._locators.items() if rid == run_id]
+
+    def add_healing_event(self, run_id: str, event: HealingEvent) -> None:
+        self._require_run(run_id)
+        self._healing[(run_id, event.event_id)] = event
+
+    def list_healing_events(self, run_id: str) -> list[HealingEvent]:
+        return [e for (rid, _), e in self._healing.items() if rid == run_id]
 
     def close(self) -> None:
         return None

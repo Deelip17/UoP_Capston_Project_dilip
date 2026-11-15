@@ -13,6 +13,7 @@ from typing import Protocol
 
 from aitaf.core.models import (
     AnalyzedRequirement,
+    HealingEvent,
     LlmAudit,
     Locator,
     ReviewStatus,
@@ -94,6 +95,12 @@ class Repository(Protocol):
 
     def list_locators(self, run_id: str) -> list[Locator]:
         """Return the locators of the run in insertion order."""
+
+    def add_healing_event(self, run_id: str, event: HealingEvent) -> None:
+        """Store (or replace) a healing event. Unknown run raises PersistenceError."""
+
+    def list_healing_events(self, run_id: str) -> list[HealingEvent]:
+        """Return the healing events of the run in insertion order."""
 
     def close(self) -> None:
         """Release resources."""

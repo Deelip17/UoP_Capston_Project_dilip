@@ -320,3 +320,101 @@ def test_script_command_accepts_an_explicitly_allowed_host(
     )
     assert code == 0
     assert "http://demo.example" in (out_dir / "conftest.py").read_text(encoding="utf-8")
+
+
+DOM = Path(__file__).resolve().parents[2] / "data" / "dom"
+
+
+def heal_args(after: str, *extra: str, db: Path) -> list[str]:
+    return [
+        "heal",
+        "--db",
+        str(db),
+        "--before",
+        str(DOM / "login_before.html"),
+        "--after",
+        str(DOM / after),
+        "--primary",
+        "id=login-button",
+        "--fallback",
+        "css=button[type=submit]",
+        *extra,
+    ]
+
+
+@pytest.mark.blackbox
+def test_heal_command_repairs_via_a_stored_fallback(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main(heal_args("login_id_changed.html", db=tmp_path / "h.db")) == 0
+    out = capsys.readouterr().out
+    assert "locator failure" in out
+    assert "HEALED" in out and "fallback" in out and "awaiting human approval" in out
+
+
+@pytest.mark.blackbox
+def test_heal_command_repairs_via_dom_similarity(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main(heal_args("login_all_changed.html", db=tmp_path / "h.db")) == 0
+    out = capsys.readouterr().out
+    assert "similarity" in out and "HEALED" in out and "id=go-4271" in out
+
+
+@pytest.mark.blackbox
+def test_heal_command_reaches_the_llm_step_only_when_enabled(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main(heal_args("login_renamed.html", db=tmp_path / "off.db")) == 1
+    assert "NOT HEALED" in capsys.readouterr().out
+    assert main(heal_args("login_renamed.html", "--llm", db=tmp_path / "on.db")) == 0
+    out = capsys.readouterr().out
+    assert "HEALED" in out and "llm" in out and "mock-generated" in out
+
+
+@pytest.mark.blackbox
+def test_heal_command_rejects_a_present_but_wrong_element(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main(heal_args("login_wrong_element.html", db=tmp_path / "h.db")) == 1
+    out = capsys.readouterr().out
+    assert "rejected" in out and "NOT HEALED" in out and "step still fails" in out
+
+
+@pytest.mark.blackbox
+def test_heal_command_leaves_application_defects_alone(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    code = main(
+        heal_args(
+            "login_id_changed.html",
+            "--error",
+            "AssertionError",
+            "--message",
+            "assert 1 == 2",
+            db=tmp_path / "h.db",
+        )
+    )
+    out = capsys.readouterr().out
+    assert code == 1
+    assert "application defect" in out and "not healable" in out.lower()
+
+
+@pytest.mark.blackbox
+def test_heal_command_rejects_a_malformed_strategy(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    args = heal_args("login_id_changed.html", db=tmp_path / "h.db")
+    args[args.index("id=login-button")] = "nonsense"
+    assert main(args) == 2
+    assert "kind=value" in capsys.readouterr().err
+
+
+@pytest.mark.blackbox
+def test_heal_command_needs_the_primary_to_resolve_in_the_before_page(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    args = heal_args("login_id_changed.html", db=tmp_path / "h.db")
+    args[args.index("id=login-button")] = "id=not-on-the-page"
+    assert main(args) == 1
+    assert "--before" in capsys.readouterr().err

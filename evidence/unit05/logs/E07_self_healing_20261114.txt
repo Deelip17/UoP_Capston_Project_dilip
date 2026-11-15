@@ -1,0 +1,74 @@
+# 1. Id changed: a stored fallback locator repairs it (cheapest rung)
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_id_changed.html --primary id=login-button --fallback css=button[type=submit]
+run <id> (mock-generated output, review before use)
+failure: locator failure (NoSuchElementException)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+attempt  fallback    css=button[type=submit]      proposed      confidence 0.90
+result: HEALED via css=button[type=submit] (confidence 0.90); proposed, awaiting human approval
+(exit code 0)
+
+# 2. Every stored strategy fails: DOM-similarity matching repairs it
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_all_changed.html --primary id=login-button --fallback css=button[type=submit]
+run <id> (mock-generated output, review before use)
+failure: locator failure (NoSuchElementException)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+attempt  fallback    -                            no_candidate    [no stored fallback locator matched an element]
+attempt  similarity  id=go-4271                   proposed      confidence 0.71
+result: HEALED via id=go-4271 (confidence 0.71); proposed, awaiting human approval
+(exit code 0)
+
+# 3. Page structure changed too: similarity still finds the button
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_wrapped.html --primary id=login-button --fallback css=button[type=submit]
+run <id> (mock-generated output, review before use)
+failure: locator failure (NoSuchElementException)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+attempt  fallback    -                            no_candidate    [no stored fallback locator matched an element]
+attempt  similarity  id=submit-9                  proposed      confidence 0.81
+result: HEALED via id=submit-9 (confidence 0.81); proposed, awaiting human approval
+(exit code 0)
+
+# 4. Present but wrong element: rejected by validation, the step still fails
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_wrong_element.html --primary id=login-button --fallback css=button[type=submit]
+run <id> (mock-generated output, review before use)
+failure: locator failure (NoSuchElementException)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+attempt  fallback    css=button[type=submit]      rejected      confidence 0.67  [text mismatch: expected 'Sign in', found 'Cancel order']
+attempt  similarity  id=cancel-order              rejected      confidence 0.67  [text mismatch: expected 'Sign in', found 'Cancel order']
+result: NOT HEALED: no candidate passed validation; the step still fails
+(exit code 1)
+
+# 5. Application defect (assertion failure): never healed
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_id_changed.html --primary id=login-button --fallback css=button[type=submit] --error AssertionError --message assert 'Welcome' in 'Invalid password'
+run <id> (mock-generated output, review before use)
+failure: application defect (AssertionError)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+result: not healable: application defect failures are never repaired (a real defect must stay visible)
+(exit code 1)
+
+# 6. Button renamed, LLM rung disabled (default): not healed
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_renamed.html --primary id=login-button --fallback css=button[type=submit]
+run <id> (mock-generated output, review before use)
+failure: locator failure (NoSuchElementException)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+attempt  fallback    -                            no_candidate    [no stored fallback locator matched an element]
+attempt  similarity  -                            no_candidate    [no element reached the similarity threshold 0.6]
+result: NOT HEALED: no candidate passed validation; the step still fails
+(exit code 1)
+
+# 7. Button renamed, LLM rung enabled (mock provider): reached only after rungs 1 and 2 failed
+$ python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_renamed.html --primary id=login-button --fallback css=button[type=submit] --llm
+run <id> (mock-generated output, review before use)
+failure: locator failure (NoSuchElementException)
+baseline: button id="login-button" type="submit" text="Sign in" (from --before)
+attempt  fallback    -                            no_candidate    [no stored fallback locator matched an element]
+attempt  similarity  -                            no_candidate    [no element reached the similarity threshold 0.6]
+attempt  llm         id=x1                        proposed      confidence 0.70
+result: HEALED via id=x1 (confidence 0.70); proposed, awaiting human approval
+(exit code 0)
+
+# 8. Human approval gate (FR-25): a healed locator changes the repository only after approval
+healing event: outcome=proposed approved=False new locator=css=button[type=submit]
+permanent update without approval: refused (permanent locator update needs human approval of the healing event)
+locator repository: version 1, primary id=login-button
+after human approval: version 2, primary css=button[type=submit], fallbacks [id=login-button]
+healing success rates for this run: {'overall': 1.0, 'fallback': 1.0}

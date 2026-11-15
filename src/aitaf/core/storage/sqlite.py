@@ -15,6 +15,7 @@ from pathlib import Path
 from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
+    HealingEvent,
     LlmAudit,
     Locator,
     ReviewStatus,
@@ -109,6 +110,15 @@ MIGRATIONS: tuple[str, ...] = (
         loc_id TEXT NOT NULL,
         record TEXT NOT NULL,
         UNIQUE (run_id, loc_id)
+    );
+    """,
+    """
+    CREATE TABLE healing_events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        event_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, event_id)
     );
     """,
 )
@@ -349,6 +359,19 @@ class SqliteRepository:
             "SELECT record FROM locators WHERE run_id = ? ORDER BY id", (run_id,)
         ).fetchall()
         return [Locator.model_validate_json(row["record"]) for row in rows]
+
+    def add_healing_event(self, run_id: str, event: HealingEvent) -> None:
+        self._write(
+            "INSERT INTO healing_events (run_id, event_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, event_id) DO UPDATE SET record = excluded.record",
+            (run_id, event.event_id, event.model_dump_json()),
+        )
+
+    def list_healing_events(self, run_id: str) -> list[HealingEvent]:
+        rows = self._conn.execute(
+            "SELECT record FROM healing_events WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [HealingEvent.model_validate_json(row["record"]) for row in rows]
 
     def close(self) -> None:
         self._conn.close()

@@ -38,7 +38,12 @@ _INJECTION_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
             r"\b(system prompt|instructions|api key|secret|password)\b"
         ),
     ),
-    ("delimiter-spoof", re.compile(r"REQUIREMENT>>>|<<<REQUIREMENT|TEST_CASE>>>|<<<TEST_CASE")),
+    (
+        "delimiter-spoof",
+        re.compile(
+            r"REQUIREMENT>>>|<<<REQUIREMENT|TEST_CASE>>>|<<<TEST_CASE|HEAL_CONTEXT>>>|<<<HEAL_CONTEXT"
+        ),
+    ),
     (
         "chat-markup",
         re.compile(r"<\|[a-z_]+\|>|^\s*#{1,3}\s*system\b", re.IGNORECASE | re.MULTILINE),

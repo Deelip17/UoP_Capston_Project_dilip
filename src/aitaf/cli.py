@@ -2,9 +2,10 @@
 
 ``aitaf run`` runs the whole pipeline and one command exists per stage. Every
 command validates the configuration file first and rejects invalid settings with
-a clear message (exit code 2). ``analyze``, ``generate``, ``review`` and ``script``
-are implemented; the other stages report that they are not implemented yet (exit
-code 3) until their slices land.
+a clear message (exit code 2). ``analyze``, ``generate``, ``review``, ``script``
+and ``heal`` (a stand-alone demonstration of the Self-Healing Engine on DOM
+snapshots) are implemented; the other stages report that they are not implemented
+yet (exit code 3) until their slices land.
 """
 
 from __future__ import annotations
@@ -19,10 +20,11 @@ from pathlib import Path
 from aitaf.analyzer import COMPONENT as ANALYZER_COMPONENT
 from aitaf.analyzer import RequirementAnalyzer, load_requirements, mock_extraction_responder
 from aitaf.core.config import Settings
-from aitaf.core.errors import AitafError, ConfigError, PersistenceError
+from aitaf.core.errors import AitafError, ConfigError, PersistenceError, ValidationError
+from aitaf.core.healing import FailureContext, FailureKind, HealStatus
 from aitaf.core.llm import LlmGateway, MockProvider
 from aitaf.core.logging import configure_root, new_run_id, set_run_id
-from aitaf.core.models import ReviewStatus, Run, RunStatus
+from aitaf.core.models import Locator, LocatorStrategy, ReviewStatus, Run, RunStatus
 from aitaf.core.storage import Repository, SqliteRepository
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
 from aitaf.generator import (
@@ -31,6 +33,15 @@ from aitaf.generator import (
     export_cases,
     mock_generation_responder,
     set_review_status,
+)
+from aitaf.healing import COMPONENT as HEALING_COMPONENT
+from aitaf.healing import (
+    HealingConfig,
+    SelfHealingEngine,
+    find_elements,
+    mock_healing_responder,
+    parse_dom,
+    signature_of,
 )
 from aitaf.scriptgen import COMPONENT as SCRIPT_COMPONENT
 from aitaf.scriptgen import ScriptGenerator, mock_script_responder
@@ -86,6 +97,26 @@ def build_parser() -> argparse.ArgumentParser:
                 action="store_true",
                 help="also script Pending cases (Rejected cases are never scripted)",
             )
+    heal = commands.add_parser("heal", help="demonstrate locator healing on two DOM snapshots")
+    heal.add_argument("--config", help="path to the JSON configuration file")
+    heal.add_argument("--db", default="aitaf.db", help="SQLite database path")
+    heal.add_argument("--before", required=True, help="HTML snapshot where the locator worked")
+    heal.add_argument("--after", required=True, help="HTML snapshot where the step failed")
+    heal.add_argument(
+        "--primary", required=True, metavar="KIND=VALUE", help="stored primary locator"
+    )
+    heal.add_argument(
+        "--fallback", action="append", default=[], metavar="KIND=VALUE", help="stored fallback"
+    )
+    heal.add_argument("--name", default="target", help="locator name")
+    heal.add_argument(
+        "--action",
+        default="click",
+        choices=["click", "type", "select", "assert_text", "assert_visible"],
+    )
+    heal.add_argument("--error", default="NoSuchElementException", help="exception type")
+    heal.add_argument("--message", default="", help="exception message")
+    heal.add_argument("--llm", action="store_true", help="enable the LLM rung (mock provider)")
     review = commands.add_parser("review", help="review generated test cases (human gate)")
     review.add_argument("--config", help="path to the JSON configuration file")
     review.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -107,6 +138,7 @@ def _gateway(settings: Settings, repo: Repository) -> LlmGateway:
             ANALYZER_COMPONENT: mock_extraction_responder,
             GENERATOR_COMPONENT: mock_generation_responder,
             SCRIPT_COMPONENT: mock_script_responder,
+            HEALING_COMPONENT: mock_healing_responder,
         }
     )
     return LlmGateway(provider, repo, call_cap=settings.llm_call_cap)
@@ -230,6 +262,110 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+_STRATEGY_KINDS = ("id", "css", "xpath", "text", "role", "attr")
+_KIND_LABELS = {
+    FailureKind.LOCATOR: "locator failure",
+    FailureKind.APPLICATION_DEFECT: "application defect",
+    FailureKind.UNKNOWN: "unknown failure",
+}
+
+
+def _strategy_arg(text: str) -> LocatorStrategy:
+    kind, sep, value = text.partition("=")
+    if not sep or kind not in _STRATEGY_KINDS or not value:
+        raise ConfigError(
+            f"locator must look like kind=value with kind one of {', '.join(_STRATEGY_KINDS)}; "
+            f"got {text!r}"
+        )
+    return LocatorStrategy(kind=kind, value=value)  # type: ignore[arg-type]
+
+
+def _read_snapshot(path: str) -> str:
+    try:
+        return Path(path).read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise ValidationError(f"cannot read {path}: {exc}") from exc
+
+
+def _show(strategy: LocatorStrategy | None) -> str:
+    return f"{strategy.kind}={strategy.value}" if strategy else "-"
+
+
+def _heal(settings: Settings, args: argparse.Namespace) -> int:
+    _require_mock(settings)
+    primary = _strategy_arg(args.primary)
+    fallbacks = [_strategy_arg(item) for item in args.fallback]
+    before = parse_dom(_read_snapshot(args.before))
+    found = find_elements(before, primary)
+    if not found:
+        raise ValidationError("the primary locator does not resolve in the --before page")
+    baseline = signature_of(before, found[0])
+    locator = Locator(
+        loc_id=f"cli.{args.name}",
+        page="cli",
+        name=args.name,
+        primary=primary,
+        fallbacks=fallbacks,
+        model="cli-demo",
+        prompt_version="n/a",
+    )
+    repo = SqliteRepository(args.db)
+    try:
+        run_id = new_run_id()
+        set_run_id(run_id)
+        repo.create_run(
+            Run(
+                run_id=run_id,
+                started_at=datetime.now(UTC),
+                status=RunStatus.RUNNING,
+                provider=settings.llm_provider,
+                environment=f"python{platform.python_version()}-{platform.system()}",
+            )
+        )
+        engine = SelfHealingEngine(
+            repo,
+            HealingConfig(llm_enabled=args.llm),
+            _gateway(settings, repo) if args.llm else None,
+        )
+        result = engine.heal(
+            FailureContext(
+                step_ref=f"cli:{args.name}",
+                action=args.action,
+                locator=locator,
+                error_type=args.error,
+                error_message=args.message,
+                dom_html=_read_snapshot(args.after),
+                baseline=baseline,
+            )
+        )
+        repo.finish_run(run_id, RunStatus.COMPLETED, datetime.now(UTC))
+    finally:
+        repo.close()
+
+    print(f"run {run_id} ({_MOCK_NOTE})")
+    print(f"failure: {_KIND_LABELS[result.kind]} ({args.error})")
+    shown = " ".join(f'{k}="{v}"' for k, v in baseline.attrs.items() if k in ("id", "type", "name"))
+    print(f'baseline: {baseline.tag} {shown} text="{baseline.text}" (from --before)')
+    for event in result.events:
+        detail = f"confidence {event.confidence:.2f}" if event.outcome != "no_candidate" else ""
+        extra = f"  [{event.reason}]" if event.reason else ""
+        print(
+            f"attempt  {event.strategy_used:<11} {_show(event.new_strategy):<28} "
+            f"{event.outcome:<13} {detail}{extra}"
+        )
+    if result.status is HealStatus.HEALED:
+        print(
+            f"result: HEALED via {_show(result.strategy)} (confidence {result.confidence:.2f}); "
+            "proposed, awaiting human approval"
+        )
+        return EXIT_OK
+    if result.status is HealStatus.NOT_HEALABLE:
+        print(f"result: not healable: {result.reason} (a real defect must stay visible)")
+    else:
+        print(f"result: NOT HEALED: {result.reason}")
+    return EXIT_FAILURE
+
+
 def _review(args: argparse.Namespace) -> int:
     repo = SqliteRepository(args.db)
     try:
@@ -262,6 +398,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "generate": lambda: _generate(settings, args),
         "review": lambda: _review(args),
         "script": lambda: _script(settings, args),
+        "heal": lambda: _heal(settings, args),
     }
     handler = handlers.get(args.command)
     if handler is None:

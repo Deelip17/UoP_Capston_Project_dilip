@@ -10,7 +10,7 @@ Later slices add further records (``TestScenario``, ``TestData``, ``Script``,
 ``Locator``, ``Artifact``, ``HealingEvent``, ``FailureAnalysis``). So far:
 ``AnalyzedRequirement`` and ``TestCase`` (slice 1), ``Run``, ``TestResult`` and
 ``LlmAudit`` (slice 2), ``TestScenario`` and ``TestData`` (slice 4), ``Script``, ``Locator`` and
-``LocatorStrategy`` (slice 5).
+``LocatorStrategy`` (slice 5), ``HealingEvent`` (slice 6).
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from datetime import datetime
 from enum import StrEnum
 from typing import ClassVar, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class RiskLevel(StrEnum):
@@ -203,3 +203,39 @@ class Script(_BaseRecord):
     model: str = Field(min_length=1)
     prompt_version: str = Field(min_length=1)
     ai_label: Literal["ai-generated"] = "ai-generated"
+
+
+class HealingEvent(_BaseRecord):
+    """One healing attempt: old and new locator, strategy, confidence, outcome (FR-23 to FR-25).
+
+    Events start unapproved. Only a validated, proposed event can be approved, and
+    only an approved event may change the locator repository permanently.
+    """
+
+    event_id: str = Field(min_length=1)
+    run_id: str = Field(min_length=1)
+    step_ref: str = Field(min_length=1)
+    loc_id: str = Field(min_length=1)
+    old_strategy: LocatorStrategy
+    new_strategy: LocatorStrategy | None = None
+    strategy_used: Literal["fallback", "similarity", "llm"]
+    confidence: float = Field(ge=0.0, le=1.0)
+    validated: bool
+    outcome: Literal["proposed", "rejected", "no_candidate"]
+    approved: bool = False
+    reason: str = ""
+    duration_ms: int = Field(ge=0)
+    model: str | None = None
+    prompt_version: str | None = None
+    created_at: datetime
+
+    @model_validator(mode="after")
+    def _outcome_is_consistent(self) -> HealingEvent:
+        if self.outcome == "proposed":
+            if self.new_strategy is None or not self.validated:
+                raise ValueError("a proposed event needs a new locator and must be validated")
+        elif self.validated:
+            raise ValueError("only a proposed event can be validated")
+        if self.approved and self.outcome != "proposed":
+            raise ValueError("only a proposed event can be approved")
+        return self
