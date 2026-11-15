@@ -2,7 +2,7 @@
 
 MSIT Capstone Project, University of the People. A working **prototype** of an AI-assisted quality-assurance pipeline, evaluated on public demonstration web applications only.
 
-> **Status:** Unit 3 baseline: architecture, requirements and Git strategy are documented; implementation starts in Units 4–5. No source code has been written yet.
+> **Status:** Unit 5 core implemented and released as [v0.5.0](https://github.com/Deelip17/UoP_Capston_Project_dilip/releases/tag/v0.5.0). Four of the eight modules work (Requirement Analyzer, Test Case Generator, Script Generator, a Self-Healing core) with masking, an LLM Gateway, SQLite persistence and metrics. **All LLM output so far comes from a deterministic mock provider; no live model has been called.** The Execution Engine, Failure Analyzer, Reporting Engine and Dashboard are not built yet (Units 6 and 7). What is and is not shown: [docs/project-management/UNIT5_HANDOFF.md](docs/project-management/UNIT5_HANDOFF.md).
 
 ## What the framework will do
 
@@ -14,7 +14,7 @@ Technology: Python 3.12, Playwright, Selenium, PyTest, OpenAI API, SQLite, Panda
 
 | Folder | Contents |
 |---|---|
-| `src/aitaf/` | Source code: one package per module plus a shared `core` (placeholder until Unit 5) |
+| `src/aitaf/` | Source code: `analyzer`, `generator`, `scriptgen`, `healing`, a shared `core` and CI tooling in `quality`; each package has a README |
 | `tests/` | Unit, integration and end-to-end tests |
 | `prompts/` | Versioned LLM prompt templates |
 | `sample-apps/` | Local demonstration application used as the system under test |
@@ -25,7 +25,26 @@ Technology: Python 3.12, Playwright, Selenium, PyTest, OpenAI API, SQLite, Panda
 | `docs/adr/` | Architecture decision records |
 | `evidence/` | Screenshots and logs with an evidence register |
 | `scripts/` | Developer helper scripts |
-| `.github/` | Pull-request template (workflows added in Unit 4) |
+| `.github/` | Pull-request template and the workflows `ci.yml` (checks on every push) and `release.yml` (GitHub Release on a `v*` tag) |
+
+## Try it (mock provider, no API key needed)
+
+```
+python -m venv .venv
+.venv\Scripts\activate            # Windows; on Linux or macOS: source .venv/bin/activate
+pip install -r requirements-dev.txt
+pip install -e . --no-deps
+python -m aitaf analyze --input data/requirements/sample_requirements.md --db demo.db
+python -m aitaf generate --db demo.db
+python -m aitaf review --db demo.db --list
+python -m aitaf review --db demo.db --approve <TC-ID from the list>
+python -m aitaf script --db demo.db --out-dir generated_tests
+python -m aitaf metrics --db demo.db
+python -m aitaf heal --before data/dom/login_before.html --after data/dom/login_all_changed.html --primary id=login-button --fallback "css=button[type=submit]"
+pytest
+```
+
+`run`, `execute`, `diagnose` and `report` are placeholders that exit with code 3. Setup details, including an optional API key, are in [docs/user-guide/SETUP.md](docs/user-guide/SETUP.md).
 
 ## Branching
 
