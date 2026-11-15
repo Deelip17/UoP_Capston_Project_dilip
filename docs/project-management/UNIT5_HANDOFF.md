@@ -32,6 +32,8 @@ Non-functional requirements shown: NFR-07 (kill-process durability test), 09, 10
 
 ## 4. Evidence (author captures the screenshots)
 
+**Step-by-step capture instructions (GitHub web first), the figure list with captions, the assignment coverage matrix (tasks A1 to C3), the objectives alignment table and the prompt for Cowork are in `UNIT5_SCREENSHOT_GUIDE.md`.** Screenshots go in `evidence/unit05/screenshots/`.
+
 Text logs and generated files are in the repository; the paper needs **screenshots inside the document**, so each ID below still needs a terminal or browser capture unless noted. Register: `evidence/EVIDENCE_REGISTER.md`.
 
 | ID | Shows | Repository file | Capture |

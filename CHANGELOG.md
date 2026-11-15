@@ -5,7 +5,7 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 ## [Unreleased]
 
 ### Added
-- Unit 5 slice 8: a README for every top-level package (each with a "Not built" section), documentation tests, the Unit 5 handoff document for writing the paper (`docs/project-management/UNIT5_HANDOFF.md`) and an updated top-level README with a quick start.
+- Unit 5 slice 8: a README for every top-level package (each with a "Not built" section), documentation tests, the Unit 5 handoff document for writing the paper (`docs/project-management/UNIT5_HANDOFF.md`) an updated top-level README with a quick start, and a screenshot guide with the assignment coverage matrix and the Cowork prompt (`docs/project-management/UNIT5_SCREENSHOT_GUIDE.md`).
 
 ## [0.5.0] - 2026-11-14
 
