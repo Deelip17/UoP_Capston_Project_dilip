@@ -41,6 +41,10 @@ python -c "import playwright, selenium, openai, pandas, sqlite3; print('imports 
 5. Check without printing the key: `python -c "import os; print('key set' if os.environ.get('OPENAI_API_KEY') else 'key missing')"`.
 6. Never paste the key into chat, code, `.env` files committed to Git, screenshots, logs or reports. If it leaks, delete it on the API keys page and create a new one.
 
+### Using the live provider (Unit 6)
+
+Set `LLM_PROVIDER=openai` for one terminal session (the default stays `mock`). Optional settings, all read from the environment or the JSON configuration file (never the key): `LLM_MODEL` (default `gpt-4o-mini`), `LLM_CALL_CAP` (default 100 per run), `LLM_MAX_RETRIES` (0 to 10, default 3, exponential back-off), `LLM_TIMEOUT_S` (default 30), `LLM_CACHE_DIR` (default `.aitaf_cache/llm`; empty turns the cache off), `LLM_PRICE_IN_PER_1K` and `LLM_PRICE_OUT_PER_1K` (for the cost column of `aitaf metrics`). Identical prompts are replayed from the cache at zero cost; if the API keeps failing after the retries the call falls back to the mock provider and the audit record says `fallback`. Output is labelled with the model name, never as mock.
+
 ## 5. Playwright and Selenium notes
 
 - Playwright stores browsers per user, outside the repository; `playwright install chromium` downloads only what the installed Playwright version expects.

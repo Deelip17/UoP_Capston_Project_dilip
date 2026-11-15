@@ -23,7 +23,10 @@ class LlmRequest(BaseModel):
 
 
 class LlmResponse(BaseModel):
-    """Provider output; ``mock`` is True for deterministic or recorded responses (FR-36)."""
+    """Provider output; ``mock`` is True for deterministic or recorded responses (FR-36).
+
+    ``cached`` is True when a live answer was replayed from the response cache (ADR-026).
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -32,6 +35,7 @@ class LlmResponse(BaseModel):
     tokens_in: int = Field(ge=0)
     tokens_out: int = Field(ge=0)
     mock: bool
+    cached: bool = False
 
 
 class LlmProvider(Protocol):

@@ -3,8 +3,9 @@
 The gateway enforces the per-run call cap, falls back to a deterministic
 provider when the primary one fails (FR-36) and writes exactly one audit record
 per call (FR-37, NFR-14). With a metrics recorder it also logs latency, outcome,
-tokens and cost per call (NFR-35). Retry with back-off (NFR-06) is added with the
-OpenAI provider; masking (FR-30) is applied by callers before the request is built.
+tokens and cost per call (NFR-35). Retry with back-off (NFR-06) lives in
+``RetryingProvider``; a replayed cache hit is audited as ``<provider>+cache`` and costs
+nothing (ADR-026). Masking (FR-30) is applied by callers before the request is built.
 """
 
 from __future__ import annotations
@@ -22,6 +23,12 @@ from aitaf.core.models import LlmAudit
 from aitaf.core.storage import Repository
 
 _log = get_logger(__name__)
+
+
+def _detail(response: LlmResponse) -> str:
+    if response.cached:
+        return "cached"
+    return "mock" if response.mock else "live"
 
 
 class LlmGateway:
@@ -57,8 +64,9 @@ class LlmGateway:
         with timed(self._metrics, "llm_gateway", req.component) as probe:
             try:
                 response = self._provider.complete(req)
-                self._audit(req, run_id, self._provider.name, response, "ok")
-                self._note(probe, response, "mock" if response.mock else "live")
+                name = f"{self._provider.name}+cache" if response.cached else self._provider.name
+                self._audit(req, run_id, name, response, "ok")
+                self._note(probe, response, _detail(response))
                 return response
             except LlmError as exc:
                 if self._fallback is None:
@@ -73,8 +81,12 @@ class LlmGateway:
     def _note(self, probe: Probe, response: LlmResponse, detail: str) -> None:
         probe.tokens_in = response.tokens_in
         probe.tokens_out = response.tokens_out
-        probe.cost_usd = token_cost(
-            response.tokens_in, response.tokens_out, self._price_in, self._price_out
+        probe.cost_usd = (
+            0.0
+            if response.cached
+            else token_cost(
+                response.tokens_in, response.tokens_out, self._price_in, self._price_out
+            )
         )
         probe.detail = detail
 

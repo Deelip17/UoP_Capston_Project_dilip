@@ -19,7 +19,16 @@ from aitaf.core.errors import ConfigError
 
 @pytest.fixture(autouse=True)
 def clean_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    for name in ("LLM_PROVIDER", "LLM_CALL_CAP", "LOG_LEVEL", "OPENAI_API_KEY"):
+    for name in (
+        "LLM_PROVIDER",
+        "LLM_CALL_CAP",
+        "LOG_LEVEL",
+        "OPENAI_API_KEY",
+        "LLM_MODEL",
+        "LLM_MAX_RETRIES",
+        "LLM_TIMEOUT_S",
+        "LLM_CACHE_DIR",
+    ):
         monkeypatch.delenv(name, raising=False)
 
 
@@ -152,17 +161,73 @@ def test_analyze_requires_input(capsys: pytest.CaptureFixture[str]) -> None:
     assert exit_info.value.code == 2
 
 
+@pytest.mark.blackbox
+def test_analyze_with_a_failing_live_provider_completes_through_the_mock_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """NFR-06 end to end: the live API fails, the pipeline still finishes offline."""
+    from aitaf.core.errors import LlmTransientError
+    from aitaf.core.llm import LlmRequest, LlmResponse, MockProvider
+
+    class Down:
+        name = "openai"
+
+        def complete(self, req: LlmRequest) -> LlmResponse:
+            raise LlmTransientError("simulated outage")
+
+    def fake_build(settings: Settings, responders=None, openai_client=None):  # type: ignore[no-untyped-def]
+        return Down(), MockProvider(responders=responders)
+
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-placeholder-value")
+    monkeypatch.setattr("aitaf.cli.build_providers", fake_build)
+    db = tmp_path / "a.db"
+    assert main(["analyze", "--input", str(DATA / "sample_plain.txt"), "--db", str(db)]) == 0
+    from aitaf.core.storage import SqliteRepository
+
+    repo = SqliteRepository(db)
+    try:
+        run_id = repo.latest_run_with_requirements()
+        assert run_id is not None
+        statuses = {audit.status for audit in repo.list_audits(run_id)}
+    finally:
+        repo.close()
+    assert statuses == {"fallback"}
+
+
+@pytest.mark.blackbox
+def test_live_output_is_labelled_as_ai_generated_not_mock(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """NFR-30: output from the live provider must not be labelled mock."""
+    from aitaf.core.llm import MockProvider
+
+    def fake_build(settings: Settings, responders=None, openai_client=None):  # type: ignore[no-untyped-def]
+        return MockProvider(responders=responders), None
+
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-placeholder-value")
+    monkeypatch.setenv("LLM_MODEL", "gpt-test")
+    monkeypatch.setattr("aitaf.cli.build_providers", fake_build)
+    code = main(
+        ["analyze", "--input", str(DATA / "sample_plain.txt"), "--db", str(tmp_path / "a.db")]
+    )
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "mock-generated" not in out
+    assert "AI-generated output from gpt-test" in out
+
+
 @pytest.mark.whitebox
-def test_analyze_refuses_openai_provider_until_implemented(
+def test_openai_provider_without_a_key_is_a_configuration_error(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("LLM_PROVIDER", "openai")
-    monkeypatch.setenv("OPENAI_API_KEY", "sk-placeholder-value")
     code = main(
         ["analyze", "--input", str(DATA / "sample_plain.txt"), "--db", str(tmp_path / "a.db")]
     )
     assert code == 2
-    assert "mock" in capsys.readouterr().err
+    assert "OPENAI_API_KEY" in capsys.readouterr().err
 
 
 def analyze_sample(db: Path) -> None:

@@ -1,0 +1,44 @@
+$ LLM_PROVIDER=openai LLM_CALL_CAP=10 LLM_MODEL=gpt-4o-mini (default) LLM_CACHE_DIR=.aitaf_cache/llm
+
+$ aitaf analyze --input data/requirements/sample_plain.txt --db demo.db   [run 1: live call]
+run f099bea54ec04192bb7da4048e756702 (AI-generated output from gpt-4o-mini via OpenAI (a failed call falls back to mock, see the audit), review before use)
+FLAGGED  REQ-15375051  Medium  sample_plain.txt#1
+           - What type of tax is included?
+           - Is the tax rate fixed or variable?
+           - Are there any exceptions to the tax inclusion?
+FLAGGED  REQ-90DD773B  Medium  sample_plain.txt#2
+           - What happens if the item is not found in the cart?
+           - Is there a confirmation step before removal?
+summary: 0 ready, 2 flagged, 0 rejected
+{"ts": "2026-11-15T17:12:39.616924+00:00", "level": "INFO", "logger": "httpx2", "run_id": "f099bea54ec04192bb7da4048e756702", "msg": "HTTP Request: POST https://api.openai.com/v1/chat/completions \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-15T17:12:41.971805+00:00", "level": "INFO", "logger": "httpx2", "run_id": "f099bea54ec04192bb7da4048e756702", "msg": "HTTP Request: POST https://api.openai.com/v1/chat/completions \"HTTP/1.1 200 OK\""}
+(exit code 0)
+
+$ aitaf metrics --db demo.db --run f099bea54ec04192bb7da4048e756702
+run f099bea54ec04192bb7da4048e756702
+component             operation              count errors  median_ms tokens_in tokens_out  cost_usd
+llm_gateway           requirement_analyzer       2      0    2194.15       373        205    0.0002
+requirement_analyzer  analyze                    1      0    4398.19         0          0    0.0000
+total cost: $0.0002
+(exit code 0)
+
+$ aitaf analyze --input data/requirements/sample_plain.txt --db demo.db   [run 2: same input, cache]
+run 4e4c5039ec8a4129881d4ba2db1e894d (AI-generated output from gpt-4o-mini via OpenAI (a failed call falls back to mock, see the audit), review before use)
+FLAGGED  REQ-15375051  Medium  sample_plain.txt#1
+           - What type of tax is included?
+           - Is the tax rate fixed or variable?
+           - Are there any exceptions to the tax inclusion?
+FLAGGED  REQ-90DD773B  Medium  sample_plain.txt#2
+           - What happens if the item is not found in the cart?
+           - Is there a confirmation step before removal?
+summary: 0 ready, 2 flagged, 0 rejected
+(exit code 0)
+
+$ aitaf metrics --db demo.db --run 4e4c5039ec8a4129881d4ba2db1e894d
+run 4e4c5039ec8a4129881d4ba2db1e894d
+component             operation              count errors  median_ms tokens_in tokens_out  cost_usd
+llm_gateway           requirement_analyzer       2      0       3.79       373        205    0.0000
+requirement_analyzer  analyze                    1      0      16.47         0          0    0.0000
+total cost: $0.0000
+(exit code 0)
+

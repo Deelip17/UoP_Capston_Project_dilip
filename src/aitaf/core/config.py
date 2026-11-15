@@ -5,6 +5,8 @@ environment only and held in :class:`pydantic.SecretStr` so they do not appear
 in ``repr``, ``str`` or JSON output (NFR-09). The mock LLM provider is the
 default (ADR-026); switching to OpenAI requires both an explicit opt-in and the
 ``OPENAI_API_KEY`` variable, and even then a per-run call cap limits spending.
+The live provider is tuned with ``LLM_MODEL``, ``LLM_MAX_RETRIES`` (NFR-06),
+``LLM_TIMEOUT_S`` and ``LLM_CACHE_DIR`` (ADR-026).
 
 Related requirements: FR-35 (configuration file), NFR-09 (secure API key
 storage), ADR-026 (budget).
@@ -15,6 +17,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 from pathlib import Path
 from typing import Any, Literal, cast
 
@@ -29,7 +32,14 @@ _FILE_KEYS = {
     "log_level": "LOG_LEVEL",
     "llm_price_in_per_1k": "LLM_PRICE_IN_PER_1K",
     "llm_price_out_per_1k": "LLM_PRICE_OUT_PER_1K",
+    "llm_model": "LLM_MODEL",
+    "llm_max_retries": "LLM_MAX_RETRIES",
+    "llm_timeout_s": "LLM_TIMEOUT_S",
+    "llm_cache_dir": "LLM_CACHE_DIR",
 }
+DEFAULT_MODEL = "gpt-4o-mini"
+DEFAULT_CACHE_DIR = ".aitaf_cache/llm"
+_MODEL_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:/-]*")
 
 
 def _price(source: dict[str, str], name: str) -> float:
@@ -40,6 +50,30 @@ def _price(source: dict[str, str], name: str) -> float:
         raise ConfigError(f"{name} must be a non-negative number, got {raw!r}") from exc
     if not math.isfinite(value) or value < 0:
         raise ConfigError(f"{name} must be a non-negative number, got {raw!r}")
+    return value
+
+
+def _bounded_int(source: dict[str, str], name: str, default: int, low: int, high: int) -> int:
+    raw = source.get(name, str(default))
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ConfigError(f"{name} must be an integer from {low} to {high}, got {raw!r}") from exc
+    if not low <= value <= high:
+        raise ConfigError(f"{name} must be an integer from {low} to {high}, got {raw!r}")
+    return value
+
+
+def _timeout(source: dict[str, str], name: str, default: float, high: float) -> float:
+    raw = source.get(name, str(default))
+    try:
+        value = float(raw)
+    except ValueError as exc:
+        raise ConfigError(
+            f"{name} must be a number above 0 and at most {high}, got {raw!r}"
+        ) from exc
+    if not math.isfinite(value) or not 0 < value <= high:
+        raise ConfigError(f"{name} must be a number above 0 and at most {high}, got {raw!r}")
     return value
 
 
@@ -54,12 +88,16 @@ class Settings(BaseModel):
     log_level: str = Field(default="INFO")
     llm_price_in_per_1k: float = Field(default=0.0, ge=0.0, allow_inf_nan=False)
     llm_price_out_per_1k: float = Field(default=0.0, ge=0.0, allow_inf_nan=False)
+    llm_model: str = Field(default=DEFAULT_MODEL, min_length=1)
+    llm_max_retries: int = Field(default=3, ge=0, le=10)
+    llm_timeout_s: float = Field(default=30.0, gt=0.0, le=300.0, allow_inf_nan=False)
+    llm_cache_dir: str | None = Field(default=DEFAULT_CACHE_DIR)
 
     @classmethod
     def from_env(cls, env: dict[str, str] | None = None) -> Settings:
         """Build settings from the environment.
 
-        Only the four variables named below are read; any other environment
+        Only the variables named in this module are read; any other environment
         value is ignored. This keeps unrelated secrets out of the framework
         (NFR-09).
         """
@@ -85,6 +123,11 @@ class Settings(BaseModel):
             name: _price(source, name) for name in ("LLM_PRICE_IN_PER_1K", "LLM_PRICE_OUT_PER_1K")
         }
 
+        model = source.get("LLM_MODEL", DEFAULT_MODEL)
+        if not _MODEL_NAME.fullmatch(model):
+            raise ConfigError(f"LLM_MODEL must be a model name such as gpt-4o-mini, got {model!r}")
+        cache_dir = source.get("LLM_CACHE_DIR", DEFAULT_CACHE_DIR)
+
         return cls(
             llm_provider=provider,
             openai_api_key=SecretStr(key_str) if key_str else None,
@@ -92,6 +135,10 @@ class Settings(BaseModel):
             log_level=source.get("LOG_LEVEL", "INFO"),
             llm_price_in_per_1k=prices["LLM_PRICE_IN_PER_1K"],
             llm_price_out_per_1k=prices["LLM_PRICE_OUT_PER_1K"],
+            llm_model=model,
+            llm_max_retries=_bounded_int(source, "LLM_MAX_RETRIES", 3, 0, 10),
+            llm_timeout_s=_timeout(source, "LLM_TIMEOUT_S", 30.0, 300.0),
+            llm_cache_dir=cache_dir or None,
         )
 
     @classmethod

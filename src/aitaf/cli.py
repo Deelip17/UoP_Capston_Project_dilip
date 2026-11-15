@@ -22,7 +22,7 @@ from aitaf.analyzer import RequirementAnalyzer, load_requirements, mock_extracti
 from aitaf.core.config import Settings
 from aitaf.core.errors import AitafError, ConfigError, PersistenceError, ValidationError
 from aitaf.core.healing import FailureContext, FailureKind, HealStatus
-from aitaf.core.llm import LlmGateway, MockProvider
+from aitaf.core.llm import LlmGateway, build_providers
 from aitaf.core.logging import configure_root, new_run_id, set_run_id
 from aitaf.core.metrics import Metrics, run_cost, summarise
 from aitaf.core.models import Locator, LocatorStrategy, ReviewStatus, Run, RunStatus
@@ -62,6 +62,16 @@ EXIT_USAGE = 2
 EXIT_NOT_IMPLEMENTED = 3
 
 _MOCK_NOTE = "mock-generated output, review before use"
+
+
+def _output_note(settings: Settings) -> str:
+    """Label the output by provider so live text is never shown as mock (NFR-30)."""
+    if settings.llm_provider == "mock":
+        return _MOCK_NOTE
+    return (
+        f"AI-generated output from {settings.llm_model} via OpenAI "
+        "(a failed call falls back to mock, see the audit), review before use"
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -117,7 +127,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     heal.add_argument("--error", default="NoSuchElementException", help="exception type")
     heal.add_argument("--message", default="", help="exception message")
-    heal.add_argument("--llm", action="store_true", help="enable the LLM rung (mock provider)")
+    heal.add_argument(
+        "--llm",
+        action="store_true",
+        help="enable the LLM rung (provider from LLM_PROVIDER; mock by default)",
+    )
     report = commands.add_parser("metrics", help="show latency, token and cost metrics of a run")
     report.add_argument("--config", help="path to the JSON configuration file")
     report.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -132,24 +146,21 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _require_mock(settings: Settings) -> None:
-    if settings.llm_provider != "mock":
-        raise ConfigError("only the mock LLM provider is available in this build")
-
-
 def _gateway(settings: Settings, repo: Repository, metrics: Metrics | None = None) -> LlmGateway:
-    provider = MockProvider(
+    provider, fallback = build_providers(
+        settings,
         responders={
             ANALYZER_COMPONENT: mock_extraction_responder,
             GENERATOR_COMPONENT: mock_generation_responder,
             SCRIPT_COMPONENT: mock_script_responder,
             HEALING_COMPONENT: mock_healing_responder,
-        }
+        },
     )
     return LlmGateway(
         provider,
         repo,
         call_cap=settings.llm_call_cap,
+        fallback=fallback,
         metrics=metrics,
         price_in_per_1k=settings.llm_price_in_per_1k,
         price_out_per_1k=settings.llm_price_out_per_1k,
@@ -157,7 +168,6 @@ def _gateway(settings: Settings, repo: Repository, metrics: Metrics | None = Non
 
 
 def _analyze(settings: Settings, args: argparse.Namespace) -> int:
-    _require_mock(settings)
     repo = SqliteRepository(args.db)
     try:
         repo.recover_interrupted_runs()
@@ -184,7 +194,7 @@ def _analyze(settings: Settings, args: argparse.Namespace) -> int:
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_MOCK_NOTE})")
+    print(f"run {run_id} ({_output_note(settings)})")
     for record in result.ready:
         print(f"READY    {record.req_id}  {record.risk.value:<6}  {record.source_ref}")
     for record in result.flagged:
@@ -208,7 +218,6 @@ def _latest_run(repo: Repository) -> str:
 
 
 def _generate(settings: Settings, args: argparse.Namespace) -> int:
-    _require_mock(settings)
     repo = SqliteRepository(args.db)
     try:
         run_id = _latest_run(repo)
@@ -223,7 +232,7 @@ def _generate(settings: Settings, args: argparse.Namespace) -> int:
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_MOCK_NOTE})")
+    print(f"run {run_id} ({_output_note(settings)})")
     for case in result.cases:
         print(f"{case.tc_id}  {case.priority}  {case.review_status.value:<8}  {case.title}")
     for req_id, reason in result.skipped:
@@ -240,7 +249,6 @@ def _generate(settings: Settings, args: argparse.Namespace) -> int:
 
 
 def _script(settings: Settings, args: argparse.Namespace) -> int:
-    _require_mock(settings)
     repo = SqliteRepository(args.db)
     try:
         run_id = _latest_run(repo)
@@ -261,7 +269,7 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_MOCK_NOTE})")
+    print(f"run {run_id} ({_output_note(settings)})")
     for script in result.scripts:
         print(f"{script.script_id}  {script.path}")
     for tc_id, reasons in result.rejected:
@@ -310,7 +318,6 @@ def _show(strategy: LocatorStrategy | None) -> str:
 
 
 def _heal(settings: Settings, args: argparse.Namespace) -> int:
-    _require_mock(settings)
     primary = _strategy_arg(args.primary)
     fallbacks = [_strategy_arg(item) for item in args.fallback]
     before = parse_dom(_read_snapshot(args.before))
@@ -362,7 +369,7 @@ def _heal(settings: Settings, args: argparse.Namespace) -> int:
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_MOCK_NOTE})")
+    print(f"run {run_id} ({_output_note(settings)})")
     print(f"failure: {_KIND_LABELS[result.kind]} ({args.error})")
     shown = " ".join(f'{k}="{v}"' for k, v in baseline.attrs.items() if k in ("id", "type", "name"))
     print(f'baseline: {baseline.tag} {shown} text="{baseline.text}" (from --before)')

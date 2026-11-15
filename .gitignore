@@ -31,3 +31,6 @@ CLAUDE.md
 # Build output
 build/
 dist/
+
+# Local LLM response cache (live provider, ADR-026)
+.aitaf_cache/

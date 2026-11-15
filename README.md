@@ -2,7 +2,7 @@
 
 MSIT Capstone Project, University of the People. A working **prototype** of an AI-assisted quality-assurance pipeline, evaluated on public demonstration web applications only.
 
-> **Status:** Unit 5 core implemented and released as [v0.5.0](https://github.com/Deelip17/UoP_Capston_Project_dilip/releases/tag/v0.5.0). Four of the eight modules work (Requirement Analyzer, Test Case Generator, Script Generator, a Self-Healing core) with masking, an LLM Gateway, SQLite persistence and metrics. **All LLM output so far comes from a deterministic mock provider; no live model has been called.** The Execution Engine, Failure Analyzer, Reporting Engine and Dashboard are not built yet (Units 6 and 7). What is and is not shown: [docs/project-management/UNIT5_HANDOFF.md](docs/project-management/UNIT5_HANDOFF.md).
+> **Status:** Unit 5 core implemented and released as [v0.5.0](https://github.com/Deelip17/UoP_Capston_Project_dilip/releases/tag/v0.5.0). Four of the eight modules work (Requirement Analyzer, Test Case Generator, Script Generator, a Self-Healing core) with masking, an LLM Gateway, SQLite persistence and metrics. **Until v0.5.0 all LLM output came from a deterministic mock provider; since Unit 6 slice 1 an OpenAI provider (retry, cache, mock fallback) exists on `develop` and was smoke-tested on two requirements.** The Execution Engine, Failure Analyzer, Reporting Engine and Dashboard are not built yet (Units 6 and 7). What is and is not shown: [docs/project-management/UNIT5_HANDOFF.md](docs/project-management/UNIT5_HANDOFF.md).
 
 ## What the framework will do
 
