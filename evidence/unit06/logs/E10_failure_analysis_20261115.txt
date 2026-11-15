@@ -1,0 +1,42 @@
+Real Chromium against the sample shop whose login button id was renamed (mutation M-login_submit-id),
+run WITHOUT healing so the locator failure stays visible. Five different failures, then `aitaf diagnose`.
+Mock provider: the one failure no rule recognises is explained by the deterministic mock, not a real model.
+
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --db demo.db
+run d73ccd349569402fa6a909526be39974 (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0)
+FAILED   PAGE-LOAD-IS-TOO-SLOW  8 ms  attempts=1  screenshot=tests_test_shop.py_test_page_load_is_too_slow.a1.png
+FAILED   SHOP-IS-DOWN  23 ms  attempts=1  screenshot=tests_test_shop.py_test_shop_is_down.a1.png
+FAILED   SHOP-JOURNEY  97 ms  attempts=1  screenshot=tests_test_shop.py_test_shop_journey.a1.png
+FAILED   UNEXPECTED-STATE  0 ms  attempts=1  screenshot=tests_test_shop.py_test_unexpected_state.a1.png
+FAILED   WRONG-WELCOME-TEXT  66 ms  attempts=1  screenshot=tests_test_shop.py_test_wrong_welcome_text.a1.png
+summary: 0 passed, 5 failed, 0 errors, 0 skipped; evidence in <work>\runs\d73ccd349569402fa6a909526be39974
+(exit code 1)
+
+$ aitaf diagnose --db demo.db
+run d73ccd349569402fa6a909526be39974 (mock-generated output, review before use)
+PAGE-LOAD-IS-TOO-SLOW  timing_flaky      conf=0.60  CL-5a17fff7  [rules]
+    cause: An operation timed out: the page or system may be slow, or the test does not wait for the right condition.
+    next: Rerun to see whether it recurs, wait for an explicit condition instead of a fixed delay, or raise the timeout.
+    evidence: log:c51209d7061641649683c0ed66705b11, screenshot:tests_test_shop.py_test_page_load_is_too_slow.a1.png, dom:tests_test_shop.py_test_page_load_is_too_slow.a1.html
+SHOP-IS-DOWN  environment       conf=0.85  CL-bf03edc1  [rules]
+    cause: The environment or infrastructure failed ('net::ERR_UNSAFE_PORT'), not the logic under test.
+    next: Check that the system under test, the network and the browser are running and reachable, then rerun.
+    evidence: log:3c843cd6aef84db9a067ccedb2c6343e, screenshot:tests_test_shop.py_test_shop_is_down.a1.png, dom:tests_test_shop.py_test_shop_is_down.a1.html
+SHOP-JOURNEY  locator           conf=0.90  CL-8cbe77cd  [rules]
+    cause: The element 'login_submit' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:bba5c1bd280b4d309287d5000b8a695f, screenshot:tests_test_shop.py_test_shop_journey.a1.png, dom:tests_test_shop.py_test_shop_journey.a1.html
+UNEXPECTED-STATE  unknown           conf=0.40  CL-0df85e60  [llm]
+    cause: The failure (RuntimeError) matches no known pattern.
+    next: Inspect the screenshot and the log, then classify it by hand.
+    evidence: log:d556ecef2b744b839b50ab5f3b06e422, screenshot:tests_test_shop.py_test_unexpected_state.a1.png, dom:tests_test_shop.py_test_unexpected_state.a1.html
+WRONG-WELCOME-TEXT  locator           conf=0.90  CL-8cbe77cd  [rules]
+    cause: The element 'login_submit' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:ed37d7529f92490b9e27b755ce6203a8, screenshot:tests_test_shop.py_test_wrong_welcome_text.a1.png, dom:tests_test_shop.py_test_wrong_welcome_text.a1.html
+summary: 5 failures analysed in 4 cluster(s); environment=1, locator=2, timing_flaky=1, unknown=1; 1 model call(s)
+(exit code 0)
+
+$ aitaf diagnose --db demo.db --no-llm   (rules only, shown as lines with [fallback] and the summary)
+UNEXPECTED-STATE  unknown           conf=0.30  CL-0df85e60  [fallback]
+summary: 5 failures analysed in 4 cluster(s); environment=1, locator=2, timing_flaky=1, unknown=1; 0 model call(s)

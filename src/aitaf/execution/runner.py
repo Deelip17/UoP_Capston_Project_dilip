@@ -71,6 +71,8 @@ class ExecutedTest:
     dom_snapshot: str
     log: str
     healed: tuple[str, ...] = ()
+    error_type: str = ""
+    error_text: str = ""
 
 
 @dataclass
@@ -279,6 +281,8 @@ class ExecutionEngine:
                 dom_snapshot=str(record["dom"]),
                 log=log,
                 healed=tuple(notes),
+                error_type=str(record.get("error_type", "")),
+                error_text=mask(str(record.get("error_text", ""))).text,
             )
             summary.executed.append(executed)
             self._repo.add_result(
@@ -292,6 +296,9 @@ class ExecutionEngine:
                     attempts=executed.attempts,
                     screenshot=executed.screenshot,
                     dom_snapshot=executed.dom_snapshot,
+                    nodeid=executed.nodeid,
+                    error_type=executed.error_type,
+                    error_text=executed.error_text,
                 )
             )
         summary.duration_ms = sum(test.duration_ms for test in summary.executed)

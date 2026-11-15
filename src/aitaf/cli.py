@@ -29,6 +29,8 @@ from aitaf.core.logging import configure_root, new_run_id, set_run_id
 from aitaf.core.metrics import Metrics, run_cost, summarise
 from aitaf.core.models import Locator, LocatorStrategy, ReviewStatus, Run, RunStatus
 from aitaf.core.storage import Repository, SqliteRepository
+from aitaf.diagnosis import COMPONENT as DIAGNOSIS_COMPONENT
+from aitaf.diagnosis import FailureAnalyzer, mock_failure_responder
 from aitaf.execution import ExecutionEngine, RunConfig
 from aitaf.execution.runner import describe_environment
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
@@ -90,7 +92,7 @@ def build_parser() -> argparse.ArgumentParser:
     for name, description in STAGES.items():
         stage = commands.add_parser(name, help=description)
         stage.add_argument("--config", help="path to the JSON configuration file")
-        if name in ("analyze", "generate", "script", "execute"):
+        if name in ("analyze", "generate", "script", "execute", "diagnose"):
             stage.add_argument("--db", default="aitaf.db", help="SQLite database path")
         if name == "analyze":
             stage.add_argument("--input", required=True, help="requirements file (.txt, .md)")
@@ -114,6 +116,7 @@ def build_parser() -> argparse.ArgumentParser:
                 help="also script Pending cases (Rejected cases are never scripted)",
             )
     _add_execute_options(commands.choices["execute"])
+    _add_diagnose_options(commands.choices["diagnose"])
     heal = commands.add_parser("heal", help="demonstrate locator healing on two DOM snapshots")
     heal.add_argument("--config", help="path to the JSON configuration file")
     heal.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -150,6 +153,12 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--approve", metavar="TC_ID", help="approve a test case")
     review.add_argument("--reject", metavar="TC_ID", help="reject a test case")
     return parser
+
+
+def _add_diagnose_options(stage: argparse.ArgumentParser) -> None:
+    stage.add_argument("--run", help="run ID to analyse (default: the latest run with results)")
+    stage.add_argument("--evidence", default="reports/runs", help="evidence directory of the runs")
+    stage.add_argument("--no-llm", action="store_true", help="rules only; never ask the model")
 
 
 def _add_execute_options(stage: argparse.ArgumentParser) -> None:
@@ -190,6 +199,7 @@ def _gateway(settings: Settings, repo: Repository, metrics: Metrics | None = Non
             GENERATOR_COMPONENT: mock_generation_responder,
             SCRIPT_COMPONENT: mock_script_responder,
             HEALING_COMPONENT: mock_healing_responder,
+            DIAGNOSIS_COMPONENT: mock_failure_responder,
         },
     )
     return LlmGateway(
@@ -321,6 +331,44 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
         print("no test cases are approved yet; approve with: aitaf review --approve TC_ID")
     else:
         print(f"run them with: pytest {args.out_dir} --base-url {args.base_url}")
+    return EXIT_OK
+
+
+def _diagnose(settings: Settings, args: argparse.Namespace) -> int:
+    repo = SqliteRepository(args.db)
+    try:
+        run_id = args.run or repo.latest_run_with_results()
+        if run_id is None:
+            raise PersistenceError("no test results found; run 'aitaf execute' first")
+        if repo.get_run(run_id) is None:
+            raise PersistenceError(f"unknown run: {run_id!r}")
+        set_run_id(run_id)
+        metrics = Metrics(repo)
+        gateway = None if args.no_llm else _gateway(settings, repo, metrics)
+        analyzer = FailureAnalyzer(
+            gateway, repo, metrics=metrics, evidence_dir=Path(args.evidence) / run_id
+        )
+        outcome = analyzer.analyze(run_id)
+    finally:
+        repo.close()
+
+    print(f"run {run_id} ({_output_note(settings)})")
+    if not outcome.analyses:
+        print("no failed tests to analyse")
+        return EXIT_OK
+    for item in outcome.analyses:
+        print(
+            f"{item.tc_id}  {item.category:<16}  conf={item.confidence:.2f}  "
+            f"{item.cluster_id}  [{item.source}]"
+        )
+        print(f"    cause: {item.root_cause}")
+        print(f"    next: {item.remediation}")
+        print(f"    evidence: {', '.join(item.evidence_refs)}")
+    counts = ", ".join(f"{name}={count}" for name, count in sorted(outcome.by_category.items()))
+    print(
+        f"summary: {len(outcome.analyses)} failures analysed in {len(outcome.clusters)} "
+        f"cluster(s); {counts}; {outcome.llm_calls} model call(s)"
+    )
     return EXIT_OK
 
 
@@ -565,6 +613,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "review": lambda: _review(args),
         "script": lambda: _script(settings, args),
         "execute": lambda: _execute(settings, args),
+        "diagnose": lambda: _diagnose(settings, args),
         "heal": lambda: _heal(settings, args),
         "metrics": lambda: _metrics(args),
     }

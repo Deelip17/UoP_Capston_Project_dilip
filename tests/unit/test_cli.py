@@ -78,7 +78,7 @@ def test_valid_config_reaches_unimplemented_stage(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     path = write_config(tmp_path, {"llm_provider": "mock", "llm_call_cap": 5})
-    assert main(["diagnose", "--config", str(path)]) == 3
+    assert main(["report", "--config", str(path)]) == 3
     assert "not implemented" in capsys.readouterr().err
 
 

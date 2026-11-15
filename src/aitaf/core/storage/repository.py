@@ -13,6 +13,7 @@ from typing import Protocol
 
 from aitaf.core.models import (
     AnalyzedRequirement,
+    FailureAnalysis,
     HealingEvent,
     LlmAudit,
     Locator,
@@ -102,6 +103,15 @@ class Repository(Protocol):
 
     def list_healing_events(self, run_id: str) -> list[HealingEvent]:
         """Return the healing events of the run in insertion order."""
+
+    def add_failure_analysis(self, run_id: str, analysis: FailureAnalysis) -> None:
+        """Store (or replace) a failure analysis. Unknown run raises PersistenceError."""
+
+    def list_failure_analyses(self, run_id: str) -> list[FailureAnalysis]:
+        """Return the run's failure analyses in insertion order."""
+
+    def latest_run_with_results(self) -> str | None:
+        """Run ID of the most recent run that stored test results, or None."""
 
     def add_metric(self, run_id: str, sample: MetricSample) -> None:
         """Store a metric sample. Unknown run raises PersistenceError."""

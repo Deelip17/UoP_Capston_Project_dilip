@@ -10,7 +10,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from test_runner_healing import ID_MUTATED_DOM, LOGIN_TEST, SHOP_DOM, project
+from fake_browser_project import ID_MUTATED_DOM, LOGIN_TEST, SHOP_DOM, project
 
 from aitaf.cli import main
 

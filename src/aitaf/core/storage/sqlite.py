@@ -15,6 +15,7 @@ from pathlib import Path
 from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
+    FailureAnalysis,
     HealingEvent,
     LlmAudit,
     Locator,
@@ -142,6 +143,18 @@ MIGRATIONS: tuple[str, ...] = (
     ALTER TABLE test_results ADD COLUMN screenshot TEXT NOT NULL DEFAULT '';
     ALTER TABLE test_results ADD COLUMN dom_snapshot TEXT NOT NULL DEFAULT ''
     """,
+    """
+    ALTER TABLE test_results ADD COLUMN nodeid TEXT NOT NULL DEFAULT '';
+    ALTER TABLE test_results ADD COLUMN error_type TEXT NOT NULL DEFAULT '';
+    ALTER TABLE test_results ADD COLUMN error_text TEXT NOT NULL DEFAULT '';
+    CREATE TABLE failure_analyses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        analysis_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, analysis_id)
+    )
+    """,
 )
 LATEST_SCHEMA_VERSION = len(MIGRATIONS)
 
@@ -227,7 +240,8 @@ class SqliteRepository:
     def add_result(self, result: TestResult) -> None:
         self._write(
             "INSERT INTO test_results (result_id, run_id, tc_id, status, duration_ms, log,"
-            " attempts, screenshot, dom_snapshot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            " attempts, screenshot, dom_snapshot, nodeid, error_type, error_text)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 result.result_id,
                 result.run_id,
@@ -238,13 +252,16 @@ class SqliteRepository:
                 result.attempts,
                 result.screenshot,
                 result.dom_snapshot,
+                result.nodeid,
+                result.error_type,
+                result.error_text,
             ),
         )
 
     def list_results(self, run_id: str) -> list[TestResult]:
         rows = self._conn.execute(
             "SELECT result_id, run_id, tc_id, status, duration_ms, log, attempts, screenshot,"
-            " dom_snapshot"
+            " dom_snapshot, nodeid, error_type, error_text"
             " FROM test_results WHERE run_id = ? ORDER BY id",
             (run_id,),
         ).fetchall()
@@ -397,6 +414,25 @@ class SqliteRepository:
             "SELECT record FROM healing_events WHERE run_id = ? ORDER BY id", (run_id,)
         ).fetchall()
         return [HealingEvent.model_validate_json(row["record"]) for row in rows]
+
+    def add_failure_analysis(self, run_id: str, analysis: FailureAnalysis) -> None:
+        self._write(
+            "INSERT INTO failure_analyses (run_id, analysis_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, analysis_id) DO UPDATE SET record = excluded.record",
+            (run_id, analysis.analysis_id, analysis.model_dump_json()),
+        )
+
+    def list_failure_analyses(self, run_id: str) -> list[FailureAnalysis]:
+        rows = self._conn.execute(
+            "SELECT record FROM failure_analyses WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [FailureAnalysis.model_validate_json(row["record"]) for row in rows]
+
+    def latest_run_with_results(self) -> str | None:
+        row = self._conn.execute(
+            "SELECT run_id FROM test_results ORDER BY id DESC LIMIT 1"
+        ).fetchone()
+        return str(row["run_id"]) if row else None
 
     def add_metric(self, run_id: str, sample: MetricSample) -> None:
         self._write(

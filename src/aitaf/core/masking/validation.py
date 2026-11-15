@@ -44,6 +44,7 @@ _INJECTION_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
         "delimiter-spoof",
         re.compile(
             r"REQUIREMENT>>>|<<<REQUIREMENT|TEST_CASE>>>|<<<TEST_CASE|HEAL_CONTEXT>>>|<<<HEAL_CONTEXT"
+            r"|FAILURE_CONTEXT>>>|<<<FAILURE_CONTEXT"
         ),
     ),
     (

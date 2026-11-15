@@ -131,6 +131,9 @@ class TestResult(_BaseRecord):
     attempts: int = Field(default=1, ge=1)
     screenshot: str = ""
     dom_snapshot: str = ""
+    nodeid: str = ""
+    error_type: str = ""
+    error_text: str = ""
 
 
 class LlmAudit(_BaseRecord):
@@ -245,6 +248,43 @@ class HealingEvent(_BaseRecord):
             raise ValueError("only a proposed event can be validated")
         if self.approved and self.outcome != "proposed":
             raise ValueError("only a proposed event can be approved")
+        return self
+
+
+FailureCategory = Literal[
+    "locator", "assertion_defect", "timing_flaky", "environment", "test_data", "unknown"
+]
+
+
+class FailureAnalysis(_BaseRecord):
+    """Why one test failed and what to do next (FR-27 to FR-29, NFR-30).
+
+    ``source`` says how the category was decided: ``rules`` (deterministic
+    pre-classifier), ``llm`` (model reasoning on an ambiguous case, which must name
+    its model and prompt version) or ``fallback`` (no rule matched and the model
+    was unavailable, refused or not asked). ``evidence_refs`` name what the analysis
+    looked at, for example ``log:<result id>`` or ``screenshot:<file>``.
+    """
+
+    analysis_id: str = Field(min_length=1)
+    run_id: str = Field(min_length=1)
+    result_id: str = Field(min_length=1)
+    tc_id: str = Field(min_length=1)
+    category: FailureCategory
+    root_cause: str = Field(min_length=1)
+    remediation: str = Field(min_length=1)
+    evidence_refs: list[str] = Field(default_factory=list)
+    confidence: float = Field(ge=0.0, le=1.0)
+    cluster_id: str = Field(pattern=r"^CL-[0-9a-f]{8}$")
+    source: Literal["rules", "llm", "fallback"]
+    model: str | None = None
+    prompt_version: str | None = None
+    created_at: datetime
+
+    @model_validator(mode="after")
+    def _ai_answers_are_labelled(self) -> FailureAnalysis:
+        if self.source == "llm" and not (self.model and self.prompt_version):
+            raise ValueError("an AI analysis must name its model and prompt version (NFR-30)")
         return self
 
 

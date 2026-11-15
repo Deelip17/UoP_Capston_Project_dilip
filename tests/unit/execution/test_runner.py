@@ -335,3 +335,23 @@ def test_the_projects_own_pytest_settings_do_not_leak_into_a_run(
     summary = ExecutionEngine(repo).execute(config(root, tmp_path))
     assert summary.passed == 1
     assert repo.list_results("run-1")[0].tc_id == "TEST-PASS"
+
+
+@pytest.mark.blackbox
+def test_results_keep_the_test_id_and_the_masked_exception_for_later_analysis(
+    repo: InMemoryRepository, tmp_path: Path
+) -> None:
+    """The Failure Analyzer works from stored results, so the exception must be stored."""
+    leaky = (
+        "def test_leak(page):\n    assert False, 'key sk-live-ABCDEF1234567890ABCDEF12 rejected'\n"
+    )
+    root = project(tmp_path, {"test_leak": leaky, "test_ok": "def test_ok(page):\n    pass\n"})
+    ExecutionEngine(repo).execute(config(root, tmp_path))
+    stored = {r.tc_id: r for r in repo.list_results("run-1")}
+    leak, ok = stored["TEST-LEAK"], stored["TEST-OK"]
+    assert leak.nodeid == "tests/test_leak.py::test_leak"
+    assert leak.error_type == "AssertionError"
+    assert (
+        "rejected" in leak.error_text and "sk-live-ABCDEF1234567890ABCDEF12" not in leak.error_text
+    )
+    assert (ok.error_type, ok.error_text) == ("", "")

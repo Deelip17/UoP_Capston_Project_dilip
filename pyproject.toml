@@ -21,7 +21,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "tests/support"]
 addopts = "-ra --strict-markers -m \"not integration\""
 markers = [
   "blackbox: behaviour tests through the public API (Unit 5 Part B evidence)",

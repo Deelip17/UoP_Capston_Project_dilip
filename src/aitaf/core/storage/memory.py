@@ -7,6 +7,7 @@ from datetime import datetime
 from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
+    FailureAnalysis,
     HealingEvent,
     LlmAudit,
     Locator,
@@ -36,6 +37,7 @@ class InMemoryRepository:
         self._scripts: dict[tuple[str, str], Script] = {}
         self._locators: dict[tuple[str, str], Locator] = {}
         self._healing: dict[tuple[str, str], HealingEvent] = {}
+        self._failures: dict[tuple[str, str], FailureAnalysis] = {}
         self._metrics: list[MetricSample] = []
 
     def _require_run(self, run_id: str) -> None:
@@ -137,6 +139,16 @@ class InMemoryRepository:
 
     def list_healing_events(self, run_id: str) -> list[HealingEvent]:
         return [e for (rid, _), e in self._healing.items() if rid == run_id]
+
+    def add_failure_analysis(self, run_id: str, analysis: FailureAnalysis) -> None:
+        self._require_run(run_id)
+        self._failures[(run_id, analysis.analysis_id)] = analysis
+
+    def list_failure_analyses(self, run_id: str) -> list[FailureAnalysis]:
+        return [a for (rid, _), a in self._failures.items() if rid == run_id]
+
+    def latest_run_with_results(self) -> str | None:
+        return self._results[-1].run_id if self._results else None
 
     def add_metric(self, run_id: str, sample: MetricSample) -> None:
         self._require_run(run_id)
