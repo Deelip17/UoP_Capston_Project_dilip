@@ -17,7 +17,7 @@ Technology: Python 3.12, Playwright, Selenium, PyTest, OpenAI API, SQLite, Panda
 | `src/aitaf/` | Source code: `analyzer`, `generator`, `scriptgen`, `healing`, a shared `core` and CI tooling in `quality`; each package has a README |
 | `tests/` | Unit, integration and end-to-end tests |
 | `prompts/` | Versioned LLM prompt templates |
-| `sample-apps/` | Local demonstration application used as the system under test |
+| `sample-apps/` | Pointer to the demonstration application used as the system under test (code in `src/aitaf/sampleapp/`) |
 | `evaluation/` | Evaluation scripts, mutation catalogue, labelled data (Unit 6) |
 | `docs/architecture/` | **Design files:** architecture, component, data-flow, sequence, security and CI/CD design, with diagrams |
 | `docs/requirements/` | Functional and non-functional requirements |

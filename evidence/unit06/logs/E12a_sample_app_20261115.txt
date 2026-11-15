@@ -1,0 +1,71 @@
+$ python -m aitaf.sampleapp list
+M-username-id  username: id attribute renamed
+M-username-class  username: element class renamed
+M-username-xpath  username: test-hook attribute renamed and element wrapped in a new container
+M-password-id  password: id attribute renamed
+M-password-class  password: element class renamed
+M-password-xpath  password: test-hook attribute renamed and element wrapped in a new container
+M-login_submit-id  login_submit: id attribute renamed
+M-login_submit-class  login_submit: element class renamed
+M-login_submit-xpath  login_submit: test-hook attribute renamed and element wrapped in a new container
+M-login_submit-text  login_submit: visible text reworded
+M-add_backpack-id  add_backpack: id attribute renamed
+M-add_backpack-class  add_backpack: element class renamed
+M-add_backpack-xpath  add_backpack: test-hook attribute renamed and element wrapped in a new container
+M-add_backpack-text  add_backpack: visible text reworded
+M-cart_link-id  cart_link: id attribute renamed
+M-cart_link-class  cart_link: element class renamed
+M-cart_link-xpath  cart_link: test-hook attribute renamed and element wrapped in a new container
+M-cart_link-text  cart_link: visible text reworded
+M-remove_item-id  remove_item: id attribute renamed
+M-remove_item-class  remove_item: element class renamed
+M-remove_item-xpath  remove_item: test-hook attribute renamed and element wrapped in a new container
+M-remove_item-text  remove_item: visible text reworded
+M-checkout_button-id  checkout_button: id attribute renamed
+M-checkout_button-class  checkout_button: element class renamed
+M-checkout_button-xpath  checkout_button: test-hook attribute renamed and element wrapped in a new container
+M-checkout_button-text  checkout_button: visible text reworded
+M-ship_name-id  ship_name: id attribute renamed
+M-ship_name-class  ship_name: element class renamed
+M-ship_name-xpath  ship_name: test-hook attribute renamed and element wrapped in a new container
+M-place_order-id  place_order: id attribute renamed
+M-place_order-class  place_order: element class renamed
+M-place_order-xpath  place_order: test-hook attribute renamed and element wrapped in a new container
+M-place_order-text  place_order: visible text reworded
+M-confirmation-id  confirmation: id attribute renamed
+M-confirmation-class  confirmation: element class renamed
+M-confirmation-xpath  confirmation: test-hook attribute renamed and element wrapped in a new container
+M-confirmation-text  confirmation: visible text reworded
+
+$ python -m aitaf analyze --input data/requirements/shop_requirements.md --db shop.db
+run 445a8c0464d142bd94ed88036e4d210f (mock-generated output, review before use)
+READY    REQ-019BAFBA  High    shop_requirements.md#1
+READY    REQ-9881818E  High    shop_requirements.md#2
+READY    REQ-36E92D70  High    shop_requirements.md#3
+READY    REQ-BB99F1B7  Medium  shop_requirements.md#4
+READY    REQ-E95ED90D  Low     shop_requirements.md#5
+READY    REQ-215A6FB0  Medium  shop_requirements.md#6
+READY    REQ-B63F4FBB  Medium  shop_requirements.md#8
+READY    REQ-AB096D5B  Medium  shop_requirements.md#9
+READY    REQ-D2433ADB  Medium  shop_requirements.md#10
+READY    REQ-5B2846AE  Medium  shop_requirements.md#11
+READY    REQ-3779D5EE  High    shop_requirements.md#12
+READY    REQ-458CCB5E  High    shop_requirements.md#13
+READY    REQ-786DC9DA  High    shop_requirements.md#14
+READY    REQ-1C7A3D37  High    shop_requirements.md#15
+READY    REQ-C3BFFA7E  High    shop_requirements.md#16
+READY    REQ-550347EC  High    shop_requirements.md#17
+READY    REQ-1542276C  Medium  shop_requirements.md#19
+READY    REQ-4C589A83  Low     shop_requirements.md#20
+FLAGGED  REQ-63C0E2FE  Low     shop_requirements.md#7
+           - vague wording: 'easy'
+FLAGGED  REQ-5826BFE9  High    shop_requirements.md#18
+           - vague wording: 'fast'
+summary: 18 ready, 2 flagged, 0 rejected
+
+$ diff login.html (baseline) login.html (mutation M-login_submit-xpath)
+--- baseline
++++ M-login_submit-xpath
+@@ -15 +15 @@
+-<button id="login-button" class="btn btn-login" data-qa="login-submit" type="submit">Log in</button>
++<div class="layout-box"><button id="login-button" class="btn btn-login" data-qa="auth-submit" type="submit">Log in</button></div>

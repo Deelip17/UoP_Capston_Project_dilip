@@ -34,7 +34,14 @@ def test_every_top_level_package_has_a_readme_citing_requirements(package: Path)
 
 @pytest.mark.blackbox
 def test_the_expected_packages_were_found() -> None:
-    assert {name(p) for p in TOP_LEVEL} >= {"core", "analyzer", "generator", "scriptgen", "healing"}
+    assert {name(p) for p in TOP_LEVEL} >= {
+        "core",
+        "analyzer",
+        "generator",
+        "scriptgen",
+        "healing",
+        "sampleapp",
+    }
 
 
 @pytest.mark.whitebox

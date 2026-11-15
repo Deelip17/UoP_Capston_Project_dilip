@@ -34,8 +34,10 @@ _INJECTION_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "prompt-leak",
         re.compile(
-            r"(?i)\b(reveal|show|print|output|leak)\b[^.\n]{0,40}"
-            r"\b(system prompt|instructions|api key|secret|password)\b"
+            r"(?i)\b(reveal|show|print|output|leak|repeat|display|disclose)\b[^.\n]{0,40}"
+            r"\b(system prompt|system message|api[ -]?key|"
+            r"(?:your|hidden|previous|initial|original|above) instructions|"
+            r"your (?:secret|password))\b"
         ),
     ),
     (
