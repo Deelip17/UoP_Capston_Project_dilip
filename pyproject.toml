@@ -44,6 +44,10 @@ extend-exclude = [".venv", "reports", "dist", "evidence"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+# The HTML report is written as long tag strings; splitting them would hurt readability.
+"src/aitaf/reporting/render_html.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.12"
 strict = true

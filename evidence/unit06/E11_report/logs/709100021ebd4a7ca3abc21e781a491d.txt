@@ -1,0 +1,38 @@
+page = <Page url='about:blank'>, base_url = 'http://127.0.0.1:8765'
+
+    def test_shop_down(page, base_url):
+>       page.goto('http://127.0.0.1:1/')
+
+tests\test_shop_down.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <playwright._impl.utils.zones.Zone object at 0x0000011B69B1BDA0>
+func = <function ChannelOwner._wrap_api_call.<locals>.finish.<locals>.<lambda> at 0x0000011B69B25F80>
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -> R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = [SECRET]
+        try:
+>           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:1/
+E           Call log:
+E             - navigating to "http://127.0.0.1:1/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error

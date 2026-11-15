@@ -1,0 +1,78 @@
+{
+  "run_id": "edb5bb7ee74046b6916fc94a425108ae",
+  "source_run_id": "9cccd0b2b7304c75b3c7e93b4adfc06c",
+  "provider": "mock",
+  "generated_at": "2026-11-15T23:31:38.258170+00:00",
+  "metrics": [
+    {
+      "key": "pass_rate",
+      "label": "Pass rate",
+      "value": 0.2,
+      "unit": "ratio",
+      "basis": "passed tests over executed tests (skipped tests excluded)"
+    },
+    {
+      "key": "requirement_coverage_ratio",
+      "label": "Requirement coverage",
+      "value": 0.9,
+      "unit": "ratio",
+      "basis": "requirements with at least one approved test case over all requirements"
+    },
+    {
+      "key": "script_executability_rate",
+      "label": "Script executability",
+      "value": 0.09259259259259259,
+      "unit": "ratio",
+      "basis": "scripts whose test ran to a pass or a fail (no error) over scripts generated"
+    },
+    {
+      "key": "healing_success_rate",
+      "label": "Healing success rate",
+      "value": 1.0,
+      "unit": "ratio",
+      "basis": "steps with a proposed locator over steps that asked for healing"
+    },
+    {
+      "key": "classification_accuracy",
+      "label": "Classification accuracy",
+      "value": null,
+      "unit": "ratio",
+      "basis": "failures whose category equals the supplied label over labelled failures"
+    },
+    {
+      "key": "generation_latency_ms_median",
+      "label": "Generation latency (median)",
+      "value": 635.402800005977,
+      "unit": "ms",
+      "basis": "analyze and generate steps of the three generation components, LLM time included"
+    },
+    {
+      "key": "llm_latency_ms_median",
+      "label": "LLM call latency (median)",
+      "value": 2.2003000049153343,
+      "unit": "ms",
+      "basis": "gateway calls to the provider (mock or live, see the provider label)"
+    },
+    {
+      "key": "non_llm_latency_ms_p95",
+      "label": "Non-LLM latency (p95)",
+      "value": null,
+      "unit": "ms",
+      "basis": "report rendering samples, nearest-rank 95th percentile"
+    },
+    {
+      "key": "api_cost_usd",
+      "label": "API cost",
+      "value": 0.0,
+      "unit": "usd",
+      "basis": "sum of token costs of the runs involved (zero for the mock provider)"
+    },
+    {
+      "key": "api_cost_usd_per_run",
+      "label": "API cost per run",
+      "value": 0.0,
+      "unit": "usd",
+      "basis": "API cost divided by the 2 run(s) involved"
+    }
+  ]
+}

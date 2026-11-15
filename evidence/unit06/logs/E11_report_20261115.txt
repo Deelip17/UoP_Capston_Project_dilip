@@ -1,0 +1,53 @@
+Demonstration of the report on a real-browser run; the numbers are not evaluation results.
+Pipeline stages use the mock provider. The generated scripts do not match the shop's elements, so five
+hand-written scripts stand in for five approved test cases (mapped by the manifest).
+
+$ aitaf analyze --input data/requirements/shop_requirements.md --db demo.db
+summary: 18 ready, 2 flagged, 0 rejected
+(exit code 0)
+
+$ aitaf generate --db demo.db
+summary: 54 test cases, 54 scenarios, 2 skipped, 0 duplicates removed, 0 data values replaced, 0 coverage gaps
+(exit code 0)
+
+$ aitaf review --approve <each of the 54 cases>   (all approved by the demo script)
+
+$ aitaf script --db demo.db --out-dir generated_tests --base-url http://127.0.0.1:8765
+summary: 54 scripts written (playwright), 0 rejected, 3 locators, static validation passed for every saved file
+(exit code 0)
+
+$ aitaf execute --scripts generated_tests --base-url http://127.0.0.1:8765 --db demo.db --heal --baseline data/dom/shop
+run edb5bb7ee74046b6916fc94a425108ae (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 10000 ms, retries 0, healing on)
+PASSED   TC-019BAFBA-01  241 ms  attempts=2  healed=1
+FAILED   TC-9881818E-02  0 ms  attempts=1  screenshot=tests_test_odd.py_test_odd.a1.png
+FAILED   TC-019BAFBA-03  31 ms  attempts=1  screenshot=tests_test_shop_down.py_test_shop_down.a1.png
+FAILED   TC-9881818E-01  8 ms  attempts=1  screenshot=tests_test_too_slow.py_test_too_slow.a1.png
+FAILED   TC-019BAFBA-02  80 ms  attempts=2  screenshot=tests_test_wrong_text.py_test_wrong_text.a2.png  healed=1
+summary: 1 passed, 4 failed, 0 errors, 0 skipped; evidence in <work>\runs\edb5bb7ee74046b6916fc94a425108ae
+healing: 1 requested, 1 test(s) passed after healing, success rate 100%; events are proposed and need approval
+(exit code 1)
+
+$ aitaf diagnose --db demo.db
+summary: 4 failures analysed in 4 cluster(s); assertion_defect=1, environment=1, timing_flaky=1, unknown=1; 1 model call(s)
+(exit code 0)
+
+$ aitaf report --db demo.db --pdf --out reports/demo
+run edb5bb7ee74046b6916fc94a425108ae (provider: mock)
+Tests: 5 (1 passed, 4 failed, 0 error, 0 skipped)
+Pass rate: 20.0%
+Requirement coverage: 90.0%
+Script executability: 9.3%
+Healing success rate: 100.0%
+Classification accuracy: n/a
+Generation latency (median): 635 ms
+LLM call latency (median): 2 ms
+Non-LLM latency (p95): n/a
+API cost: $0.0000
+API cost per run: $0.0000
+wrote <work>\report\report.html
+wrote <work>\report\report.md
+wrote <work>\report\metrics.json
+wrote <work>\report\metrics.csv
+wrote <work>\report\report.pdf
+(exit code 0)
+

@@ -44,6 +44,10 @@ class ExecutionError(AitafError):
     """Test execution could not be carried out or its output was unusable (FR-17)."""
 
 
+class ReportingError(AitafError):
+    """A report or one of its files could not be produced (FR-31, FR-32)."""
+
+
 class PersistenceError(AitafError):
     """Storage error, including interrupted runs (NFR-07)."""
 

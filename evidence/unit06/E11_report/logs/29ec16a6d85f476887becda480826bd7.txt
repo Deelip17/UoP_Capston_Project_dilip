@@ -1,0 +1,20 @@
+healed shop.login_submit -> id=signin-btn (confidence 0.92, proposed, needs approval)
+page = <Page url='http://127.0.0.1:8765/'>, base_url = 'http://127.0.0.1:8765'
+
+    def test_wrong_text(page, base_url):
+        s = ShopPage(page, base_url)
+        s.open('/')
+>       s.assert_text('login_submit', 'Sign in')
+
+tests\test_wrong_text.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pages.shop_page.ShopPage object at 0x000001C9B4D6E030>
+name = 'login_submit', expected = 'Sign in'
+
+    def assert_text(self, name, expected):
+>       assert expected in self._find(name).inner_text()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+pages\shop_page.py:47: AssertionError

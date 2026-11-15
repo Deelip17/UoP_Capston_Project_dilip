@@ -1,0 +1,7 @@
+page = <Page url='about:blank'>, base_url = 'http://127.0.0.1:8765'
+
+    def test_odd(page, base_url):
+>       raise RuntimeError('unexpected state')
+E       RuntimeError: unexpected state
+
+tests\test_odd.py:2: RuntimeError

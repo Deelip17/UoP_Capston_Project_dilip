@@ -11,11 +11,13 @@ yet (exit code 3) until their slices land.
 from __future__ import annotations
 
 import argparse
+import csv
 import platform
 import sys
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import get_args
 
 from pydantic import ValidationError as PydanticValidationError
 
@@ -27,11 +29,19 @@ from aitaf.core.healing import FailureContext, FailureKind, HealStatus
 from aitaf.core.llm import LlmGateway, build_providers
 from aitaf.core.logging import configure_root, new_run_id, set_run_id
 from aitaf.core.metrics import Metrics, run_cost, summarise
-from aitaf.core.models import Locator, LocatorStrategy, ReviewStatus, Run, RunStatus
+from aitaf.core.models import (
+    FailureCategory,
+    Locator,
+    LocatorStrategy,
+    ReviewStatus,
+    Run,
+    RunStatus,
+)
 from aitaf.core.storage import Repository, SqliteRepository
 from aitaf.diagnosis import COMPONENT as DIAGNOSIS_COMPONENT
 from aitaf.diagnosis import FailureAnalyzer, mock_failure_responder
 from aitaf.execution import ExecutionEngine, RunConfig
+from aitaf.execution.pdf import render_html_to_pdf
 from aitaf.execution.runner import describe_environment
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
 from aitaf.generator import (
@@ -51,6 +61,7 @@ from aitaf.healing import (
     parse_dom,
     signature_of,
 )
+from aitaf.reporting import build_report, format_value, write_report
 from aitaf.scriptgen import COMPONENT as SCRIPT_COMPONENT
 from aitaf.scriptgen import ScriptGenerator, mock_script_responder
 
@@ -92,7 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
     for name, description in STAGES.items():
         stage = commands.add_parser(name, help=description)
         stage.add_argument("--config", help="path to the JSON configuration file")
-        if name in ("analyze", "generate", "script", "execute", "diagnose"):
+        if name in ("analyze", "generate", "script", "execute", "diagnose", "report"):
             stage.add_argument("--db", default="aitaf.db", help="SQLite database path")
         if name == "analyze":
             stage.add_argument("--input", required=True, help="requirements file (.txt, .md)")
@@ -117,6 +128,7 @@ def build_parser() -> argparse.ArgumentParser:
             )
     _add_execute_options(commands.choices["execute"])
     _add_diagnose_options(commands.choices["diagnose"])
+    _add_report_options(commands.choices["report"])
     heal = commands.add_parser("heal", help="demonstrate locator healing on two DOM snapshots")
     heal.add_argument("--config", help="path to the JSON configuration file")
     heal.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -153,6 +165,15 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--approve", metavar="TC_ID", help="approve a test case")
     review.add_argument("--reject", metavar="TC_ID", help="reject a test case")
     return parser
+
+
+def _add_report_options(stage: argparse.ArgumentParser) -> None:
+    stage.add_argument("--run", help="execution run ID (default: the latest run with results)")
+    stage.add_argument("--source-run", help="run that holds requirements, cases and scripts")
+    stage.add_argument("--evidence", default="reports/runs", help="evidence directory of the runs")
+    stage.add_argument("--out", help="output directory (default: the run's evidence directory)")
+    stage.add_argument("--labels", help="CSV with columns tc_id,category to measure accuracy")
+    stage.add_argument("--pdf", action="store_true", help="also print the report to PDF (browser)")
 
 
 def _add_diagnose_options(stage: argparse.ArgumentParser) -> None:
@@ -369,6 +390,63 @@ def _diagnose(settings: Settings, args: argparse.Namespace) -> int:
         f"summary: {len(outcome.analyses)} failures analysed in {len(outcome.clusters)} "
         f"cluster(s); {counts}; {outcome.llm_calls} model call(s)"
     )
+    return EXIT_OK
+
+
+def _read_labels(path: str) -> dict[str, str]:
+    """Hand-made labels: a CSV with the columns tc_id and category."""
+    allowed = set(get_args(FailureCategory))
+    try:
+        with open(path, encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if not reader.fieldnames or not {"tc_id", "category"} <= set(reader.fieldnames):
+                raise ValidationError("the labels file needs the columns tc_id and category")
+            labels: dict[str, str] = {}
+            for row in reader:
+                tc_id, category = (
+                    (row.get("tc_id") or "").strip(),
+                    (row.get("category") or "").strip(),
+                )
+                if not tc_id or category not in allowed:
+                    raise ValidationError(
+                        f"labels file: bad row for {tc_id or 'an empty test case'!r}; "
+                        f"category must be one of {', '.join(sorted(allowed))}"
+                    )
+                labels[tc_id] = category
+    except OSError as exc:
+        raise ValidationError(f"cannot read the labels file: {exc.strerror}") from exc
+    if not labels:
+        raise ValidationError("the labels file has no rows")
+    return labels
+
+
+def _report(settings: Settings, args: argparse.Namespace) -> int:
+    labels = _read_labels(args.labels) if args.labels else None
+    repo = SqliteRepository(args.db)
+    try:
+        run_id = args.run or repo.latest_run_with_results()
+        if run_id is None:
+            raise PersistenceError("no test results found; run 'aitaf execute' first")
+        if repo.get_run(run_id) is None:
+            raise PersistenceError(f"unknown run: {run_id!r}")
+        set_run_id(run_id)
+        evidence = Path(args.evidence) / run_id
+        out = Path(args.out) if args.out else evidence
+        with Metrics(repo).time("reporting_engine", "render"):
+            data = build_report(repo, run_id, args.source_run, labels=labels)
+            files = write_report(
+                data, out, evidence, pdf_renderer=render_html_to_pdf if args.pdf else None
+            )
+    finally:
+        repo.close()
+
+    print(f"run {run_id} (provider: {data.provider})")
+    print(data.summary_line)
+    for metric in data.metrics:
+        print(f"{metric.label}: {format_value(metric)}")
+    for path in (files.html, files.markdown, files.metrics_json, files.metrics_csv, files.pdf):
+        if path is not None:
+            print(f"wrote {path}")
     return EXIT_OK
 
 
@@ -614,6 +692,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "script": lambda: _script(settings, args),
         "execute": lambda: _execute(settings, args),
         "diagnose": lambda: _diagnose(settings, args),
+        "report": lambda: _report(settings, args),
         "heal": lambda: _heal(settings, args),
         "metrics": lambda: _metrics(args),
     }
