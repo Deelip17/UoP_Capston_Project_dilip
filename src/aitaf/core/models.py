@@ -7,13 +7,14 @@ is a pydantic model: immutable (``frozen=True``), rejects unknown fields
 them with human-authored artefacts (NFR-30).
 
 Later slices add further records (``TestScenario``, ``TestData``, ``Script``,
-``Locator``, ``Run``, ``TestResult``, ``Artifact``, ``HealingEvent``,
-``FailureAnalysis``, ``LlmAudit``). This slice covers the two records needed
-by the Requirement Analyzer and the Test Case Generator.
+``Locator``, ``Artifact``, ``HealingEvent``, ``FailureAnalysis``). So far:
+``AnalyzedRequirement`` and ``TestCase`` (slice 1), ``Run``, ``TestResult`` and
+``LlmAudit`` (slice 2).
 """
 
 from __future__ import annotations
 
+from datetime import datetime
 from enum import StrEnum
 from typing import ClassVar, Literal
 
@@ -34,6 +35,15 @@ class ReviewStatus(StrEnum):
     PENDING = "Pending"
     APPROVED = "Approved"
     REJECTED = "Rejected"
+
+
+class RunStatus(StrEnum):
+    """Lifecycle of a pipeline run; INCOMPLETE marks an interrupted run (NFR-07)."""
+
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    INCOMPLETE = "incomplete"
 
 
 class _BaseRecord(BaseModel):
@@ -87,3 +97,48 @@ class TestCase(_BaseRecord):
     priority: Literal["M", "S", "C"]
     review_status: ReviewStatus = ReviewStatus.PENDING
     ai_label: Literal["ai-generated"] = "ai-generated"
+
+
+class Run(_BaseRecord):
+    """One pipeline run with its environment, for traceability (FR-19, FR-34, NFR-07)."""
+
+    run_id: str = Field(min_length=1)
+    started_at: datetime
+    finished_at: datetime | None = None
+    status: RunStatus
+    provider: str = Field(min_length=1)
+    environment: str = Field(min_length=1)
+
+
+class TestResult(_BaseRecord):
+    """Outcome, duration and log of one executed test (FR-19, FR-34)."""
+
+    __test__: ClassVar[bool] = False
+
+    result_id: str = Field(min_length=1)
+    run_id: str = Field(min_length=1)
+    tc_id: str = Field(min_length=1)
+    status: Literal["passed", "failed", "skipped", "error"]
+    duration_ms: int = Field(ge=0)
+    log: str = ""
+
+
+class LlmAudit(_BaseRecord):
+    """Audit record for one LLM call (FR-37, NFR-14).
+
+    There is deliberately no field for the prompt text or any credential: only a
+    hash of the input is kept, so the audit table cannot leak either.
+    """
+
+    call_id: str = Field(min_length=1)
+    run_id: str = Field(min_length=1)
+    component: str = Field(min_length=1)
+    provider: str = Field(min_length=1)
+    model: str = Field(min_length=1)
+    prompt_version: str = Field(min_length=1)
+    tokens_in: int = Field(ge=0)
+    tokens_out: int = Field(ge=0)
+    input_hash: str = Field(min_length=64, max_length=64)
+    status: Literal["ok", "fallback", "error"]
+    mock: bool
+    created_at: datetime

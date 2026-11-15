@@ -12,14 +12,21 @@ storage), ADR-026 (budget).
 
 from __future__ import annotations
 
+import json
 import os
-from typing import Literal, cast
+from pathlib import Path
+from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr
 
 from aitaf.core.errors import ConfigError
 
 LlmProviderName = Literal["mock", "openai"]
+_FILE_KEYS = {
+    "llm_provider": "LLM_PROVIDER",
+    "llm_call_cap": "LLM_CALL_CAP",
+    "log_level": "LOG_LEVEL",
+}
 
 
 class Settings(BaseModel):
@@ -64,3 +71,37 @@ class Settings(BaseModel):
             llm_call_cap=cap,
             log_level=source.get("LOG_LEVEL", "INFO"),
         )
+
+    @classmethod
+    def from_file(cls, path: Path | str, env: dict[str, str] | None = None) -> Settings:
+        """Load settings from a JSON configuration file (FR-35)."""
+        file_path = Path(path)
+        try:
+            data = json.loads(file_path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            raise ConfigError(
+                f"cannot read configuration file {file_path}: {exc.strerror}"
+            ) from exc
+        except json.JSONDecodeError as exc:
+            raise ConfigError(f"configuration file {file_path} is not valid JSON: {exc}") from exc
+        if not isinstance(data, dict):
+            raise ConfigError(f"configuration file {file_path} must contain a JSON object")
+        return cls.from_file_data(data, env)
+
+    @classmethod
+    def from_file_data(cls, data: dict[str, Any], env: dict[str, str] | None = None) -> Settings:
+        """Combine file values with the environment; the environment wins.
+
+        The API key is never accepted from a file (NFR-09).
+        """
+        if "openai_api_key" in data:
+            raise ConfigError("the API key must come from OPENAI_API_KEY, not a configuration file")
+        unknown = sorted(set(data) - set(_FILE_KEYS))
+        if unknown:
+            raise ConfigError(f"unknown configuration keys: {', '.join(unknown)}")
+        source = env if env is not None else dict(os.environ)
+        merged = {_FILE_KEYS[key]: str(value) for key, value in data.items()}
+        for name in (*_FILE_KEYS.values(), "OPENAI_API_KEY"):
+            if name in source:
+                merged[name] = source[name]
+        return cls.from_env(merged)

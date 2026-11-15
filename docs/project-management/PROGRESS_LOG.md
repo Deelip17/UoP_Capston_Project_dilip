@@ -8,6 +8,7 @@ Written as work happens. It is the source for the progress documentation and for
 |---|---|---|---|---|---|---|---|---|
 | 2026-11-14 | 4 | CI pipeline and scaffold | NFR-12, NFR-18, NFR-19, NFR-26 | 7283c13 | 1 smoke test | 100% | E03a-E03e | CI run 4 on `develop` green |
 | 2026-11-14 | 5 | Slice 1 thin core: `core/__init__`, `core/errors`, `core/config`, `core/logging`, `core/models` | NFR-09, NFR-10, NFR-17, NFR-22, NFR-30, NFR-34, FR-04, FR-10, FR-34, FR-35, FR-37, ADR-026, ADR-032 | (this commit) | 31 (21 blackbox, 10 whitebox) | 98.4% | none (no demo logic yet) | Pydantic 2.14.3 adopted (ADR-032); pytest markers added; `TestCase` model excluded from pytest collection via `__test__=False` |
+| 2026-11-14 | 5 | Slice 2: `core/storage` (repository, in-memory fake, SQLite with migrations), `core/llm` (provider interface, mock provider, gateway with cap, fallback and audit), `cli`, config file loading | FR-19, FR-35, FR-36, FR-37, NFR-07, NFR-14, NFR-24, NFR-25, ADR-026 | (this commit) | 82 (55 blackbox, 27 whitebox) | 97% | none (CLI stages not implemented yet) | Repository contract tests run against both fake and SQLite; kill-process test verifies integrity check and incomplete run. OpenAI provider and retry with back-off (NFR-06) deferred to the slice that first needs a live call |
 
 ## Issues found by tests (Part B)
 
