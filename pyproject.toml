@@ -19,7 +19,11 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = "-ra"
+addopts = "-ra --strict-markers"
+markers = [
+  "blackbox: behaviour tests through the public API (Unit 5 Part B evidence)",
+  "whitebox: branch and validator tests exercising internals (Unit 5 Part B evidence)",
+]
 
 [tool.coverage.run]
 source = ["src/aitaf"]
