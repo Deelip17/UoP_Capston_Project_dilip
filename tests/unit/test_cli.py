@@ -17,6 +17,12 @@ from aitaf.core.config import Settings
 from aitaf.core.errors import ConfigError
 
 
+@pytest.fixture(autouse=True)
+def clean_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    for name in ("LLM_PROVIDER", "LLM_CALL_CAP", "LOG_LEVEL", "OPENAI_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
+
+
 def write_config(tmp_path: Path, data: dict[str, object]) -> Path:
     path = tmp_path / "aitaf.json"
     path.write_text(json.dumps(data), encoding="utf-8")

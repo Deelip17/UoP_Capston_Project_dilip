@@ -18,6 +18,7 @@ Record each real failure: what failed, cause, fix, commit.
 |---|---|---|---|---|---|
 | 2026-11-14 | deliberate demo test (E03b) | CI red: tests failed and ruff B011 flagged `assert False` | Intentional failing test | Removed the test | 7912566 |
 | 2026-11-14 | `test_settings_are_immutable`, `test_analyzed_requirement_is_frozen` | Ruff B017 "do not assert blind `Exception`" failed the lint gate | Tests used `pytest.raises(Exception)` for pydantic frozen-model assignment | Tightened to `pytest.raises(PydanticValidationError)`, which is what pydantic actually raises for frozen models | (this commit) |
+| 2026-11-14 | `test_invalid_config_is_rejected_with_clear_message` | CI run 7 red on Ubuntu and Windows while the same test passed locally | CI sets `LLM_PROVIDER=mock`; the environment overrides the config file by design, so the invalid file value was never read. The test was not isolated from the environment | Added an autouse fixture that clears the framework's environment variables for CLI tests; reproduced locally with `LLM_PROVIDER=mock pytest -n auto` | (this commit) |
 
 ## Challenges and resolutions (Part A)
 
