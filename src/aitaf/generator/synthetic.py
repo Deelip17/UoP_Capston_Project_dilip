@@ -7,18 +7,9 @@ replaced by a rule-based synthetic value chosen from the field name.
 
 from __future__ import annotations
 
-import re
+from aitaf.core.masking import is_synthetic_safe
 
-from aitaf.core.masking import mask
-
-_SYNTHETIC_EMAIL = re.compile(
-    r"[\w.+-]+@(?:example\.(?:com|org|net)|[\w-]+\.(?:test|invalid))\b", re.IGNORECASE
-)
-
-
-def is_synthetic_safe(value: str) -> bool:
-    """True if the value shows no secret or real personal data."""
-    return mask(_SYNTHETIC_EMAIL.sub("synthetic", value)).total == 0
+__all__ = ["is_synthetic_safe", "rule_value"]
 
 
 def rule_value(key: str, index: int) -> str:

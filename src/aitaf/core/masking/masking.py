@@ -13,6 +13,10 @@ from dataclasses import dataclass, field
 
 from aitaf.core.errors import MaskingError
 
+_SYNTHETIC_EMAIL = re.compile(
+    r"[\w.+-]+@(?:example\.(?:com|org|net)|[\w-]+\.(?:test|invalid))\b", re.IGNORECASE
+)
+
 # Order matters: secrets first, then structured personal data, then looser patterns.
 _RULES: tuple[tuple[str, re.Pattern[str], str], ...] = (
     ("SECRET", re.compile(r"\bsk-[A-Za-z0-9_-]{8,}"), "[SECRET]"),
@@ -47,12 +51,44 @@ class MaskResult:
         return sum(self.counts.values())
 
 
-def mask(text: str) -> MaskResult:
-    """Replace secrets and personal data with placeholders; fail closed on bad input."""
+def _mask_real_emails(text: str, pattern: re.Pattern[str], replacement: str) -> tuple[str, int]:
+    """Mask emails except those on reserved example or test domains."""
+    replaced = 0
+
+    def keep_or_mask(match: re.Match[str]) -> str:
+        nonlocal replaced
+        if _SYNTHETIC_EMAIL.fullmatch(match.group(0)):
+            return match.group(0)
+        replaced += 1
+        return replacement
+
+    return pattern.sub(keep_or_mask, text), replaced
+
+
+def mask(text: str, keep_synthetic: bool = False) -> MaskResult:
+    """Replace secrets and personal data with placeholders; fail closed on bad input.
+
+    With ``keep_synthetic`` an email on a reserved example or test domain is left
+    in place (it is synthetic test data, FR-08); every other email is still masked.
+    """
     if not isinstance(text, str):
         raise MaskingError(f"can only mask text, got {type(text).__name__}")
     counts: Counter[str] = Counter()
     for kind, pattern, replacement in _RULES:
-        text, n = pattern.subn(replacement, text)
-        counts[kind] += n
+        if kind == "EMAIL" and keep_synthetic:
+            text, n = _mask_real_emails(text, pattern, replacement)
+            counts[kind] += n
+        else:
+            text, n = pattern.subn(replacement, text)
+            counts[kind] += n
     return MaskResult(text=text, counts={k: v for k, v in counts.items() if v})
+
+
+def find_sensitive(value: str) -> dict[str, int]:
+    """Counts of secrets and personal data in the value, ignoring synthetic emails."""
+    return mask(_SYNTHETIC_EMAIL.sub("synthetic", value)).counts
+
+
+def is_synthetic_safe(value: str) -> bool:
+    """True if the value shows no secret or real personal data (FR-08, NFR-15)."""
+    return not find_sensitive(value)

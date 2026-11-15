@@ -9,7 +9,7 @@ from __future__ import annotations
 import pytest
 
 from aitaf.core.errors import MaskingError
-from aitaf.core.masking import mask
+from aitaf.core.masking import is_synthetic_safe, mask
 
 SEEDED = {
     "email": "jane.doe@example.com",
@@ -72,3 +72,29 @@ def test_counts_report_what_was_masked() -> None:
 def test_non_string_input_fails_closed() -> None:
     with pytest.raises(MaskingError):
         mask(None)  # type: ignore[arg-type]
+
+
+@pytest.mark.whitebox
+def test_synthetic_emails_can_be_kept_while_real_ones_are_masked() -> None:
+    text = "use demo.user@example.test or jane.doe@gmail.com"
+    kept = mask(text, keep_synthetic=True)
+    assert "demo.user@example.test" in kept.text
+    assert "jane.doe@gmail.com" not in kept.text
+    assert kept.counts == {"EMAIL": 1}
+    assert "demo.user@example.test" not in mask(text).text
+
+
+@pytest.mark.whitebox
+@pytest.mark.parametrize(
+    ("value", "safe"),
+    [
+        ("demo.user@example.test", True),
+        ("a@example.com", True),
+        ("Test User", True),
+        ("john.smith@gmail.com", False),
+        ("4111 1111 1111 1111", False),
+        ("password=Hunter2Hunter2", False),
+    ],
+)
+def test_is_synthetic_safe(value: str, safe: bool) -> None:
+    assert is_synthetic_safe(value) is safe

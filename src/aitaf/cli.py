@@ -2,8 +2,8 @@
 
 ``aitaf run`` runs the whole pipeline and one command exists per stage. Every
 command validates the configuration file first and rejects invalid settings with
-a clear message (exit code 2). ``analyze``, ``generate`` and ``review`` are
-implemented; the other stages report that they are not implemented yet (exit
+a clear message (exit code 2). ``analyze``, ``generate``, ``review`` and ``script``
+are implemented; the other stages report that they are not implemented yet (exit
 code 3) until their slices land.
 """
 
@@ -27,10 +27,13 @@ from aitaf.core.storage import Repository, SqliteRepository
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
 from aitaf.generator import (
     TestCaseGenerator,
+    cases_for_scripting,
     export_cases,
     mock_generation_responder,
     set_review_status,
 )
+from aitaf.scriptgen import COMPONENT as SCRIPT_COMPONENT
+from aitaf.scriptgen import ScriptGenerator, mock_script_responder
 
 STAGES: dict[str, str] = {
     "analyze": "Requirement Analyzer: turn requirements into structured records",
@@ -60,12 +63,29 @@ def build_parser() -> argparse.ArgumentParser:
     for name, description in STAGES.items():
         stage = commands.add_parser(name, help=description)
         stage.add_argument("--config", help="path to the JSON configuration file")
-        if name in ("analyze", "generate"):
+        if name in ("analyze", "generate", "script"):
             stage.add_argument("--db", default="aitaf.db", help="SQLite database path")
         if name == "analyze":
             stage.add_argument("--input", required=True, help="requirements file (.txt, .md)")
         if name == "generate":
             stage.add_argument("--export-dir", help="also export cases as JSON, CSV and Markdown")
+        if name == "script":
+            stage.add_argument("--out-dir", default="generated_tests", help="output directory")
+            stage.add_argument(
+                "--framework", choices=["playwright", "selenium"], default="playwright"
+            )
+            stage.add_argument("--base-url", default="http://localhost:8000")
+            stage.add_argument(
+                "--allow-host",
+                action="append",
+                default=[],
+                help="host the scripts may target (repeatable); localhost is always allowed",
+            )
+            stage.add_argument(
+                "--no-review",
+                action="store_true",
+                help="also script Pending cases (Rejected cases are never scripted)",
+            )
     review = commands.add_parser("review", help="review generated test cases (human gate)")
     review.add_argument("--config", help="path to the JSON configuration file")
     review.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -86,6 +106,7 @@ def _gateway(settings: Settings, repo: Repository) -> LlmGateway:
         responders={
             ANALYZER_COMPONENT: mock_extraction_responder,
             GENERATOR_COMPONENT: mock_generation_responder,
+            SCRIPT_COMPONENT: mock_script_responder,
         }
     )
     return LlmGateway(provider, repo, call_cap=settings.llm_call_cap)
@@ -170,6 +191,45 @@ def _generate(settings: Settings, args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _script(settings: Settings, args: argparse.Namespace) -> int:
+    _require_mock(settings)
+    repo = SqliteRepository(args.db)
+    try:
+        run_id = _latest_run(repo)
+        set_run_id(run_id)
+        cases = cases_for_scripting(repo, run_id, review_mode=not args.no_review)
+        hosts = frozenset({"localhost", "127.0.0.1", *args.allow_host})
+        generator = ScriptGenerator(
+            _gateway(settings, repo),
+            repo,
+            framework=args.framework,
+            base_url=args.base_url,
+            allowed_hosts=hosts,
+            output_dir=Path(args.out_dir),
+        )
+        result = generator.generate(cases, repo.list_test_data(run_id))
+    finally:
+        repo.close()
+
+    print(f"run {run_id} ({_MOCK_NOTE})")
+    for script in result.scripts:
+        print(f"{script.script_id}  {script.path}")
+    for tc_id, reasons in result.rejected:
+        print(f"REJECTED {tc_id}:")
+        for reason in reasons:
+            print(f"           - {reason}")
+    print(
+        f"summary: {len(result.scripts)} scripts written ({args.framework}), "
+        f"{len(result.rejected)} rejected, {len(result.locators)} locators, "
+        f"static validation passed for every saved file"
+    )
+    if not cases:
+        print("no test cases are approved yet; approve with: aitaf review --approve TC_ID")
+    else:
+        print(f"run them with: pytest {args.out_dir} --base-url {args.base_url}")
+    return EXIT_OK
+
+
 def _review(args: argparse.Namespace) -> int:
     repo = SqliteRepository(args.db)
     try:
@@ -201,6 +261,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "analyze": lambda: _analyze(settings, args),
         "generate": lambda: _generate(settings, args),
         "review": lambda: _review(args),
+        "script": lambda: _script(settings, args),
     }
     handler = handlers.get(args.command)
     if handler is None:

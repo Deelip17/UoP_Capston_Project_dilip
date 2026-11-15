@@ -69,7 +69,7 @@ def test_valid_config_reaches_unimplemented_stage(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     path = write_config(tmp_path, {"llm_provider": "mock", "llm_call_cap": 5})
-    assert main(["script", "--config", str(path)]) == 3
+    assert main(["execute", "--config", str(path)]) == 3
     assert "not implemented" in capsys.readouterr().err
 
 
@@ -221,3 +221,102 @@ def test_review_of_unknown_case_fails_clearly(
     capsys.readouterr()
     assert main(["review", "--db", str(db), "--approve", "TC-NOPE"]) == 1
     assert "TC-NOPE" in capsys.readouterr().err
+
+
+def prepare_cases(db: Path, capsys: pytest.CaptureFixture[str]) -> str:
+    analyze_sample(db)
+    assert main(["generate", "--db", str(db)]) == 0
+    capsys.readouterr()
+    assert main(["review", "--db", str(db), "--list"]) == 0
+    first_id = capsys.readouterr().out.split()[0]
+    return first_id
+
+
+@pytest.mark.blackbox
+def test_script_command_scripts_only_approved_cases(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    first_id = prepare_cases(db, capsys)
+    assert main(["review", "--db", str(db), "--approve", first_id]) == 0
+    capsys.readouterr()
+    out_dir = tmp_path / "gen"
+    assert main(["script", "--db", str(db), "--out-dir", str(out_dir)]) == 0
+    out = capsys.readouterr().out
+    assert "1 scripts written (playwright)" in out
+    assert "0 rejected" in out
+    assert len(list((out_dir / "tests").glob("test_*.py"))) == 1
+    assert (out_dir / "manifest.json").exists()
+
+
+@pytest.mark.blackbox
+def test_script_command_with_nothing_approved_writes_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    prepare_cases(db, capsys)
+    out_dir = tmp_path / "gen"
+    assert main(["script", "--db", str(db), "--out-dir", str(out_dir)]) == 0
+    out = capsys.readouterr().out
+    assert "0 scripts written" in out and "aitaf review" in out
+    assert not out_dir.exists()
+
+
+@pytest.mark.blackbox
+def test_script_command_without_review_mode_scripts_pending_cases(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    prepare_cases(db, capsys)
+    out_dir = tmp_path / "gen"
+    code = main(
+        [
+            "script",
+            "--db",
+            str(db),
+            "--out-dir",
+            str(out_dir),
+            "--no-review",
+            "--framework",
+            "selenium",
+        ]
+    )
+    assert code == 0
+    assert "12 scripts written (selenium)" in capsys.readouterr().out
+    assert "selenium" in (out_dir / "conftest.py").read_text(encoding="utf-8")
+
+
+@pytest.mark.blackbox
+def test_script_command_refuses_a_host_outside_the_allow_list(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    prepare_cases(db, capsys)
+    code = main(["script", "--db", str(db), "--base-url", "http://client-system.example"])
+    assert code == 1
+    assert "allow-list" in capsys.readouterr().err
+
+
+@pytest.mark.blackbox
+def test_script_command_accepts_an_explicitly_allowed_host(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    prepare_cases(db, capsys)
+    out_dir = tmp_path / "gen"
+    code = main(
+        [
+            "script",
+            "--db",
+            str(db),
+            "--out-dir",
+            str(out_dir),
+            "--no-review",
+            "--base-url",
+            "http://demo.example",
+            "--allow-host",
+            "demo.example",
+        ]
+    )
+    assert code == 0
+    assert "http://demo.example" in (out_dir / "conftest.py").read_text(encoding="utf-8")

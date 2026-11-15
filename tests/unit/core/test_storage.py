@@ -20,10 +20,13 @@ from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
     LlmAudit,
+    Locator,
+    LocatorStrategy,
     ReviewStatus,
     RiskLevel,
     Run,
     RunStatus,
+    Script,
     TestCase,
     TestData,
     TestResult,
@@ -365,3 +368,57 @@ def test_latest_run_with_requirements(repo: Repository) -> None:
     assert repo.latest_run_with_requirements() == "run-1"
     repo.add_requirement("run-2", make_requirement())
     assert repo.latest_run_with_requirements() == "run-2"
+
+
+def make_locator(name: str = "email", value: str = "email") -> Locator:
+    return Locator(
+        loc_id=f"login.{name}",
+        page="login",
+        name=name,
+        primary=LocatorStrategy(kind="id", value=value),
+        fallbacks=[LocatorStrategy(kind="css", value="input")],
+        model="mock-1",
+        prompt_version="sg-v1",
+    )
+
+
+def make_script(script_id: str = "SCR-1") -> Script:
+    return Script(
+        script_id=script_id,
+        tc_id="TC-1",
+        framework="playwright",
+        path="tests/test_tc_1.py",
+        validation_result="passed",
+        model="mock-1",
+        prompt_version="sg-v1",
+    )
+
+
+@pytest.mark.blackbox
+def test_scripts_and_locators_are_stored_per_run(repo: Repository) -> None:
+    repo.create_run(make_run("run-1"))
+    repo.create_run(make_run("run-2"))
+    repo.add_script("run-1", make_script())
+    repo.add_locator("run-1", make_locator("email"))
+    repo.add_locator("run-1", make_locator("submit"))
+    repo.add_locator("run-2", make_locator("other"))
+    assert repo.list_scripts("run-1") == [make_script()]
+    assert [loc.name for loc in repo.list_locators("run-1")] == ["email", "submit"]
+    assert repo.list_scripts("run-2") == []
+
+
+@pytest.mark.blackbox
+def test_adding_the_same_locator_again_replaces_it(repo: Repository) -> None:
+    repo.create_run(make_run())
+    repo.add_locator("run-1", make_locator(value="a"))
+    repo.add_locator("run-1", make_locator(value="b"))
+    stored = repo.list_locators("run-1")
+    assert len(stored) == 1 and stored[0].primary.value == "b"
+
+
+@pytest.mark.blackbox
+def test_script_or_locator_for_unknown_run_rejected(repo: Repository) -> None:
+    with pytest.raises(PersistenceError):
+        repo.add_script("missing", make_script())
+    with pytest.raises(PersistenceError):
+        repo.add_locator("missing", make_locator())

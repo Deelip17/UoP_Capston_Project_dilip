@@ -16,9 +16,11 @@ from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
     LlmAudit,
+    Locator,
     ReviewStatus,
     Run,
     RunStatus,
+    Script,
     TestCase,
     TestData,
     TestResult,
@@ -91,6 +93,22 @@ MIGRATIONS: tuple[str, ...] = (
         tc_id TEXT NOT NULL,
         record TEXT NOT NULL,
         UNIQUE (run_id, tc_id)
+    );
+    """,
+    """
+    CREATE TABLE scripts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        script_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, script_id)
+    );
+    CREATE TABLE locators (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT NOT NULL REFERENCES runs(run_id),
+        loc_id TEXT NOT NULL,
+        record TEXT NOT NULL,
+        UNIQUE (run_id, loc_id)
     );
     """,
 )
@@ -305,6 +323,32 @@ class SqliteRepository:
             "SELECT record FROM test_data WHERE run_id = ? ORDER BY id", (run_id,)
         ).fetchall()
         return [TestData.model_validate_json(row["record"]) for row in rows]
+
+    def add_script(self, run_id: str, script: Script) -> None:
+        self._write(
+            "INSERT INTO scripts (run_id, script_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, script_id) DO UPDATE SET record = excluded.record",
+            (run_id, script.script_id, script.model_dump_json()),
+        )
+
+    def list_scripts(self, run_id: str) -> list[Script]:
+        rows = self._conn.execute(
+            "SELECT record FROM scripts WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [Script.model_validate_json(row["record"]) for row in rows]
+
+    def add_locator(self, run_id: str, locator: Locator) -> None:
+        self._write(
+            "INSERT INTO locators (run_id, loc_id, record) VALUES (?, ?, ?)"
+            " ON CONFLICT (run_id, loc_id) DO UPDATE SET record = excluded.record",
+            (run_id, locator.loc_id, locator.model_dump_json()),
+        )
+
+    def list_locators(self, run_id: str) -> list[Locator]:
+        rows = self._conn.execute(
+            "SELECT record FROM locators WHERE run_id = ? ORDER BY id", (run_id,)
+        ).fetchall()
+        return [Locator.model_validate_json(row["record"]) for row in rows]
 
     def close(self) -> None:
         self._conn.close()

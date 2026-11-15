@@ -1,0 +1,12 @@
+[
+  {
+    "script_id": "SCR-TC-3F03EBEF-01",
+    "tc_id": "TC-3F03EBEF-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_3f03ebef_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v1",
+    "ai_label": "ai-generated"
+  }
+]

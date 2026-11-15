@@ -38,7 +38,7 @@ show_missing = true
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-extend-exclude = [".venv", "reports", "dist"]
+extend-exclude = [".venv", "reports", "dist", "evidence"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]

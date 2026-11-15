@@ -9,8 +9,11 @@ from pydantic import ValidationError as PydanticValidationError
 
 from aitaf.core.models import (
     AnalyzedRequirement,
+    Locator,
+    LocatorStrategy,
     ReviewStatus,
     RiskLevel,
+    Script,
     TestCase,
     TestData,
     TestScenario,
@@ -152,3 +155,51 @@ def test_test_data_is_always_marked_synthetic() -> None:
     assert data.synthetic is True
     with pytest.raises(PydanticValidationError):
         TestData(tc_id="TC-1", dataset={}, synthetic=False)  # type: ignore[arg-type]
+
+
+@pytest.mark.blackbox
+def test_locator_holds_primary_and_ordered_fallbacks() -> None:
+    locator = Locator(
+        loc_id="login.email",
+        page="login",
+        name="email",
+        primary=LocatorStrategy(kind="id", value="email"),
+        fallbacks=[
+            LocatorStrategy(kind="css", value="input[type=email]"),
+            LocatorStrategy(kind="xpath", value="//input[1]"),
+        ],
+        model="mock-1",
+        prompt_version="sg-v1",
+    )
+    assert [f.kind for f in locator.fallbacks] == ["css", "xpath"]
+    assert locator.version == 1 and locator.ai_label == "ai-generated"
+
+
+@pytest.mark.blackbox
+def test_locator_strategy_kind_is_validated() -> None:
+    with pytest.raises(PydanticValidationError):
+        LocatorStrategy(kind="magic", value="x")  # type: ignore[arg-type]
+
+
+@pytest.mark.blackbox
+def test_script_record_requires_label_fields() -> None:
+    script = Script(
+        script_id="SCR-1",
+        tc_id="TC-1",
+        framework="playwright",
+        path="tests/test_tc_1.py",
+        validation_result="passed",
+        model="mock-1",
+        prompt_version="sg-v1",
+    )
+    assert script.ai_label == "ai-generated"
+    with pytest.raises(PydanticValidationError):
+        Script(
+            script_id="SCR-1",
+            tc_id="TC-1",
+            framework="cypress",  # type: ignore[arg-type]
+            path="p",
+            validation_result="passed",
+            model="m",
+            prompt_version="p",
+        )

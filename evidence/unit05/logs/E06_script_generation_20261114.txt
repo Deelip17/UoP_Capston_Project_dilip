@@ -1,0 +1,64 @@
+$ python -m aitaf analyze --input data/requirements/sample_requirements.md --db demo.db
+run 959194ebbe5f4676a6e010025587bf76 (mock-generated output, review before use)
+READY    REQ-3F03EBEF  High    sample_requirements.md#1
+READY    REQ-2A794EAB  High    sample_requirements.md#2
+READY    REQ-E877946E  Medium  sample_requirements.md#3
+READY    REQ-A7571042  High    sample_requirements.md#5
+FLAGGED  REQ-850D9253  Low     sample_requirements.md#4
+           - vague wording: 'quickly'
+FLAGGED  REQ-CBCE96C5  High    sample_requirements.md#6
+           - vague wording: 'easy'
+           - no expected outcome stated
+FLAGGED  REQ-E3454027  High    sample_requirements.md#7
+summary: 4 ready, 3 flagged, 0 rejected
+
+$ python -m aitaf generate --db demo.db
+run 959194ebbe5f4676a6e010025587bf76 (mock-generated output, review before use)
+TC-3F03EBEF-01  M  Pending   Verify that a system can allow a registered customer to log in with an email address and password
+TC-3F03EBEF-02  M  Pending   Reject invalid input when a system tries to allow a registered customer to log in with an email address and password
+TC-3F03EBEF-03  M  Pending   Check boundary values when a system tries to allow a registered customer to log in with an email address and password
+TC-2A794EAB-01  M  Pending   Verify that a system can lock an account for 15 minutes after 5 failed login attempts
+... (8 more test cases omitted from this log)
+SKIPPED  REQ-E3454027: flagged as ambiguous; clarify before generation
+summary: 12 test cases, 12 scenarios, 3 skipped, 0 duplicates removed, 0 data values replaced, 0 coverage gaps
+all new cases are Pending; approve with: aitaf review --approve TC_ID
+
+$ python -m aitaf review --db demo.db --list
+TC-3F03EBEF-01  Pending   Verify that a system can allow a registered customer to log in with an email address and password
+TC-3F03EBEF-02  Pending   Reject invalid input when a system tries to allow a registered customer to log in with an email address and password
+TC-3F03EBEF-03  Pending   Check boundary values when a system tries to allow a registered customer to log in with an email address and password
+
+$ python -m aitaf review --db demo.db --approve TC-3F03EBEF-01
+TC-3F03EBEF-01 -> Approved
+
+$ python -m aitaf script --db demo.db --out-dir generated_tests --framework playwright
+run 959194ebbe5f4676a6e010025587bf76 (mock-generated output, review before use)
+SCR-TC-3F03EBEF-01  tests/test_tc_3f03ebef_01.py
+summary: 1 scripts written (playwright), 0 rejected, 3 locators, static validation passed for every saved file
+run them with: pytest generated_tests --base-url http://localhost:8000
+
+$ find generated_tests -type f
+conftest.py
+locators/__init__.py
+locators/app_locators.py
+manifest.json
+pages/__init__.py
+pages/app_page.py
+tests/test_tc_3f03ebef_01.py
+
+# FR-15 / NFR-11: static validation rejects forbidden constructs (reason per line)
+REJECTED (os.system call): line 1: import of 'os' is not allowed
+REJECTED (os.system call): line 2: use of '.system' is not allowed
+REJECTED (eval): line 1: use of 'eval' is not allowed
+REJECTED (file write): line 1: use of 'open' is not allowed
+REJECTED (URL on a host that is not allow-listed): line 1: URL host 'evil.example' is not allow-listed
+REJECTED (hard-coded secret): line 1: hard-coded secret assigned to 'password'
+REJECTED (JavaScript injection): line 2: use of '.evaluate' is not allowed
+
+# The generated files themselves pass the same validation:
+conftest.py: static validation passed
+locators/__init__.py: static validation passed
+locators/app_locators.py: static validation passed
+pages/__init__.py: static validation passed
+pages/app_page.py: static validation passed
+tests/test_tc_3f03ebef_01.py: static validation passed

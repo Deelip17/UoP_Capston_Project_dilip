@@ -14,9 +14,11 @@ from typing import Protocol
 from aitaf.core.models import (
     AnalyzedRequirement,
     LlmAudit,
+    Locator,
     ReviewStatus,
     Run,
     RunStatus,
+    Script,
     TestCase,
     TestData,
     TestResult,
@@ -80,6 +82,18 @@ class Repository(Protocol):
 
     def list_test_data(self, run_id: str) -> list[TestData]:
         """Return the test data of the run in insertion order."""
+
+    def add_script(self, run_id: str, script: Script) -> None:
+        """Store (or replace) a script manifest entry. Unknown run raises PersistenceError."""
+
+    def list_scripts(self, run_id: str) -> list[Script]:
+        """Return the scripts of the run in insertion order."""
+
+    def add_locator(self, run_id: str, locator: Locator) -> None:
+        """Store (or replace) a locator. Unknown run raises PersistenceError."""
+
+    def list_locators(self, run_id: str) -> list[Locator]:
+        """Return the locators of the run in insertion order."""
 
     def close(self) -> None:
         """Release resources."""

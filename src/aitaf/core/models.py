@@ -9,7 +9,8 @@ them with human-authored artefacts (NFR-30).
 Later slices add further records (``TestScenario``, ``TestData``, ``Script``,
 ``Locator``, ``Artifact``, ``HealingEvent``, ``FailureAnalysis``). So far:
 ``AnalyzedRequirement`` and ``TestCase`` (slice 1), ``Run``, ``TestResult`` and
-``LlmAudit`` (slice 2), ``TestScenario`` and ``TestData`` (slice 4).
+``LlmAudit`` (slice 2), ``TestScenario`` and ``TestData`` (slice 4), ``Script``, ``Locator`` and
+``LocatorStrategy`` (slice 5).
 """
 
 from __future__ import annotations
@@ -168,3 +169,37 @@ class TestData(_BaseRecord):
     tc_id: str = Field(min_length=1)
     dataset: dict[str, str]
     synthetic: Literal[True] = True
+
+
+class LocatorStrategy(_BaseRecord):
+    """One way of finding an element: id, CSS, XPath, text, role or attribute (FR-16)."""
+
+    kind: Literal["id", "css", "xpath", "text", "role", "attr"]
+    value: str = Field(min_length=1)
+
+
+class Locator(_BaseRecord):
+    """Named element locator with a primary and ordered fallback strategies (FR-14, FR-16)."""
+
+    loc_id: str = Field(min_length=1)
+    page: str = Field(min_length=1)
+    name: str = Field(min_length=1)
+    primary: LocatorStrategy
+    fallbacks: list[LocatorStrategy] = Field(default_factory=list)
+    version: int = Field(default=1, ge=1)
+    model: str = Field(min_length=1)
+    prompt_version: str = Field(min_length=1)
+    ai_label: Literal["ai-generated"] = "ai-generated"
+
+
+class Script(_BaseRecord):
+    """Manifest entry for one generated, statically validated script (FR-12 to FR-15)."""
+
+    script_id: str = Field(min_length=1)
+    tc_id: str = Field(min_length=1)
+    framework: Literal["playwright", "selenium"]
+    path: str = Field(min_length=1)
+    validation_result: Literal["passed"]
+    model: str = Field(min_length=1)
+    prompt_version: str = Field(min_length=1)
+    ai_label: Literal["ai-generated"] = "ai-generated"

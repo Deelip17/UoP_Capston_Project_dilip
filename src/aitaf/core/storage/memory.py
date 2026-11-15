@@ -8,9 +8,11 @@ from aitaf.core.errors import PersistenceError
 from aitaf.core.models import (
     AnalyzedRequirement,
     LlmAudit,
+    Locator,
     ReviewStatus,
     Run,
     RunStatus,
+    Script,
     TestCase,
     TestData,
     TestResult,
@@ -29,6 +31,8 @@ class InMemoryRepository:
         self._scenarios: dict[tuple[str, str], TestScenario] = {}
         self._cases: dict[tuple[str, str], TestCase] = {}
         self._data: dict[tuple[str, str], TestData] = {}
+        self._scripts: dict[tuple[str, str], Script] = {}
+        self._locators: dict[tuple[str, str], Locator] = {}
 
     def _require_run(self, run_id: str) -> None:
         if run_id not in self._runs:
@@ -108,6 +112,20 @@ class InMemoryRepository:
 
     def list_test_data(self, run_id: str) -> list[TestData]:
         return [d for (rid, _), d in self._data.items() if rid == run_id]
+
+    def add_script(self, run_id: str, script: Script) -> None:
+        self._require_run(run_id)
+        self._scripts[(run_id, script.script_id)] = script
+
+    def list_scripts(self, run_id: str) -> list[Script]:
+        return [s for (rid, _), s in self._scripts.items() if rid == run_id]
+
+    def add_locator(self, run_id: str, locator: Locator) -> None:
+        self._require_run(run_id)
+        self._locators[(run_id, locator.loc_id)] = locator
+
+    def list_locators(self, run_id: str) -> list[Locator]:
+        return [loc for (rid, _), loc in self._locators.items() if rid == run_id]
 
     def close(self) -> None:
         return None

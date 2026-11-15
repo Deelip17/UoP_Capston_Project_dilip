@@ -1,8 +1,8 @@
 $ pytest -v --cov=aitaf  (slice 4, 14 Nov 2026)
 ============================= test session starts =============================
-platform win32 -- Python 3.12.10, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\dchennap\repos\UoP_Capston_Project_dilip\.venv\Scripts\python.exe
+platform win32 -- Python 3.12.10, pytest-9.2.0, pluggy-1.7.0 -- <repo>\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: c:\Users\dchennap\repos\UoP_Capston_Project_dilip
+rootdir: <repo>
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.16.0, platformdirs-4.14.5, cov-7.1.0, xdist-3.8.0
