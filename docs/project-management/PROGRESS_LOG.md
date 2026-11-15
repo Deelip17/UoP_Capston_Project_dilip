@@ -35,4 +35,4 @@ Record each real failure: what failed, cause, fix, commit.
 
 | Date | Tag | Branch | Release | Contents |
 |---|---|---|---|---|
-| | | | | |
+| 2026-11-14 | v0.1.0 | develop | tag only (GitHub Release planned at v0.5.0) | Core, persistence, LLM gateway, masking layer, Requirement Analyzer; 156 tests, 98% coverage, CI run 9 green (commit f31a76d) |
