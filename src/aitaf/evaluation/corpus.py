@@ -27,6 +27,8 @@ from aitaf.core.logging import new_run_id, set_run_id
 from aitaf.core.metrics import Metrics
 from aitaf.core.models import Locator, LocatorStrategy, Run, RunStatus, TestResult
 from aitaf.core.storage import SqliteRepository
+from aitaf.evaluation.corpus_holdout import LOCATOR_FAILURES as HOLDOUT_LOCATORS
+from aitaf.evaluation.corpus_holdout import RAW as HOLDOUT_RAW
 from aitaf.execution import ExecutionEngine, RunConfig
 from aitaf.sampleapp import ELEMENTS, ShopServer
 from aitaf.scriptgen import templates
@@ -150,19 +152,22 @@ def _locators() -> list[Locator]:
     return out
 
 
-def corpus_sources() -> list[str]:
+def corpus_sources(recipe_set: str = "dev") -> list[str]:
     """The source of every corpus test, in order (``test_case_001`` and so on)."""
+    if recipe_set not in ("dev", "holdout"):
+        raise ValueError("recipe_set must be 'dev' or 'holdout'")
+    located, raw = (
+        (_LOCATOR_FAILURES, _RAW) if recipe_set == "dev" else (HOLDOUT_LOCATORS, HOLDOUT_RAW)
+    )
     sources = []
-    bodies = [
-        f"screen = ShopPage(page, base_url)\n    {body}" for _, body in _LOCATOR_FAILURES
-    ] + _RAW
+    bodies = [f"screen = ShopPage(page, base_url)\n    {body}" for _, body in located] + raw
     for number, body in enumerate(bodies, start=1):
         head = "from pages.shop_page import ShopPage\n\n\n" if "ShopPage" in body else ""
         sources.append(f"{head}def test_case_{number:03d}(page, base_url):\n    {body}\n")
     return sources
 
 
-def _write_project(root: Path, base_url: str) -> list[dict[str, str]]:
+def _write_project(root: Path, base_url: str, recipe_set: str) -> list[dict[str, str]]:
     for folder in ("tests", "locators", "pages"):
         (root / folder).mkdir(parents=True)
     (root / "locators" / "__init__.py").write_text("", encoding="utf-8")
@@ -177,7 +182,7 @@ def _write_project(root: Path, base_url: str) -> list[dict[str, str]]:
         templates.render_conftest("playwright", base_url), encoding="utf-8"
     )
     manifest = []
-    for number, source in enumerate(corpus_sources(), start=1):
+    for number, source in enumerate(corpus_sources(recipe_set), start=1):
         path = f"tests/test_case_{number:03d}.py"
         (root / path).write_text(source, encoding="utf-8")
         manifest.append({"tc_id": f"F{number:03d}", "path": path})
@@ -203,7 +208,7 @@ def _scrub_evidence(folder: Path) -> None:
                 path.write_text(clean, encoding="utf-8", newline="\n")
 
 
-def build_corpus(folder: Path | str, timeout_ms: int = 3000) -> CorpusInfo:
+def build_corpus(folder: Path | str, timeout_ms: int = 3000, recipe_set: str = "dev") -> CorpusInfo:
     """Run the corpus tests in Chromium and write the files the author labels from."""
     out = Path(folder)
     if out.exists() and any(out.iterdir()):
@@ -215,7 +220,7 @@ def build_corpus(folder: Path | str, timeout_ms: int = 3000) -> CorpusInfo:
     with tempfile.TemporaryDirectory() as work, ShopServer(mutations, open_login=True) as shop:
         scripts = Path(work) / "scripts"
         scripts.mkdir()
-        _write_project(scripts, shop.url)
+        _write_project(scripts, shop.url, recipe_set)
         config = RunConfig(
             scripts_dir=scripts,
             base_url=shop.url,
@@ -269,7 +274,7 @@ def build_corpus(folder: Path | str, timeout_ms: int = 3000) -> CorpusInfo:
         repo.finish_run(run_id, RunStatus.COMPLETED, datetime.now(UTC))
     finally:
         repo.close()
-    sources = {f"F{n:03d}": s for n, s in enumerate(corpus_sources(), start=1)}
+    sources = {f"F{n:03d}": s for n, s in enumerate(corpus_sources(recipe_set), start=1)}
     failed = [r for r in clean if r.status in ("failed", "error")]
     _write_label_files(out, failed, sources)
     return CorpusInfo(out, db, run_id, len(failed), summary.passed)

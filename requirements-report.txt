@@ -1,0 +1,2 @@
+# Optional: charts for the evaluation results (aitaf evaluate results)
+matplotlib==3.11.2

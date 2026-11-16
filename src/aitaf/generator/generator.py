@@ -136,7 +136,13 @@ class TestCaseGenerator:
                 _log.warning("skipped %s: %s", req.req_id, reason)
                 result.skipped.append((req.req_id, reason))
                 continue
-            schema, model = self._extract(mask(record).text)
+            try:
+                schema, model = self._extract(mask(record).text)
+            except LlmValidationError as exc:
+                reason = f"model output invalid after one re-ask ({exc})"
+                _log.warning("skipped %s: %s", req.req_id, reason)
+                result.skipped.append((req.req_id, reason))
+                continue
             self._build(req, schema, model, result, data_by_case)
 
         result.cases = self._remove_duplicates(result, data_by_case)

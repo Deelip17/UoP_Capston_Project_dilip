@@ -16,7 +16,6 @@ import pytest
 
 from aitaf.analyzer import COMPONENT, RequirementAnalyzer, mock_extraction_responder
 from aitaf.analyzer.intake import RawRequirement, load_requirements
-from aitaf.core.errors import LlmValidationError
 from aitaf.core.llm import LlmGateway, LlmRequest, LlmResponse, MockProvider
 from aitaf.core.logging import set_run_id
 from aitaf.core.models import RiskLevel, Run, RunStatus
@@ -190,8 +189,8 @@ def test_each_llm_call_is_audited_with_prompt_version(repo: InMemoryRepository) 
 @pytest.mark.blackbox
 def test_invalid_output_twice_is_rejected_not_passed_on(repo: InMemoryRepository) -> None:
     analyzer, provider = make_analyzer(repo, CapturingProvider(["not json", '{"bad": 1}']))
-    with pytest.raises(LlmValidationError):
-        analyzer.analyze([raw("The system shall list orders.")])
+    result = analyzer.analyze([raw("The system shall list orders.")])
+    assert result.ready == [] and "invalid after one re-ask" in result.rejected[0][1]
     assert len(provider.prompts) == 2
     assert repo.list_requirements("run-1") == []
 

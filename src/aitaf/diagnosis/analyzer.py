@@ -86,6 +86,7 @@ class FailureAnalyzer:
             error_type=result.error_type,
             error_text=result.error_text,
             log=result.log,
+            page_text=self._dom_text(result.dom_snapshot),
             attempts=result.attempts,
             healing_outcomes=tuple(e.outcome for e in events),
         )

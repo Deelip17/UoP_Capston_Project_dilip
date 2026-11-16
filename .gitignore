@@ -16,6 +16,7 @@ htmlcov/
 # Local databases and generated output
 *.db
 !evaluation/corpus/corpus.db
+!evaluation/corpus_holdout/corpus.db
 *.sqlite3
 reports/*
 !reports/samples/

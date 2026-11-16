@@ -13,7 +13,9 @@ from collections import defaultdict
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
+from aitaf.evaluation.generation_eval import GenerationTrial
 from aitaf.evaluation.healing_eval import HealingTrial
+from aitaf.evaluation.latency_eval import LatencySample
 
 
 @dataclass(frozen=True)
@@ -125,4 +127,74 @@ def healing_by_kind(trials: Sequence[HealingTrial]) -> list[tuple[str, int, int,
     return [
         (kind, len(rows), sum(t.healed for t in rows), sum(t.correct for t in rows))
         for kind, rows in sorted(groups.items())
+    ]
+
+
+def generation_figures(trial: GenerationTrial) -> list[Figure]:
+    """Script executability (O2), pass rate and locator validity of one configuration."""
+    return [
+        ratio_figure(
+            "script_executability",
+            "Script executability",
+            trial.executable,
+            trial.scripts,
+            "scripts that ran their steps without a missing element or runtime error (passed, "
+            "or failed on an assertion), over scripts generated",
+        ),
+        ratio_figure(
+            "script_pass_rate",
+            "Script pass rate",
+            trial.passed,
+            trial.scripts,
+            "generated scripts that passed on the unmutated shop, over scripts generated",
+        ),
+        ratio_figure(
+            "locator_validity",
+            "Locator validity",
+            trial.valid_locators,
+            trial.locators,
+            "primary locators that exist on the baseline pages, over generated locators",
+        ),
+        ratio_figure(
+            "scripts_accepted",
+            "Test cases turned into scripts",
+            trial.scripts,
+            trial.cases,
+            "scripts that passed static validation and grounding, over approved test cases",
+        ),
+        Figure(
+            "api_cost_usd",
+            "API cost of the pipeline",
+            trial.cost_usd,
+            "usd",
+            None,
+            trial.llm_calls,
+            "sum of token costs over all model calls (zero for the mock provider)",
+        ),
+    ]
+
+
+def latency_figures(samples: Sequence[LatencySample]) -> list[Figure]:
+    """Median and p95 of the report pipeline without the first (warm-up) repetition."""
+    times = [s.duration_ms for s in samples if not s.warmup]
+    basis = "report build and write on one stored run, warm-up excluded, no model calls"
+    return [
+        Figure(
+            "non_llm_latency_ms_median",
+            "Non-LLM latency (median)",
+            median(times),
+            "ms",
+            None,
+            len(times),
+            basis,
+        ),
+        Figure(
+            "non_llm_latency_ms_p95",
+            "Non-LLM latency (p95)",
+            percentile(times, 0.95),
+            "ms",
+            None,
+            len(times),
+            basis,
+        ),
     ]

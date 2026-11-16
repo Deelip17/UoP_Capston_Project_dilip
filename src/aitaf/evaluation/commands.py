@@ -26,8 +26,16 @@ from aitaf.evaluation.classify_eval import (
     write_rows_csv,
 )
 from aitaf.evaluation.corpus import FAILURES_FILE, LABELS_FILE, build_corpus
+from aitaf.evaluation.generation_eval import run_generation_trial, write_generation_csv
 from aitaf.evaluation.healing_eval import run_healing_evaluation, write_trials_csv
-from aitaf.evaluation.summary import Figure, healing_by_kind, healing_figures
+from aitaf.evaluation.latency_eval import measure_report_latency, write_latency_csv
+from aitaf.evaluation.results import write_results
+from aitaf.evaluation.summary import (
+    Figure,
+    healing_by_kind,
+    healing_figures,
+    latency_figures,
+)
 from aitaf.sampleapp import CATALOGUE
 
 GatewayFactory = Callable[[Repository], LlmGateway]
@@ -47,6 +55,25 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     heal.add_argument("--out", default=f"{DEFAULT_RESULTS}/healing.csv", help="raw CSV")
     corpus = sub.add_parser("corpus", help="build the failure corpus in real Chromium")
     corpus.add_argument("--out", default=DEFAULT_CORPUS, help="new folder for the corpus")
+    corpus.add_argument(
+        "--set", dest="recipe_set", choices=["dev", "holdout"], default="dev", help="recipe set"
+    )
+    generate = sub.add_parser(
+        "generate", help="run the pipeline with and without page context and execute the scripts"
+    )
+    generate.add_argument("--requirements", default="data/requirements/shop_requirements.md")
+    generate.add_argument("--pages", default="data/dom/shop", help="baseline page snapshots")
+    generate.add_argument("--live", action="store_true", help="also run both on the live model")
+    generate.add_argument("--cache-dir", help="response cache for live runs")
+    generate.add_argument("--out", default=f"{DEFAULT_RESULTS}/generation.csv", help="raw CSV")
+    generate.add_argument("--keep-db", help="keep the database of the last mock run (for latency)")
+    latency = sub.add_parser("latency", help="time the report pipeline (non-LLM latency)")
+    latency.add_argument("--db", required=True, help="database with an executed run")
+    latency.add_argument("--samples", type=int, default=30)
+    latency.add_argument("--out", default=f"{DEFAULT_RESULTS}/latency.csv", help="raw CSV")
+    results = sub.add_parser("results", help="write RESULTS.md and charts from the raw CSV files")
+    results.add_argument("--dir", default=DEFAULT_RESULTS, help="folder with the raw CSV files")
+    results.add_argument("--no-charts", action="store_true", help="table only (no matplotlib)")
     classify = sub.add_parser("classify", help="score the Failure Analyzer against your labels")
     classify.add_argument("--corpus", default=DEFAULT_CORPUS, help="folder made by 'corpus'")
     classify.add_argument("--labels", help=f"labels CSV (default: <corpus>/{LABELS_FILE})")
@@ -90,7 +117,7 @@ def _heal(args: argparse.Namespace, factory: GatewayFactory | None) -> int:
 
 def _corpus(args: argparse.Namespace) -> int:
     try:
-        info = build_corpus(args.out)
+        info = build_corpus(args.out, recipe_set=args.recipe_set)
     except FileExistsError as exc:
         raise ValidationError(str(exc)) from exc
     print(f"corpus built in {info.folder}: {info.failures} failures, {info.passed} passed")
@@ -146,10 +173,54 @@ def _classify(args: argparse.Namespace, factory: GatewayFactory | None) -> int:
     return 0
 
 
+def _generate(args: argparse.Namespace) -> int:
+    configs = [("sg-v1 mock", None, False), ("sg-v2 mock", args.pages, False)]
+    if args.live:
+        configs += [("sg-v1 live", None, True), ("sg-v2 live", args.pages, True)]
+    trials = []
+    for name, pages, live in configs:
+        trial = run_generation_trial(
+            name,
+            pages_dir=pages,
+            requirements=args.requirements,
+            live=live,
+            cache_dir=args.cache_dir,
+            keep_db=args.keep_db if name == "sg-v2 mock" else None,
+        )
+        trials.append(trial)
+        print(
+            f"{name}: {trial.scripts} scripts, {trial.rejected} rejected; "
+            f"{trial.valid_locators}/{trial.locators} locators on the pages; "
+            f"{trial.passed} passed, {trial.failed} failed, {trial.errors} errors; "
+            f"executable {trial.executable}/{trial.scripts}; {trial.llm_calls} model calls, "
+            f"${trial.cost_usd:.4f}"
+        )
+    print(f"raw rows in {write_generation_csv(trials, args.out)}")
+    return 0
+
+
+def _latency(args: argparse.Namespace) -> int:
+    rows = measure_report_latency(args.db, args.samples)
+    path = write_latency_csv(rows, args.out)
+    figures = latency_figures(rows)
+    print(f"{len(rows)} samples (first is warm-up), raw rows in {path}")
+    for figure in figures:
+        print(f"  {figure.label:<34} {_percent(figure)}")
+    return 0
+
+
 def run(args: argparse.Namespace, factory: GatewayFactory | None) -> int:
     """Run the chosen evaluation; raises :class:`ValidationError` for unusable input."""
     if args.evaluation == "heal":
         return _heal(args, factory)
+    if args.evaluation == "generate":
+        return _generate(args)
+    if args.evaluation == "results":
+        for path in write_results(args.dir, charts=not args.no_charts):
+            print(f"wrote {path}")
+        return 0
+    if args.evaluation == "latency":
+        return _latency(args)
     if args.evaluation == "corpus":
         return _corpus(args)
     return _classify(args, factory)

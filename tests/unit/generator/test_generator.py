@@ -16,7 +16,6 @@ from typing import Any
 
 import pytest
 
-from aitaf.core.errors import LlmValidationError
 from aitaf.core.llm import LlmGateway, LlmRequest, LlmResponse, MockProvider
 from aitaf.core.logging import set_run_id
 from aitaf.core.masking import mask
@@ -214,8 +213,8 @@ def test_output_missing_a_scenario_type_is_re_asked_then_accepted(
 @pytest.mark.blackbox
 def test_invalid_output_twice_is_rejected_not_passed_on(repo: InMemoryRepository) -> None:
     generator, _ = make_generator(repo, CapturingProvider(["not json", '{"scenarios": []}']))
-    with pytest.raises(LlmValidationError):
-        generator.generate([make_req()])
+    result = generator.generate([make_req()])
+    assert result.cases == [] and "invalid after one re-ask" in result.skipped[0][1]
     assert repo.list_test_cases("run-1") == []
 
 

@@ -20,7 +20,7 @@ from typing import Any
 
 import pytest
 
-from aitaf.core.errors import LlmValidationError, PolicyError
+from aitaf.core.errors import PolicyError
 from aitaf.core.llm import LlmGateway, LlmRequest, LlmResponse, MockProvider
 from aitaf.core.logging import set_run_id
 from aitaf.core.models import Run, RunStatus, TestCase, TestData
@@ -306,8 +306,8 @@ def test_code_injection_through_names_is_blocked_by_the_schema(
 ) -> None:
     bad = plan(page='login"; import os #')
     generator, _ = make_generator(repo, tmp_path, provider=CapturingProvider([bad, bad]))
-    with pytest.raises(LlmValidationError):
-        generator.generate([make_case()])
+    result = generator.generate([make_case()])
+    assert result.scripts == [] and "invalid after one re-ask" in result.rejected[0][1][0]
     assert not (tmp_path / "out").exists()
 
 
@@ -362,8 +362,8 @@ def test_step_vocabulary_is_enforced(
 ) -> None:
     bad = plan(steps=bad_steps)
     generator, _ = make_generator(repo, tmp_path, provider=CapturingProvider([bad, bad]))
-    with pytest.raises(LlmValidationError):
-        generator.generate([make_case()])
+    result = generator.generate([make_case()])
+    assert result.scripts == [] and "invalid after one re-ask" in result.rejected[0][1][0]
 
 
 @pytest.mark.whitebox

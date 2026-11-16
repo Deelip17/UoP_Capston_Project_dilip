@@ -5,6 +5,11 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 ## [Unreleased]
 
 ### Added
+- Unit 6 slice U6-8c: `aitaf evaluate generate|latency|results` (script generation with and without page context, mock and live; report latency samples; `RESULTS.md` and charts), a qualitative review rubric, and a second (hold-out) failure corpus for the classifier.
+
+### Changed
+- Failure Analyzer rules v2: a validation message in the assertion or the page is a test-data failure, a raw wait that ran out of time is a timing failure even if it names a locator, and an assertion on a 4xx or 5xx status is an environment failure.
+- The Requirement Analyzer, Test Case Generator and Script Generator reject or skip an item whose model output is invalid twice, with a reason, instead of aborting the run.
 - Unit 6 slice U6-8b: `aitaf.evaluation` and `aitaf evaluate heal|corpus|classify`. Healing trials over the seeded mutations are scored against a hidden ground truth with absent-element controls; a corpus of 50 real failures is built in Chromium for the author to label; the Failure Analyzer is scored only against complete labels on a corpus it has not seen. Raw CSV files and the corpus are in `evaluation/`.
 - Unit 6 slice U6-8a: the Script Generator can be given the application's baseline page snapshots (`PageCatalogue`, prompt `sg-v2`, `aitaf script --pages DIR`). The model may use only elements found there; a plan that names anything else is asked again once and then rejected. The sample shop gained `--open-login` for measurements that must not depend on a password.
 - Unit 6 slice U6-6: Reporting Engine (`aitaf.reporting`) and `aitaf report`. One data model feeds an offline HTML report (summary first, failure analysis with screenshots and logs, healing events, traceability, notes and limits), a Markdown report with identical figures, `metrics.json`, `metrics.csv` and, with `--pdf`, a PDF printed by Chromium (`aitaf.execution.pdf`). The Unit 6 metrics are computed from stored data and each states its basis; traceability queries run from a result to its requirement and back.

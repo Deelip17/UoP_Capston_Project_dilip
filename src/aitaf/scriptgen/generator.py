@@ -149,7 +149,13 @@ class ScriptGenerator:
                 _log.warning("rejected %s: %s", case.tc_id, reason)
                 result.rejected.append((case.tc_id, [reason]))
                 continue
-            plan, model, problems = self._extract(mask(record, keep_synthetic=True).text)
+            try:
+                plan, model, problems = self._extract(mask(record, keep_synthetic=True).text)
+            except LlmValidationError as exc:
+                reason = f"model output invalid after one re-ask ({exc})"
+                _log.warning("rejected %s: %s", case.tc_id, reason)
+                result.rejected.append((case.tc_id, [reason]))
+                continue
             if problems:
                 _log.warning("rejected %s: plan not grounded in the pages", case.tc_id)
                 result.rejected.append((case.tc_id, problems))

@@ -67,6 +67,20 @@ _LOCATOR_PHRASES = (
     "element is not interactable",
     "strict mode violation",
 )
+_HTTP_STATUS_ASSERT = re.compile(r"assert\s+[45]\d\d\s*(==|!=|<|>|in )")
+_VALIDATION_PHRASES = (
+    "required",
+    "invalid",
+    "must be",
+    "must not",
+    "too long",
+    "too short",
+    "cannot be empty",
+    "can't be empty",
+    "is empty",
+    "not allowed",
+    "bad request",
+)
 _DATA_TYPES = ("keyerror", "filenotfounderror")
 _DATA_PHRASES = (
     "test data",
@@ -87,6 +101,7 @@ class FailureFacts:
     error_type: str
     error_text: str
     log: str = ""
+    page_text: str = ""
     attempts: int = 1
     healing_outcomes: tuple[str, ...] = ()
 
@@ -147,7 +162,34 @@ def classify(facts: FailureFacts) -> Verdict | None:
             "reachable, then rerun.",
         )
 
-    if "assertion" in kind or text.strip().startswith("assert") or kind == "failed":
+    is_assertion = "assertion" in kind or text.strip().startswith("assert") or kind == "failed"
+    status_assert = _HTTP_STATUS_ASSERT.search(text) if is_assertion else None
+    if status_assert:
+        return Verdict(
+            "environment",
+            0.7,
+            "http-error-status",
+            "The test compared an HTTP error status (4xx or 5xx) with the expected one: the page "
+            f"or service did not answer as the test needs ('{status_assert.group(0)}...')."
+            + _healing_sentence(healing, "environment"),
+            "Check that the address exists and the service is healthy, then rerun; if the status "
+            "is the intended behaviour, update the expected value.",
+        )
+
+    rejected = _first(f"{text} {facts.page_text.lower()}", _VALIDATION_PHRASES)
+    if is_assertion and rejected:
+        return Verdict(
+            "test_data",
+            0.65,
+            "validation-message",
+            f"The application showed a validation message ('{rejected}'): the input data was "
+            "probably rejected, so the page the test expects was never reached."
+            + _healing_sentence(healing, "test_data"),
+            "Check the data the test enters (empty, too long, invalid) against the application's "
+            "rules, and correct or regenerate it.",
+        )
+
+    if is_assertion:
         return Verdict(
             "assertion_defect",
             0.9 if facts.attempts > 1 else 0.85,
@@ -160,7 +202,8 @@ def classify(facts: FailureFacts) -> Verdict | None:
         )
 
     miss = _PAGE_OBJECT_MISS.search(text)
-    if miss or kind in _LOCATOR_TYPES or _first(hay, _LOCATOR_PHRASES):
+    waiting_out = "timeout" in kind  # a raw wait that ran out of time is a timing failure
+    if miss or kind in _LOCATOR_TYPES or (not waiting_out and _first(hay, _LOCATOR_PHRASES)):
         if miss:
             cause = (
                 f"The element '{miss.group(1)}' on page '{miss.group(2)}' was not found: "

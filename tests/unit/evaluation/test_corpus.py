@@ -47,3 +47,15 @@ def test_local_user_paths_are_removed_before_a_corpus_is_stored() -> None:
     assert scrub("net::ERR_CONNECTION_REFUSED at http://127.0.0.1:1/") == (
         "net::ERR_CONNECTION_REFUSED at http://127.0.0.1:1/"
     )
+
+
+@pytest.mark.blackbox
+def test_the_holdout_set_is_a_different_set_of_valid_tests() -> None:
+    dev, holdout = corpus_sources("dev"), corpus_sources("holdout")
+    assert len(holdout) >= MIN_FAILURES + 5
+    assert not {s.split(":\n", 1)[1] for s in dev} & {s.split(":\n", 1)[1] for s in holdout}
+    for number, source in enumerate(holdout, start=1):
+        assert f"def test_case_{number:03d}(" in source
+        ast.parse(source)
+    with pytest.raises(ValueError):
+        corpus_sources("other")

@@ -114,7 +114,14 @@ class RequirementAnalyzer:
             except ValidationError as exc:
                 result.rejected.append((item.source_ref, str(exc)))
                 continue
-            record = self._analyze_one(item.source_ref, clean)
+            try:
+                record = self._analyze_one(item.source_ref, clean)
+            except LlmValidationError as exc:
+                # one bad model answer must not abort the run: report it and go on
+                reason = f"model output invalid after one re-ask ({exc})"
+                _log.warning("rejected %s: %s", item.source_ref, reason)
+                result.rejected.append((item.source_ref, reason))
+                continue
             self._repo.add_requirement(current_run_id(), record)
             (result.flagged if record.ambiguity_flags else result.ready).append(record)
         return result

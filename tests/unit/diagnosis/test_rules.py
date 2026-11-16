@@ -17,7 +17,6 @@ LOCATOR = [
     ("NoSuchElementException", "Message: no such element: Unable to locate element"),
     ("StaleElementReferenceException", "stale element reference: element is not attached"),
     ("ElementNotInteractableException", "element not interactable"),
-    ("TimeoutError", "Timeout 10000ms exceeded. waiting for locator('#login-button')"),
     ("Error", "strict mode violation: locator('button') resolved to 3 elements"),
 ]
 ASSERTION = [
@@ -108,9 +107,35 @@ def test_a_network_error_inside_a_timeout_is_environment_not_timing() -> None:
 
 
 @pytest.mark.whitebox
-def test_a_timeout_waiting_for_a_locator_is_a_locator_failure_not_timing() -> None:
+def test_a_raw_wait_that_ran_out_of_time_is_timing_even_when_it_names_a_locator() -> None:
+    # decided after the first evaluation (author's labels): the wait may fail because the page
+    # was slow, so the type TimeoutError wins; a page-object miss is still a locator failure
     verdict = classify(facts("TimeoutError", "Timeout 5000ms exceeded waiting for selector '#x'"))
-    assert verdict is not None and verdict.category == "locator"
+    assert verdict is not None and verdict.category == "timing_flaky"
+    miss = classify(facts("LookupError", "no locator strategy matched for x on page shop"))
+    assert miss is not None and miss.category == "locator"
+
+
+@pytest.mark.whitebox
+def test_an_http_error_status_assertion_is_environment() -> None:
+    verdict = classify(facts("AssertionError", "assert 404 == 200 + where 404 = <Response>"))
+    assert verdict is not None and verdict.category == "environment"
+    other = classify(facts("AssertionError", "assert 3 == 4"))
+    assert other is not None and other.category == "assertion_defect"
+
+
+@pytest.mark.whitebox
+def test_a_validation_message_in_the_assertion_or_the_page_is_test_data() -> None:
+    msg = "assert 'Thank you' in 'Name required'"
+    verdict = classify(facts("AssertionError", msg))
+    assert verdict is not None and verdict.category == "test_data"
+    page = FailureFacts(
+        "failed", "AssertionError", "assert False", page_text="Bad request: invalid"
+    )
+    from_page = classify(page)
+    assert from_page is not None and from_page.category == "test_data"
+    plain = classify(facts("AssertionError", "assert 'Sign in' == 'Log in'"))
+    assert plain is not None and plain.category == "assertion_defect"
 
 
 @pytest.mark.whitebox
