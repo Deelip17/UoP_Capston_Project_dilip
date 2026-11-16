@@ -134,3 +134,18 @@ def test_hosts_are_lowercased_and_trimmed_and_the_config_is_frozen() -> None:
     assert cfg.allowed_hosts == ("localhost", "127.0.0.1")
     with pytest.raises(PydanticValidationError):
         cfg.retries = 3  # type: ignore[misc]
+
+
+@pytest.mark.blackbox
+def test_relative_folders_are_made_absolute_so_pytest_can_find_its_files(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    config = RunConfig(
+        scripts_dir=Path("scripts"),
+        base_url="http://127.0.0.1:1",
+        allowed_hosts=("127.0.0.1",),
+        evidence_dir=Path("reports/runs/r1"),
+    )
+    assert config.scripts_dir == (tmp_path / "scripts").resolve()
+    assert config.evidence_dir == (tmp_path / "reports" / "runs" / "r1").resolve()

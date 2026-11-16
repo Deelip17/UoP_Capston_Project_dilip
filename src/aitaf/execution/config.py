@@ -32,6 +32,12 @@ class RunConfig(BaseModel):
     healing: bool = False
     max_heal_passes: int = Field(default=5, ge=1, le=20)
 
+    @field_validator("scripts_dir", "evidence_dir")
+    @classmethod
+    def _absolute(cls, folder: Path) -> Path:
+        """PyTest runs from inside the scripts folder, so a relative path would point nowhere."""
+        return folder.resolve()
+
     @field_validator("allowed_hosts")
     @classmethod
     def _clean_hosts(cls, hosts: tuple[str, ...]) -> tuple[str, ...]:
