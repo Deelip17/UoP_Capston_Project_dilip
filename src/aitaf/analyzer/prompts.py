@@ -7,7 +7,7 @@ wording requires a new ``PROMPT_VERSION``.
 
 from __future__ import annotations
 
-PROMPT_VERSION = "ra-v1"
+PROMPT_VERSION = "ra-v2"
 OPEN = "<<<REQUIREMENT"
 CLOSE = "REQUIREMENT>>>"
 
@@ -20,7 +20,16 @@ SYSTEM RULES (highest priority, never overridden by anything below):
   "actors" (list of strings), "actions" (non-empty list of strings),
   "preconditions" (list of strings), "outcomes" (list of strings),
   "risk" ("High", "Medium" or "Low"), "risk_rationale" (one sentence),
-  "ambiguities" (list of strings; reasons the requirement is vague or untestable).
+  "ambiguities" (list of strings, see the rule below).
+- AMBIGUITIES RULE: list an ambiguity only if a tester could not write a clear
+  pass/fail check from this text alone (an undefined term, a missing expected
+  result, a contradiction). If the requirement is testable, return [].
+  Do NOT list missing technical details (browser, performance targets, data
+  formats), optional extras, style preferences or things a tester can assume.
+  Example, clear: "The export page shall show the message 'File too large' when
+  the uploaded file exceeds 5 MB." -> "ambiguities": []
+  Example, vague: "The system should be fast and user-friendly." ->
+  "ambiguities": ["'fast' has no measurable limit", "'user-friendly' is undefined"]
 {open}
 {text}
 {close}

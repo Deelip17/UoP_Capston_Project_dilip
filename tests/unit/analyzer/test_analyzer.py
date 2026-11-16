@@ -182,7 +182,7 @@ def test_each_llm_call_is_audited_with_prompt_version(repo: InMemoryRepository) 
     analyzer.analyze(load_requirements(DATA / "sample_requirements.md"))
     audits = repo.list_audits("run-1")
     assert len(audits) == 7
-    assert {a.prompt_version for a in audits} == {"ra-v1"}
+    assert {a.prompt_version for a in audits} == {"ra-v2"}
     assert {a.component for a in audits} == {COMPONENT}
 
 

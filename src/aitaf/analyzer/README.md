@@ -8,7 +8,7 @@ Per requirement: split and read the input (plain text, Markdown or user stories)
 |---|---|---|
 | `intake` | `load_requirements`, `parse_requirements`, `detect_format` | FR-01 |
 | `analyzer` | `RequirementAnalyzer`, `AnalysisResult` (ready, flagged, rejected) | FR-02 to FR-05, FR-30, NFR-13 |
-| `prompts` | Versioned prompt `ra-v1` with delimited, untrusted input | NFR-22, NFR-13 |
+| `prompts` | Versioned prompt `ra-v2` with delimited, untrusted input | NFR-22, NFR-13 |
 | `mock_responder` | Deterministic stand-in for the model, used by the mock provider | FR-36 |
 
 Flagged requirements are excluded from test generation until clarified (FR-05).
