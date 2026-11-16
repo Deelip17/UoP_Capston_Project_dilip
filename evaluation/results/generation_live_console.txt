@@ -1,5 +1,5 @@
 sg-v1 mock: 54 scripts, 0 rejected; 0/3 locators on the pages; 0 passed, 54 failed, 0 errors; executable 0/54; 92 model calls, $0.0000
 sg-v2 mock: 54 scripts, 0 rejected; 12/12 locators on the pages; 21 passed, 33 failed, 0 errors; executable 21/54; 92 model calls, $0.0000
-sg-v1 live: 3 scripts, 0 rejected; 0/7 locators on the pages; 0 passed, 3 failed, 0 errors; executable 0/3; 27 model calls, $0.0037
-sg-v2 live: 2 scripts, 1 rejected; 7/7 locators on the pages; 1 passed, 1 failed, 0 errors; executable 1/2; 29 model calls, $0.0024
+sg-v1 live: 30 scripts, 24 rejected; 0/50 locators on the pages; 0 passed, 30 failed, 0 errors; executable 0/30; 126 model calls, $0.0312
+sg-v2 live: 24 scripts, 30 rejected; 12/12 locators on the pages; 6 passed, 18 failed, 0 errors; executable 8/24; 134 model calls, $0.0338
 raw rows in evaluation\results\generation.csv

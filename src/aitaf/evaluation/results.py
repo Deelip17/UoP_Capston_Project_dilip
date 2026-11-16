@@ -94,9 +94,10 @@ def build_markdown(
         "- The failure labels were written by the author after the corpus was built from the "
         "author's own recipes; the figure is agreement with that judgement, not accuracy on "
         "unseen applications.",
-        "- Live rows rest on very few scripts (the live model flagged 17 of the 18 requirements "
-        "that were written to be clear as ambiguous, so only 2 to 3 test cases were left to "
-        "script): they show that the pipeline works with a live model, not a rate.",
+        "- Live rows are one run each of one small model (gpt-4o-mini); with analyzer prompt "
+        "ra-v2 (tuned on the same 20 requirements) all 54 test cases reached the script step, "
+        "and the script generator rejected the plans it could not ground or re-ask. The rates "
+        "are for that run, not for models in general.",
         "- Rules v2 were changed after seeing the errors on the 50 development failures, so "
         "their score on those 50 is not independent; only the hold-out rows are.",
         "- Test cases were approved by the harness, not by a reviewer.",

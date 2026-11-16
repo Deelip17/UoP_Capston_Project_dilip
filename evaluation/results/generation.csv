@@ -1,5 +1,5 @@
 config,provider,page_context,cases,scripts,rejected,locators,valid_locators,passed,failed,errors,executable,llm_calls,tokens_in,tokens_out,cost_usd,generation_s,script_step_s
-sg-v1 mock,mock,False,54,54,0,3,0,0,54,0,0,92,19211,9526,0.0,5.57,1.84
-sg-v2 mock,mock,True,54,54,0,12,12,21,33,0,21,92,32063,16105,0.0,5.47,1.8
-sg-v1 live,live,False,3,3,0,7,0,0,3,0,0,27,6064,4659,0.003705,80.26,16.22
-sg-v2 live,live,True,3,2,1,7,7,1,1,0,1,29,9638,6292,0.002355,58.25,52.51
+sg-v1 mock,mock,False,54,54,0,3,0,0,54,0,0,92,21131,9526,0.0,5.36,1.78
+sg-v2 mock,mock,True,54,54,0,12,12,21,33,0,21,92,33983,16105,0.0,5.24,1.73
+sg-v1 live,live,False,54,30,24,50,0,0,30,0,0,126,45514,44040,0.031175,733.07,559.31
+sg-v2 live,live,True,54,24,30,12,12,6,18,0,8,134,97770,49363,0.033772,901.55,889.69
