@@ -67,7 +67,7 @@ If Doc 1 cannot hold all of A2 and A3, keep figures 8, 9, 10, 11, 12, 14, 15 and
 | # | File name | How | Caption (suggested) | Use |
 |---|---|---|---|---|
 | 29 | `E15_dockerfile.png` | `.../blob/v1.0.0-rc1/Dockerfile` | Figure: the container definition (non-root user, no secret, mock provider by default) | Doc 1 |
-| 30 | `E15_deployment_guide.png` | `.../blob/v1.0.0-rc1/docs/user-guide/DEPLOYMENT.md`, section 1 (methods) and section 3 (variables) | Figure: deployment methods compared and the settings table | Doc 1 |
+| 30 | `E15_deployment_guide.png` and `E15_deployment_guide_s3.png` | `.../blob/v1.0.0-rc1/docs/user-guide/DEPLOYMENT.md`: section 1 (methods) in the first image, section 3 (variables) in the second | Figure: deployment methods compared and the settings table | Doc 1 |
 | 31 | `E15_env_example.png` | `.../blob/develop/.env.example` (after you commit it) | Figure: configuration template, no secret values | Doc 1 |
 | 32 | `E15_ci_integration.png` | `.../actions/runs/43800603134` (Integration #8) summary page, both jobs green | Figure: CI builds the image and runs the pipeline inside it | Doc 1 |
 | 33 | `E15_ci_docker_job.png` | same run, job "docker image (build and demo run)", the step list (**sign in, private window**) | Figure: build, command check and in-container pipeline run | Doc 1 |
