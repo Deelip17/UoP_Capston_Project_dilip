@@ -2,9 +2,11 @@ name: Integration
 
 # Real-browser tests (marker "integration"): the sample shop in Chromium and the whole
 # `aitaf run` pipeline (Unit 6, U6-9). Slower than CI, so it runs on pull requests to
-# develop and main and on request. Mock provider only: no live LLM calls, no secrets (ADR-026).
+# develop and main, on pushes to develop and on request. Mock provider only: no live LLM calls, no secrets (ADR-026).
 
 on:
+  push:
+    branches: [develop]
   pull_request:
     branches: [develop, main]
   workflow_dispatch:
@@ -50,5 +52,32 @@ jobs:
           path: |
             reports/
             junit*.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+  docker:
+    name: docker image (build and demo run)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Build the image (no push)
+        run: docker build -t aitaf:ci .
+      - name: Command line works inside the image
+        run: docker run --rm aitaf:ci --help
+      - name: Whole pipeline on the demo shop inside the container (mock provider)
+        run: |
+          mkdir -p out && chmod 777 out
+          docker run --rm --ipc=host -v "$PWD/out:/app/reports" aitaf:ci run \
+            --input data/requirements/shop_requirements.md --db reports/aitaf.db \
+            --out-dir reports/pipeline --demo-shop --approve-all
+          test -f out/pipeline/dashboard/dashboard.html
+      - name: Keep the output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-demo-output
+          path: out/
           if-no-files-found: ignore
           retention-days: 7
