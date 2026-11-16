@@ -2,9 +2,9 @@
 # Contains the framework, Chromium and the report extras. No API key or other secret is
 # baked in: pass settings at run time (docker run --env-file .env ...), see .env.example.
 
-FROM python:3.12-slim
+FROM python:3.12-slim-bookworm
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
+ENV DEBIAN_FRONTEND=noninteractive \n    PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
