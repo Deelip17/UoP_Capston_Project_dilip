@@ -61,7 +61,7 @@ def test_invalid_config_is_rejected_with_clear_message(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     path = write_config(tmp_path, {"llm_provider": "banana"})
-    assert main(["run", "--config", str(path)]) == 2
+    assert main(["run", "--input", "r.md", "--config", str(path)]) == 2
     assert "LLM_PROVIDER" in capsys.readouterr().err
 
 
@@ -69,17 +69,17 @@ def test_invalid_config_is_rejected_with_clear_message(
 def test_missing_config_file_is_rejected(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    assert main(["run", "--config", str(tmp_path / "nope.json")]) == 2
+    assert main(["run", "--input", "r.md", "--config", str(tmp_path / "nope.json")]) == 2
     assert "nope.json" in capsys.readouterr().err
 
 
 @pytest.mark.blackbox
-def test_valid_config_reaches_unimplemented_stage(
+def test_run_without_a_system_under_test_is_a_usage_error(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     path = write_config(tmp_path, {"llm_provider": "mock", "llm_call_cap": 5})
-    assert main(["run", "--config", str(path)]) == 3
-    assert "not implemented" in capsys.readouterr().err
+    assert main(["run", "--input", "r.md", "--config", str(path)]) == 2
+    assert "--demo-shop or --base-url" in capsys.readouterr().err
 
 
 @pytest.mark.whitebox

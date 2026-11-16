@@ -44,7 +44,7 @@ from aitaf.diagnosis import COMPONENT as DIAGNOSIS_COMPONENT
 from aitaf.diagnosis import FailureAnalyzer, mock_failure_responder
 from aitaf.evaluation.commands import add_arguments as add_evaluation_arguments
 from aitaf.evaluation.commands import run as run_evaluation
-from aitaf.execution import ExecutionEngine, RunConfig
+from aitaf.execution import ExecutionEngine, RunConfig, apply_strategy
 from aitaf.execution.pdf import render_html_to_pdf
 from aitaf.execution.runner import describe_environment
 from aitaf.generator import COMPONENT as GENERATOR_COMPONENT
@@ -60,11 +60,14 @@ from aitaf.healing import (
     BaselineSnapshots,
     HealingConfig,
     SelfHealingEngine,
+    approve_healing_event,
     find_elements,
     mock_healing_responder,
     parse_dom,
     signature_of,
 )
+from aitaf.pipeline import add_arguments as add_pipeline_arguments
+from aitaf.pipeline import run_pipeline
 from aitaf.reporting import build_report, format_value, write_report
 from aitaf.scriptgen import COMPONENT as SCRIPT_COMPONENT
 from aitaf.scriptgen import PageCatalogue, ScriptGenerator, mock_script_responder
@@ -101,9 +104,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="aitaf", description="AI-powered test automation framework (capstone prototype)"
     )
     commands = parser.add_subparsers(dest="command", required=True, metavar="command")
-    commands.add_parser("run", help="run the whole pipeline").add_argument(
-        "--config", help="path to the JSON configuration file"
-    )
+    add_pipeline_arguments(commands.add_parser("run", help="run the whole pipeline"))
     for name, description in STAGES.items():
         stage = commands.add_parser(name, help=description)
         stage.add_argument("--config", help="path to the JSON configuration file")
@@ -172,6 +173,17 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--config", help="path to the JSON configuration file")
     report.add_argument("--db", default="aitaf.db", help="SQLite database path")
     report.add_argument("--run", help="run ID (default: the latest run with metrics)")
+    approve = commands.add_parser(
+        "approve-heal", help="list proposed locator repairs and approve one (human gate)"
+    )
+    approve.add_argument("--config", help="path to the JSON configuration file")
+    approve.add_argument("--db", default="aitaf.db", help="SQLite database path")
+    approve.add_argument("--run", help="execution run ID (default: the latest run with results)")
+    approve.add_argument("--event", metavar="EVENT_ID", help="healing event to approve")
+    approve.add_argument(
+        "--source-run", help="run that holds the stored locators (default: latest)"
+    )
+    approve.add_argument("--scripts", help="also write the new locator into this scripts folder")
     dash = commands.add_parser(
         "dashboard", help="Dashboard: static HTML page with trends over all stored runs"
     )
@@ -476,6 +488,42 @@ def _report(settings: Settings, args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _approve_heal(args: argparse.Namespace) -> int:
+    repo = SqliteRepository(args.db)
+    try:
+        run_id = args.run or repo.latest_run_with_results()
+        if run_id is None or repo.get_run(run_id) is None:
+            raise PersistenceError("no execution run found; run 'aitaf execute --heal' first")
+        events = [e for e in repo.list_healing_events(run_id) if e.outcome == "proposed"]
+        if args.event is None:
+            print(f"run {run_id}: {len(events)} proposed locator repair(s)")
+            for e in events:
+                new = e.new_strategy.value if e.new_strategy else "-"
+                state = "approved" if e.approved else "waiting"
+                print(
+                    f"{e.event_id}  {e.loc_id}  {e.old_strategy.value} -> {new}  "
+                    f"confidence {e.confidence:.2f}  {state}"
+                )
+            return EXIT_OK
+        event = next((e for e in events if e.event_id == args.event), None)
+        if event is None or event.new_strategy is None:
+            raise PersistenceError(f"no proposed healing event {args.event!r} in run {run_id}")
+        source = args.source_run or repo.latest_run_with_requirements()
+        if source is None:
+            raise PersistenceError("no run with stored locators found")
+        locator = approve_healing_event(repo, run_id, event.event_id, source)
+        print(f"approved {event.event_id}: {locator.loc_id} is now version {locator.version}")
+        if args.scripts:
+            page, _, name = event.loc_id.partition(".")
+            done = apply_strategy(
+                Path(args.scripts), page, name, event.new_strategy, permanent=True
+            )
+            print("scripts updated" if done else "scripts folder has no such locator; not changed")
+    finally:
+        repo.close()
+    return EXIT_OK
+
+
 def _dashboard(args: argparse.Namespace) -> int:
     labels = _read_labels(args.labels) if args.labels else None
     repo = SqliteRepository(args.db)
@@ -738,6 +786,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "diagnose": lambda: _diagnose(settings, args),
         "report": lambda: _report(settings, args),
         "dashboard": lambda: _dashboard(args),
+        "approve-heal": lambda: _approve_heal(args),
+        "run": lambda: run_pipeline(args, main),
         "heal": lambda: _heal(settings, args),
         "evaluate": lambda: run_evaluation(args, lambda repo: _gateway(settings, repo)),
         "metrics": lambda: _metrics(args),

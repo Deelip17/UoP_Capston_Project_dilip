@@ -7,6 +7,13 @@ base URLs), NFR-11 (least privilege).
 
 from aitaf.execution.allowlist import check_base_url
 from aitaf.execution.config import RunConfig
-from aitaf.execution.runner import ExecutedTest, ExecutionEngine, RunSummary
+from aitaf.execution.runner import ExecutedTest, ExecutionEngine, RunSummary, apply_strategy
 
-__all__ = ["ExecutedTest", "ExecutionEngine", "RunConfig", "RunSummary", "check_base_url"]
+__all__ = [
+    "ExecutedTest",
+    "ExecutionEngine",
+    "RunConfig",
+    "RunSummary",
+    "apply_strategy",
+    "check_base_url",
+]

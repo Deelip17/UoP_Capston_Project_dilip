@@ -27,7 +27,7 @@ aitaf execute ... --heal --baseline data/dom/shop [--max-heal-passes 5]
 
 ## Not built
 
-- Approving a healing event from an execution run is not possible yet: the event belongs to the execution run, while the stored locators belong to the script-generation run, so `approve_healing_event` cannot find them. The healed copy is evidence of what would pass, not a permanent repair.
+- A repair is permanent only after a person approves it: `aitaf approve-heal` lists the proposed repairs of an execution run and, with `--event ID` (and `--scripts DIR`), approves one: the stored locator of the script-generation run moves to a new version and the generated locator file is updated (`apply_strategy`). The healed copy used during a run stays a one-run copy.
 - Healing is exercised in a real browser on one element (the login button) with four mutation kinds; the evaluation over 30 mutations is a later slice.
 - Selenium runs are supported by the generated `conftest.py` and the plugin, but were exercised only with a fake driver; the Selenium conftest cannot intercept requests, so only the base-URL check protects it.
 - Parallel workers are tested with a fake browser; speed-up (NFR-23) has not been measured.

@@ -22,13 +22,22 @@ def _event(repo: Repository, run_id: str, event_id: str) -> HealingEvent:
     return found
 
 
-def update_locator_from_event(repo: Repository, run_id: str, event_id: str) -> Locator:
-    """Apply an approved event to the locator repository (new version, old primary kept)."""
+def update_locator_from_event(
+    repo: Repository, run_id: str, event_id: str, locator_run_id: str | None = None
+) -> Locator:
+    """Apply an approved event to the locator repository (new version, old primary kept).
+
+    The event may belong to an execution run while the locators belong to the run that
+    generated the scripts: ``locator_run_id`` names that run (default: the event's run).
+    """
     event = _event(repo, run_id, event_id)
+    locator_run = locator_run_id or run_id
     if not event.approved:
         raise PolicyError("permanent locator update needs human approval of the healing event")
     assert event.new_strategy is not None  # guaranteed: only proposed events can be approved
-    current = next((loc for loc in repo.list_locators(run_id) if loc.loc_id == event.loc_id), None)
+    current = next(
+        (loc for loc in repo.list_locators(locator_run) if loc.loc_id == event.loc_id), None
+    )
     if current is None:
         raise PersistenceError(f"unknown locator: {event.loc_id!r}")
     kept = [current.primary, *(f for f in current.fallbacks if f != event.new_strategy)]
@@ -39,19 +48,22 @@ def update_locator_from_event(repo: Repository, run_id: str, event_id: str) -> L
             "version": current.version + 1,
         }
     )
-    repo.add_locator(run_id, updated)
+    repo.add_locator(locator_run, updated)
     _log.info(
         "locator %s updated to version %d from event %s", updated.loc_id, updated.version, event_id
     )
     return updated
 
 
-def approve_healing_event(repo: Repository, run_id: str, event_id: str) -> Locator:
+def approve_healing_event(
+    repo: Repository, run_id: str, event_id: str, locator_run_id: str | None = None
+) -> Locator:
     """Human decision: approve a validated, proposed event and apply it permanently."""
     event = _event(repo, run_id, event_id)
+    locator_run = locator_run_id or run_id
     if event.outcome != "proposed" or not event.validated:
         raise PolicyError("only validated, proposed healing events can be approved")
-    if not any(loc.loc_id == event.loc_id for loc in repo.list_locators(run_id)):
+    if not any(loc.loc_id == event.loc_id for loc in repo.list_locators(locator_run)):
         raise PersistenceError(f"unknown locator: {event.loc_id!r}")
     repo.add_healing_event(run_id, event.model_copy(update={"approved": True}))
-    return update_locator_from_event(repo, run_id, event_id)
+    return update_locator_from_event(repo, run_id, event_id, locator_run)

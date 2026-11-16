@@ -5,6 +5,7 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 ## [Unreleased]
 
 ### Added
+- Unit 6 slice U6-9: `aitaf run` runs the whole pipeline (analyze, generate, human gate or `--approve-all`, script, execute, diagnose, report, dashboard), with `--demo-shop` and `--mutation` for a self-contained demonstration; `aitaf approve-heal` closes the approval gap between an execution run and the stored locators; `integration.yml` runs the real-browser tests on pull requests.
 - Unit 6 slice U6-7: `aitaf dashboard` writes a static page (`dashboard.html`, `dashboard.csv`, three charts) over every stored run: pass rate, coverage, executability, healing, accuracy, latency, cost and the trend. `Repository.list_runs_with_results`.
 - Unit 6 slice U6-8c: `aitaf evaluate generate|latency|results` (script generation with and without page context, mock and live; report latency samples; `RESULTS.md` and charts), a qualitative review rubric, and a second (hold-out) failure corpus for the classifier.
 

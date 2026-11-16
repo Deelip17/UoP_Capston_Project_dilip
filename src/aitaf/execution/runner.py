@@ -182,6 +182,33 @@ def read_locator_module(path: Path) -> dict[str, dict[str, object]] | None:
     return None
 
 
+def apply_strategy(
+    scripts_dir: Path, page: str, name: str, strategy: LocatorStrategy, *, permanent: bool = False
+) -> bool:
+    """Make ``strategy`` the primary locator of ``name`` in a scripts folder; keep the old one.
+
+    Returns False when the locator file or the name is not there. ``permanent`` is for a
+    change a person approved; the default marks the file as a one-run healed copy.
+    """
+    path = scripts_dir / "locators" / f"{page}_locators.py"
+    module = read_locator_module(path)
+    if module is None or name not in module:
+        return False
+    current = module[name]
+    new = (strategy.kind, strategy.value)
+    fallbacks = current.get("fallbacks", [])
+    old = [current["primary"], *(fallbacks if isinstance(fallbacks, list) else [])]
+    current["primary"] = new
+    current["fallbacks"] = [pair for pair in old if tuple(pair) != new]
+    note = "approved locator update" if permanent else "healed copy, one run, needs approval"
+    path.write_text(
+        f'"""Locator repository for {page!r}: {note}."""\n\n'
+        f"LOCATORS = {pprint.pformat(module, sort_dicts=False)}\n",
+        encoding="utf-8",
+    )
+    return True
+
+
 def _locator_from(page: str, name: str, entry: object) -> Locator | None:
     if not isinstance(entry, dict):
         return None
@@ -385,21 +412,7 @@ class ExecutionEngine:
     @staticmethod
     def _patch(healed_dir: Path, page: str, name: str, strategy: LocatorStrategy) -> None:
         """Make ``strategy`` the primary locator of ``name`` in the temporary copy only."""
-        path = healed_dir / "locators" / f"{page}_locators.py"
-        module = read_locator_module(path)
-        if module is None or name not in module:
-            return
-        current = module[name]
-        new = (strategy.kind, strategy.value)
-        fallbacks = current.get("fallbacks", [])
-        old = [current["primary"], *(fallbacks if isinstance(fallbacks, list) else [])]
-        current["primary"] = new
-        current["fallbacks"] = [pair for pair in old if tuple(pair) != new]
-        path.write_text(
-            f'"""Locator repository for {page!r}: healed copy, one run, needs approval."""\n\n'
-            f"LOCATORS = {pprint.pformat(module, sort_dicts=False)}\n",
-            encoding="utf-8",
-        )
+        apply_strategy(healed_dir, page, name, strategy)
 
     # ------------------------------------------------------------------ pytest
 

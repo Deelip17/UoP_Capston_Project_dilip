@@ -125,6 +125,34 @@ def test_approval_updates_the_locator_repository_and_keeps_the_old_primary_as_fa
 
 
 @pytest.mark.blackbox
+def test_an_event_of_an_execution_run_updates_the_locator_of_the_script_run(
+    repo: InMemoryRepository,
+) -> None:
+    """The approval gap: the event belongs to the execution run, the locator to run-1."""
+    repo.create_run(
+        Run(
+            run_id="run-exec",
+            started_at=NOW,
+            status=RunStatus.COMPLETED,
+            provider="mock",
+            environment="t",
+        )
+    )
+    repo.add_healing_event(
+        "run-exec",
+        event("e-exec", "t.py::t#login.login_button", "similarity", "proposed", True).model_copy(
+            update={"run_id": "run-exec"}
+        ),
+    )
+    with pytest.raises(PersistenceError, match="unknown locator"):
+        approve_healing_event(repo, "run-exec", "e-exec")
+    updated = approve_healing_event(repo, "run-exec", "e-exec", "run-1")
+    assert updated.version == 2 and updated.primary == LocatorStrategy(kind="id", value="b")
+    assert repo.list_locators("run-1") == [updated]
+    assert repo.list_healing_events("run-exec")[0].approved
+
+
+@pytest.mark.blackbox
 def test_only_validated_proposed_events_can_be_approved(repo: InMemoryRepository) -> None:
     repo.add_healing_event("run-1", event("e-rej", "s", "similarity", "rejected"))
     repo.add_healing_event("run-1", event("e-none", "s", "llm", "no_candidate"))
