@@ -4,6 +4,8 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.0.0-rc1] - 2026-11-16
+
 ### Added
 - Unit 6 slice U6-10: `Dockerfile` (Python 3.12, Chromium, report extras, non-root user, mock provider by default), `.dockerignore`, `docs/user-guide/DEPLOYMENT.md` (methods and choice, variables, install, build and run commands), a CI job that builds the image and runs the pipeline inside it, and tests that keep the guide and the settings in step.
 - Unit 6 slice U6-9: `aitaf run` runs the whole pipeline (analyze, generate, human gate or `--approve-all`, script, execute, diagnose, report, dashboard), with `--demo-shop` and `--mutation` for a self-contained demonstration; `aitaf approve-heal` closes the approval gap between an execution run and the stored locators; `integration.yml` runs the real-browser tests on pull requests.

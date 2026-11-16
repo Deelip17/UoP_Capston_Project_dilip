@@ -1,4 +1,4 @@
-# AITAF container image (NFR-05, NFR-19). Build: docker build -t aitaf:local .
+# AITAF container image (NFR-05, NFR-26, NFR-27). Build: docker build -t aitaf:local .
 # Contains the framework, Chromium and the report extras. No API key or other secret is
 # baked in: pass settings at run time (docker run --env-file .env ...), see .env.example.
 

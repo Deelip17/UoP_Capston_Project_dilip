@@ -76,7 +76,7 @@ def test_the_current_version_has_release_notes_in_the_real_changelog() -> None:
 
 @pytest.mark.blackbox
 def test_the_package_version_is_a_semantic_version() -> None:
-    assert re.fullmatch(r"\d+\.\d+\.\d+", aitaf.__version__)
+    assert re.fullmatch(r"\d+\.\d+\.\d+(-rc\d+)?", aitaf.__version__)
 
 
 @pytest.mark.blackbox

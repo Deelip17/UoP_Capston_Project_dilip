@@ -1,6 +1,6 @@
 # Deployment and Configuration Guide
 
-Requirements: NFR-05 (repeatable runs), NFR-09 (key from the environment only), NFR-19 (containerised deployment), NFR-20 (documentation), NFR-26 (Windows and Linux, Python 3.12), NFR-27 (install in 15 minutes or less).
+Requirements: NFR-05 (repeatable runs), NFR-09 (key from the environment only), NFR-20 (documentation), NFR-26 (Windows and Linux, Python 3.12), NFR-27 (install and run the sample pipeline from the README).
 
 ## 1. Deployment methods and the choice
 

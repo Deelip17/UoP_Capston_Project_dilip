@@ -1,4 +1,4 @@
-"""The deployment pack stays consistent with the code (NFR-05, NFR-09, NFR-19, NFR-20)."""
+"""The deployment pack stays consistent with the code (NFR-05, NFR-09, NFR-20, NFR-26)."""
 
 from __future__ import annotations
 
