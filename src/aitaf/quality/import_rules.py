@@ -28,7 +28,7 @@ CORE = "core"
 EXEMPT_PACKAGES = frozenset({"quality"})
 # tools that run the components against each other, like cli.py: they may import any
 # component, but the vendor-library rules still apply to them
-WIRING_PACKAGES = frozenset({"evaluation"})
+WIRING_PACKAGES = frozenset({"evaluation", "dashboard"})
 VENDOR_OWNERS: dict[str, tuple[str, ...]] = {
     "openai": ("core", "llm"),
     "sqlite3": ("core", "storage"),

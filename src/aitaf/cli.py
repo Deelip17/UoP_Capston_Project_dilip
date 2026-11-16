@@ -38,6 +38,8 @@ from aitaf.core.models import (
     RunStatus,
 )
 from aitaf.core.storage import Repository, SqliteRepository
+from aitaf.dashboard import collect as collect_dashboard
+from aitaf.dashboard import write_dashboard
 from aitaf.diagnosis import COMPONENT as DIAGNOSIS_COMPONENT
 from aitaf.diagnosis import FailureAnalyzer, mock_failure_responder
 from aitaf.evaluation.commands import add_arguments as add_evaluation_arguments
@@ -170,6 +172,15 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--config", help="path to the JSON configuration file")
     report.add_argument("--db", default="aitaf.db", help="SQLite database path")
     report.add_argument("--run", help="run ID (default: the latest run with metrics)")
+    dash = commands.add_parser(
+        "dashboard", help="Dashboard: static HTML page with trends over all stored runs"
+    )
+    dash.add_argument("--config", help="path to the JSON configuration file")
+    dash.add_argument("--db", default="aitaf.db", help="SQLite database path")
+    dash.add_argument("--out", default="reports/dashboard", help="output directory")
+    dash.add_argument("--last", type=int, help="only the last N runs")
+    dash.add_argument("--source-run", help="run that holds requirements, cases and scripts")
+    dash.add_argument("--labels", help="CSV with columns tc_id,category to measure accuracy")
     review = commands.add_parser("review", help="review generated test cases (human gate)")
     review.add_argument("--config", help="path to the JSON configuration file")
     review.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -281,8 +292,8 @@ def _analyze(settings: Settings, args: argparse.Namespace) -> int:
         print(f"FLAGGED  {record.req_id}  {record.risk.value:<6}  {record.source_ref}")
         for flag in record.ambiguity_flags:
             print(f"           - {flag}")
-    for _source_ref, reason in result.rejected:
-        print(f"REJECTED {reason}")
+    for source_ref, reason in result.rejected:
+        print(f"REJECTED {source_ref}: {reason}")
     print(
         f"summary: {len(result.ready)} ready, {len(result.flagged)} flagged, "
         f"{len(result.rejected)} rejected"
@@ -462,6 +473,24 @@ def _report(settings: Settings, args: argparse.Namespace) -> int:
     for path in (files.html, files.markdown, files.metrics_json, files.metrics_csv, files.pdf):
         if path is not None:
             print(f"wrote {path}")
+    return EXIT_OK
+
+
+def _dashboard(args: argparse.Namespace) -> int:
+    labels = _read_labels(args.labels) if args.labels else None
+    repo = SqliteRepository(args.db)
+    try:
+        data = collect_dashboard(repo, labels, args.source_run, args.last)
+    finally:
+        repo.close()
+    files = write_dashboard(data, Path(args.out))
+    print(f"{data.run_count} run(s) with results")
+    if data.run_count and not data.has_trend:
+        print("the trend needs at least 3 runs")
+    print(f"wrote {files.html}")
+    print(f"wrote {files.csv}")
+    for chart in files.charts:
+        print(f"wrote {chart}")
     return EXIT_OK
 
 
@@ -708,6 +737,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "execute": lambda: _execute(settings, args),
         "diagnose": lambda: _diagnose(settings, args),
         "report": lambda: _report(settings, args),
+        "dashboard": lambda: _dashboard(args),
         "heal": lambda: _heal(settings, args),
         "evaluate": lambda: run_evaluation(args, lambda repo: _gateway(settings, repo)),
         "metrics": lambda: _metrics(args),

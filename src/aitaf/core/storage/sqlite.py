@@ -434,6 +434,12 @@ class SqliteRepository:
         ).fetchone()
         return str(row["run_id"]) if row else None
 
+    def list_runs_with_results(self) -> list[str]:
+        rows = self._conn.execute(
+            "SELECT run_id FROM test_results GROUP BY run_id ORDER BY MIN(id)"
+        ).fetchall()
+        return [str(row["run_id"]) for row in rows]
+
     def add_metric(self, run_id: str, sample: MetricSample) -> None:
         self._write(
             "INSERT INTO metric_samples (run_id, component, operation, outcome, detail,"

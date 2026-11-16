@@ -150,6 +150,9 @@ class InMemoryRepository:
     def latest_run_with_results(self) -> str | None:
         return self._results[-1].run_id if self._results else None
 
+    def list_runs_with_results(self) -> list[str]:
+        return list(dict.fromkeys(r.run_id for r in self._results))
+
     def add_metric(self, run_id: str, sample: MetricSample) -> None:
         self._require_run(run_id)
         self._metrics.append(sample)

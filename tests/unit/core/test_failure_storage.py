@@ -86,6 +86,20 @@ def test_the_latest_run_with_results_is_found(repo: Repository) -> None:
     assert repo.latest_run_with_results() == "run-1"
 
 
+@pytest.mark.blackbox
+def test_runs_with_results_are_listed_oldest_first_once_each(repo: Repository) -> None:
+    for run_id in ("run-1", "run-2", "run-3"):
+        repo.create_run(make_run(run_id))
+    assert repo.list_runs_with_results() == []
+    for index, run_id in enumerate(("run-2", "run-2", "run-1")):
+        repo.add_result(
+            TestResult(
+                result_id=f"r{index}", run_id=run_id, tc_id="T", status="passed", duration_ms=1
+            )
+        )
+    assert repo.list_runs_with_results() == ["run-2", "run-1"]
+
+
 # --------------------------------------------------------------------- analyses
 
 

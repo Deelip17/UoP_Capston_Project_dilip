@@ -113,6 +113,9 @@ class Repository(Protocol):
     def latest_run_with_results(self) -> str | None:
         """Run ID of the most recent run that stored test results, or None."""
 
+    def list_runs_with_results(self) -> list[str]:
+        """Run IDs that stored test results, oldest first (FR-33 trend)."""
+
     def add_metric(self, run_id: str, sample: MetricSample) -> None:
         """Store a metric sample. Unknown run raises PersistenceError."""
 
