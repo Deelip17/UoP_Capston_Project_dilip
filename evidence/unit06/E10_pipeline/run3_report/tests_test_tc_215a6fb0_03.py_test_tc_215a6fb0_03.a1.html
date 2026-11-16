@@ -1,0 +1,19 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<title>Demo Shop - Catalogue</title>
+<style>body{font-family:Arial,sans-serif;max-width:640px;margin:2rem auto;color:#222}nav{margin-bottom:1rem}.btn{padding:.4rem .9rem;background:#1b5e9b;color:#fff;border:0;border-radius:4px;cursor:pointer}.field{display:block;margin:.3rem 0 1rem;padding:.4rem;width:18rem}.error{color:#b00020}li{margin:.6rem 0}</style>
+</head>
+<body>
+<h1>Products</h1>
+<nav><a id="cart-link" class="nav-link nav-cart" data-qa="cart-nav" href="/cart">View shopping cart</a></nav>
+<ul>
+<li><span class="name">Backpack</span> <span class="price">$39.00</span>
+<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="sku" value="backpack" style=""><button id="buy-backpack" class="btn btn-add-backpack" data-qa="add-bp" type="submit">Add Backpack to cart</button></form></li>
+<li><span class="name">Desk Lamp</span> <span class="price">$24.50</span>
+<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="sku" value="lamp" style=""><button id="add-lamp" class="btn btn-add-lamp" data-qa="add-lamp" type="submit">Add Desk Lamp to cart</button></form></li>
+<li><span class="name">Notebook</span> <span class="price">$6.90</span>
+<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="sku" value="notebook" style=""><button id="add-notebook" class="btn btn-add-notebook" data-qa="add-notebook" type="submit">Add Notebook to cart</button></form></li>
+</ul>
+
+
+</body></html>

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AITAF test run report</title>
+<style>body{font-family:Arial,Helvetica,sans-serif;max-width:60rem;margin:1.5rem auto;padding:0 1rem;color:#1a1a1a;background:#ffffff;line-height:1.45}a{color:#0b3d91}h1,h2,h3{margin-top:1.6rem}table{border-collapse:collapse;width:100%;margin:.6rem 0}caption{text-align:left;font-weight:bold;padding:.3rem 0}th,td{border:1px solid #c8c8c8;padding:.35rem .5rem;text-align:left;vertical-align:top}.muted{color:#4a4a4a}.badge{color:#ffffff;padding:.05rem .45rem;border-radius:.2rem;font-size:.85rem;font-weight:bold}.b-pass{background:#0b5d1e}.b-fail{background:#9b1c1c}.b-error{background:#7a3e00}.b-skip{background:#4a4a4a}details{border:1px solid #c8c8c8;margin:.5rem 0;padding:.4rem .7rem}summary{cursor:pointer;font-weight:bold}img{max-width:100%;border:1px solid #c8c8c8}</style>
+</head>
+<body>
+<h1>AITAF test run report</h1>
+<h2 id="summary">Summary</h2>
+<p>Tests: 54 (30 passed, 24 failed, 0 error, 0 skipped)</p>
+<p>Run 8f9a11fc774142b683d80014029a8117 on playwright headless, python 3.12.10, Windows 11, workers 1, timeout 5000 ms, retries 0, healing on; generated 2026-11-16 04:16 UTC.</p>
+<p>Provider: mock</p>
+<h2 id="metrics">Metrics</h2>
+<table>
+<caption>Metrics computed from stored data</caption>
+<thead><tr><th scope="col">Metric</th><th scope="col">Value</th><th scope="col">Basis</th></tr></thead>
+<tbody>
+<tr><td>Pass rate</td><td>55.6%</td><td>passed tests over executed tests (skipped tests excluded)</td></tr>
+<tr><td>Requirement coverage</td><td>90.0%</td><td>requirements with at least one approved test case over all requirements</td></tr>
+<tr><td>Script executability</td><td>100.0%</td><td>scripts whose test ran to a pass or a fail (no error) over scripts generated</td></tr>
+<tr><td>Healing success rate</td><td>5.0%</td><td>steps with a proposed locator over steps that asked for healing</td></tr>
+<tr><td>Classification accuracy</td><td>n/a</td><td>failures whose category equals the supplied label over labelled failures</td></tr>
+<tr><td>Generation latency (median)</td><td>773 ms</td><td>analyze and generate steps of the three generation components, LLM time included</td></tr>
+<tr><td>LLM call latency (median)</td><td>2 ms</td><td>gateway calls to the provider (mock or live, see the provider label)</td></tr>
+<tr><td>Non-LLM latency (p95)</td><td>n/a</td><td>report rendering samples, nearest-rank 95th percentile</td></tr>
+<tr><td>API cost</td><td>$0.0000</td><td>sum of token costs of the runs involved (zero for the mock provider)</td></tr>
+<tr><td>API cost per run</td><td>$0.0000</td><td>API cost divided by the 2 run(s) involved</td></tr>
+</tbody>
+</table>
+<h2 id="results">Results</h2>
+<table>
+<caption>Results of every executed test</caption>
+<thead><tr><th scope="col">Test case</th><th scope="col">Title</th><th scope="col">Requirement</th><th scope="col">Status</th><th scope="col">Duration</th><th scope="col">Attempts</th><th scope="col">Healed</th><th scope="col">Failure category</th></tr></thead>
+<tbody>
+<tr><td>TC-019BAFBA-01</td><td>Verify that a system can allow a registered customer to log in with an email address and a password</td><td>REQ-019BAFBA</td><td><span class="badge b-pass">PASSED</span></td><td>302 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-019BAFBA-02</td><td>Reject invalid input when a system tries to allow a registered customer to log in with an email address and a password</td><td>REQ-019BAFBA</td><td><span class="badge b-pass">PASSED</span></td><td>235 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-019BAFBA-03</td><td>Check boundary values when a system tries to allow a registered customer to log in with an email address and a password</td><td>REQ-019BAFBA</td><td><span class="badge b-pass">PASSED</span></td><td>181 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-1542276C-01</td><td>Verify that a system can provide a link back to the product list on the confirmation page</td><td>REQ-1542276C</td><td><span class="badge b-pass">PASSED</span></td><td>516 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-1542276C-02</td><td>Reject invalid input when a system tries to provide a link back to the product list on the confirmation page</td><td>REQ-1542276C</td><td><span class="badge b-pass">PASSED</span></td><td>563 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-1542276C-03</td><td>Check boundary values when a system tries to provide a link back to the product list on the confirmation page</td><td>REQ-1542276C</td><td><span class="badge b-pass">PASSED</span></td><td>504 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-1C7A3D37-01</td><td>Verify that a system can refuse an order when the cart is empty</td><td>REQ-1C7A3D37</td><td><span class="badge b-fail">FAILED</span></td><td>270 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-1C7A3D37-02</td><td>Reject invalid input when a system tries to refuse an order when the cart is empty</td><td>REQ-1C7A3D37</td><td><span class="badge b-fail">FAILED</span></td><td>255 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-1C7A3D37-03</td><td>Check boundary values when a system tries to refuse an order when the cart is empty</td><td>REQ-1C7A3D37</td><td><span class="badge b-fail">FAILED</span></td><td>253 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-215A6FB0-01</td><td>Verify that a user can The product list shall contain an add button for every product</td><td>REQ-215A6FB0</td><td><span class="badge b-pass">PASSED</span></td><td>568 ms</td><td>2</td><td>yes</td><td>-</td></tr>
+<tr><td>TC-215A6FB0-02</td><td>Reject invalid input when a user tries to The product list shall contain an add button for every product</td><td>REQ-215A6FB0</td><td><span class="badge b-pass">PASSED</span></td><td>549 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-215A6FB0-03</td><td>Check boundary values when a user tries to The product list shall contain an add button for every product</td><td>REQ-215A6FB0</td><td><span class="badge b-pass">PASSED</span></td><td>404 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-36E92D70-01</td><td>Verify that a system can not show the product list, the cart or the checkout page to a visitor who is not logged in</td><td>REQ-36E92D70</td><td><span class="badge b-fail">FAILED</span></td><td>265 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-36E92D70-02</td><td>Reject invalid input when a system tries to not show the product list, the cart or the checkout page to a visitor who is not logged in</td><td>REQ-36E92D70</td><td><span class="badge b-fail">FAILED</span></td><td>244 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-36E92D70-03</td><td>Check boundary values when a system tries to not show the product list, the cart or the checkout page to a visitor who is not logged in</td><td>REQ-36E92D70</td><td><span class="badge b-fail">FAILED</span></td><td>256 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-3779D5EE-01</td><td>Verify that a system can provide a checkout button in a cart that holds at least one product</td><td>REQ-3779D5EE</td><td><span class="badge b-fail">FAILED</span></td><td>267 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-3779D5EE-02</td><td>Reject invalid input when a system tries to provide a checkout button in a cart that holds at least one product</td><td>REQ-3779D5EE</td><td><span class="badge b-fail">FAILED</span></td><td>263 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-3779D5EE-03</td><td>Check boundary values when a system tries to provide a checkout button in a cart that holds at least one product</td><td>REQ-3779D5EE</td><td><span class="badge b-fail">FAILED</span></td><td>250 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-458CCB5E-01</td><td>Verify that a system can require a full name before an order can be placed</td><td>REQ-458CCB5E</td><td><span class="badge b-pass">PASSED</span></td><td>486 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-458CCB5E-02</td><td>Reject invalid input when a system tries to require a full name before an order can be placed</td><td>REQ-458CCB5E</td><td><span class="badge b-pass">PASSED</span></td><td>511 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-458CCB5E-03</td><td>Check boundary values when a system tries to require a full name before an order can be placed</td><td>REQ-458CCB5E</td><td><span class="badge b-pass">PASSED</span></td><td>512 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-4C589A83-01</td><td>Verify that a system can refuse a request to add a product that is not in the catalogue</td><td>REQ-4C589A83</td><td><span class="badge b-pass">PASSED</span></td><td>423 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-4C589A83-02</td><td>Reject invalid input when a system tries to refuse a request to add a product that is not in the catalogue</td><td>REQ-4C589A83</td><td><span class="badge b-pass">PASSED</span></td><td>443 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-4C589A83-03</td><td>Check boundary values when a system tries to refuse a request to add a product that is not in the catalogue</td><td>REQ-4C589A83</td><td><span class="badge b-pass">PASSED</span></td><td>402 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-550347EC-01</td><td>Verify that a system can empty the cart after an order is placed</td><td>REQ-550347EC</td><td><span class="badge b-fail">FAILED</span></td><td>243 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-550347EC-02</td><td>Reject invalid input when a system tries to empty the cart after an order is placed</td><td>REQ-550347EC</td><td><span class="badge b-fail">FAILED</span></td><td>242 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-550347EC-03</td><td>Check boundary values when a system tries to empty the cart after an order is placed</td><td>REQ-550347EC</td><td><span class="badge b-fail">FAILED</span></td><td>255 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-5B2846AE-01</td><td>Verify that a system can show the message &quot;Your cart is empty&quot; when the cart holds no products</td><td>REQ-5B2846AE</td><td><span class="badge b-fail">FAILED</span></td><td>259 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-5B2846AE-02</td><td>Reject invalid input when a system tries to show the message &quot;Your cart is empty&quot; when the cart holds no products</td><td>REQ-5B2846AE</td><td><span class="badge b-fail">FAILED</span></td><td>245 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-5B2846AE-03</td><td>Check boundary values when a system tries to show the message &quot;Your cart is empty&quot; when the cart holds no products</td><td>REQ-5B2846AE</td><td><span class="badge b-fail">FAILED</span></td><td>240 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-786DC9DA-01</td><td>Verify that a system can refuse an order when the full name is longer than 80 characters</td><td>REQ-786DC9DA</td><td><span class="badge b-pass">PASSED</span></td><td>491 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-786DC9DA-02</td><td>Reject invalid input when a system tries to refuse an order when the full name is longer than 80 characters</td><td>REQ-786DC9DA</td><td><span class="badge b-pass">PASSED</span></td><td>462 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-786DC9DA-03</td><td>Check boundary values when a system tries to refuse an order when the full name is longer than 80 characters</td><td>REQ-786DC9DA</td><td><span class="badge b-pass">PASSED</span></td><td>501 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-9881818E-01</td><td>Verify that a system can show the message &quot;Invalid email or password&quot; and keep the product list closed when the credentials are wrong</td><td>REQ-9881818E</td><td><span class="badge b-pass">PASSED</span></td><td>80 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-9881818E-02</td><td>Reject invalid input when a system tries to show the message &quot;Invalid email or password&quot; and keep the product list closed when the credentials are wrong</td><td>REQ-9881818E</td><td><span class="badge b-pass">PASSED</span></td><td>79 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-9881818E-03</td><td>Check boundary values when a system tries to show the message &quot;Invalid email or password&quot; and keep the product list closed when the credentials are wrong</td><td>REQ-9881818E</td><td><span class="badge b-pass">PASSED</span></td><td>81 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-AB096D5B-01</td><td>Verify that a system can show each product in the cart with its name and price</td><td>REQ-AB096D5B</td><td><span class="badge b-fail">FAILED</span></td><td>264 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-AB096D5B-02</td><td>Reject invalid input when a system tries to show each product in the cart with its name and price</td><td>REQ-AB096D5B</td><td><span class="badge b-fail">FAILED</span></td><td>260 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-AB096D5B-03</td><td>Check boundary values when a system tries to show each product in the cart with its name and price</td><td>REQ-AB096D5B</td><td><span class="badge b-fail">FAILED</span></td><td>295 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-B63F4FBB-01</td><td>Verify that a system can add a product to the cart when the customer selects its add button</td><td>REQ-B63F4FBB</td><td><span class="badge b-fail">FAILED</span></td><td>275 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-B63F4FBB-02</td><td>Reject invalid input when a system tries to add a product to the cart when the customer selects its add button</td><td>REQ-B63F4FBB</td><td><span class="badge b-fail">FAILED</span></td><td>238 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-B63F4FBB-03</td><td>Check boundary values when a system tries to add a product to the cart when the customer selects its add button</td><td>REQ-B63F4FBB</td><td><span class="badge b-fail">FAILED</span></td><td>252 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-BB99F1B7-01</td><td>Verify that a system can show a product list in which every product has a name and a price in dollars</td><td>REQ-BB99F1B7</td><td><span class="badge b-pass">PASSED</span></td><td>407 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-BB99F1B7-02</td><td>Reject invalid input when a system tries to show a product list in which every product has a name and a price in dollars</td><td>REQ-BB99F1B7</td><td><span class="badge b-pass">PASSED</span></td><td>413 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-BB99F1B7-03</td><td>Check boundary values when a system tries to show a product list in which every product has a name and a price in dollars</td><td>REQ-BB99F1B7</td><td><span class="badge b-pass">PASSED</span></td><td>418 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-C3BFFA7E-01</td><td>Verify that a system can show a confirmation message after a successful order</td><td>REQ-C3BFFA7E</td><td><span class="badge b-pass">PASSED</span></td><td>486 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-C3BFFA7E-02</td><td>Reject invalid input when a system tries to show a confirmation message after a successful order</td><td>REQ-C3BFFA7E</td><td><span class="badge b-pass">PASSED</span></td><td>488 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-C3BFFA7E-03</td><td>Check boundary values when a system tries to show a confirmation message after a successful order</td><td>REQ-C3BFFA7E</td><td><span class="badge b-pass">PASSED</span></td><td>535 ms</td><td>1</td><td>no</td><td>-</td></tr>
+<tr><td>TC-D2433ADB-01</td><td>Verify that a system can remove a product from the cart when the customer selects its remove button</td><td>REQ-D2433ADB</td><td><span class="badge b-fail">FAILED</span></td><td>250 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-D2433ADB-02</td><td>Reject invalid input when a system tries to remove a product from the cart when the customer selects its remove button</td><td>REQ-D2433ADB</td><td><span class="badge b-fail">FAILED</span></td><td>244 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-D2433ADB-03</td><td>Check boundary values when a system tries to remove a product from the cart when the customer selects its remove button</td><td>REQ-D2433ADB</td><td><span class="badge b-fail">FAILED</span></td><td>261 ms</td><td>1</td><td>no</td><td>locator</td></tr>
+<tr><td>TC-E95ED90D-01</td><td>Verify that a system can show exactly three products: Backpack, Desk Lamp and Notebook</td><td>REQ-E95ED90D</td><td><span class="badge b-pass">PASSED</span></td><td>416 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-E95ED90D-02</td><td>Reject invalid input when a system tries to show exactly three products: Backpack, Desk Lamp and Notebook</td><td>REQ-E95ED90D</td><td><span class="badge b-pass">PASSED</span></td><td>409 ms</td><td>2</td><td>no</td><td>-</td></tr>
+<tr><td>TC-E95ED90D-03</td><td>Check boundary values when a system tries to show exactly three products: Backpack, Desk Lamp and Notebook</td><td>REQ-E95ED90D</td><td><span class="badge b-pass">PASSED</span></td><td>424 ms</td><td>2</td><td>no</td><td>-</td></tr>
+</tbody>
+</table>
+<h2 id="failures">Failure analysis</h2>
+<details>
+<summary>TC-1C7A3D37-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:4267737973c0461896e2ef8ffcb8774b, screenshot:tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.png, dom:tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.html, healing:2443a451244e4c27b0d3dbae5e3325ce, healing:04df7e5c0b524c45b52b70cd7b4596cb</p>
+<p><img src="evidence/tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.png" alt="Screenshot of test TC-1C7A3D37-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231474A6450&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.html">page snapshot</a> | <a href="logs/4267737973c0461896e2ef8ffcb8774b.txt">log</a></p>
+</details>
+<details>
+<summary>TC-1C7A3D37-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:5b9c6d2aa34d4bb29e658744015651e7, screenshot:tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.png, dom:tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.html, healing:a40ad9dfd1a94dbba2552f2261da3650, healing:15242a54de6d4db1b1d92665c62826a9</p>
+<p><img src="evidence/tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.png" alt="Screenshot of test TC-1C7A3D37-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147346C60&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.html">page snapshot</a> | <a href="logs/5b9c6d2aa34d4bb29e658744015651e7.txt">log</a></p>
+</details>
+<details>
+<summary>TC-1C7A3D37-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:cb65081a95fd4ad0bc29787c01a76e00, screenshot:tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.png, dom:tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.html, healing:1851d7c547f5410791595c3ce3380159, healing:0f3be9f2bcbb4d38850dd1dd9583c81c</p>
+<p><img src="evidence/tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.png" alt="Screenshot of test TC-1C7A3D37-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147526030&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.html">page snapshot</a> | <a href="logs/cb65081a95fd4ad0bc29787c01a76e00.txt">log</a></p>
+</details>
+<details>
+<summary>TC-36E92D70-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:4f78bf529e444ac589b20af396a7b25a, screenshot:tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.png, dom:tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.html, healing:76fe8ad3b92e4d60b1572173c953c86a, healing:607136502e2c422a84cb977421cb3f62, healing:6f716e4f182046deb9a9e8db17a4a7d3, healing:7e10a1a3639741a6939593859941e0d6</p>
+<p><img src="evidence/tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.png" alt="Screenshot of test TC-36E92D70-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147524650&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.html">page snapshot</a> | <a href="logs/4f78bf529e444ac589b20af396a7b25a.txt">log</a></p>
+</details>
+<details>
+<summary>TC-36E92D70-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:68a73ea02cc34b04a2ac3c088f61cc89, screenshot:tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.png, dom:tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.html, healing:d6c24da8d3494c63b546b6a4edef0adb, healing:92d947b93f1c417fa881fb19277e1222, healing:66ededfd883c44979dec0499cbab487c, healing:d67bf96cbb9b4a9fb715dcd5415c2ac7</p>
+<p><img src="evidence/tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.png" alt="Screenshot of test TC-36E92D70-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147346E10&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.html">page snapshot</a> | <a href="logs/68a73ea02cc34b04a2ac3c088f61cc89.txt">log</a></p>
+</details>
+<details>
+<summary>TC-36E92D70-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:8e57a18ce3d44edbad402b3c23652f40, screenshot:tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.png, dom:tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.html, healing:894aa11a538d4a29a34475311ddfcbe3, healing:814690ecbc0d41e281a8c7eaf2132394, healing:c3746943d0bd4b6e97d919078b2276db, healing:8f7c99a683824e2d8df064c7d1bd13e3</p>
+<p><img src="evidence/tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.png" alt="Screenshot of test TC-36E92D70-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314736FD40&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.html">page snapshot</a> | <a href="logs/8e57a18ce3d44edbad402b3c23652f40.txt">log</a></p>
+</details>
+<details>
+<summary>TC-3779D5EE-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:634598cbad67493e99d1f1d5e04444db, screenshot:tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.png, dom:tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.html, healing:a24cf618d89343d794c40061d29cb37e, healing:6904d37d34d44dfc86dbc07d1154b5dd, healing:1eb7938a88cd4a85a92fb4e403fa870d, healing:1065e6072273465e82c587655fbc7460</p>
+<p><img src="evidence/tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.png" alt="Screenshot of test TC-3779D5EE-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314760CBC0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.html">page snapshot</a> | <a href="logs/634598cbad67493e99d1f1d5e04444db.txt">log</a></p>
+</details>
+<details>
+<summary>TC-3779D5EE-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:5ca1e27f936b41b1a11a781822c7925d, screenshot:tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.png, dom:tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.html, healing:1d0d8985a18143ba877e347ce3641e5e, healing:5977552fe7b04b50a92d08eda4a89c8e, healing:c231f7807cf14b2e9138f8e2f635560f, healing:8ddf231301b54932a9e8baa76e2949ca</p>
+<p><img src="evidence/tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.png" alt="Screenshot of test TC-3779D5EE-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147799700&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.html">page snapshot</a> | <a href="logs/5ca1e27f936b41b1a11a781822c7925d.txt">log</a></p>
+</details>
+<details>
+<summary>TC-3779D5EE-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:a5d182d7f22f41bdaf2629b203a8e497, screenshot:tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.png, dom:tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.html, healing:98c9f5498a77479b969cfa51776962a2, healing:2a2b2b2586a6473fbe628dd613b26ad7, healing:f2c42f572ede4856a5a79102b65061b8, healing:5af1b13b8fb447f0a040c6651c8d4322</p>
+<p><img src="evidence/tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.png" alt="Screenshot of test TC-3779D5EE-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231475A9C10&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.html">page snapshot</a> | <a href="logs/a5d182d7f22f41bdaf2629b203a8e497.txt">log</a></p>
+</details>
+<details>
+<summary>TC-550347EC-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:48b795897e644d178726c4addb5ebe8e, screenshot:tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.png, dom:tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.html, healing:f1997eb723b448c899e65bb23eb67c30, healing:e1dffc08a2464d0bbefa2b9b3592cd29, healing:8a1cb1662e2c4258b7a3cb5e797bd903, healing:002ab36b8df7495eaf2a3bc16d151cae</p>
+<p><img src="evidence/tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.png" alt="Screenshot of test TC-550347EC-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231475A9C70&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.html">page snapshot</a> | <a href="logs/48b795897e644d178726c4addb5ebe8e.txt">log</a></p>
+</details>
+<details>
+<summary>TC-550347EC-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:2514e67ff21b46949cb2c3badd2fe1f3, screenshot:tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.png, dom:tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.html, healing:2f715f9816ed4b2cb2325fa0d62be5e3, healing:198e62d7532c457fb5ec23a569dc4536, healing:a00bebb58cdd4bfea409d7996bc8c953, healing:4e19f5b483ca4f2bb758d57b9595d6fe</p>
+<p><img src="evidence/tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.png" alt="Screenshot of test TC-550347EC-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314744F980&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.html">page snapshot</a> | <a href="logs/2514e67ff21b46949cb2c3badd2fe1f3.txt">log</a></p>
+</details>
+<details>
+<summary>TC-550347EC-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:961ec3c878f640ccaa10e97162b3b375, screenshot:tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.png, dom:tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.html, healing:d61cea069e424457a5930a786d1d9169, healing:e48cfda4273945c0885b06cf0a54af2c, healing:6c659646ffdc476fa7c90d8cb8eeac2c, healing:4157dc5650fd47fdb6d6c06a505ec208</p>
+<p><img src="evidence/tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.png" alt="Screenshot of test TC-550347EC-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231477997F0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.html">page snapshot</a> | <a href="logs/961ec3c878f640ccaa10e97162b3b375.txt">log</a></p>
+</details>
+<details>
+<summary>TC-5B2846AE-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:b0db9abf39214036b98d774be5dcf013, screenshot:tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.png, dom:tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.html, healing:a5433a54e7614696bd3c90af7c4af8df, healing:d908cf01e076474587767ff1fa940b0d, healing:8f0959c38d5b425ea58e4487ff2a58c5, healing:c7421e92948d46c4916ee199e3f97052</p>
+<p><img src="evidence/tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.png" alt="Screenshot of test TC-5B2846AE-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231474A6ED0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.html">page snapshot</a> | <a href="logs/b0db9abf39214036b98d774be5dcf013.txt">log</a></p>
+</details>
+<details>
+<summary>TC-5B2846AE-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:f24b3d321c724efd8cf77e7a5f01f677, screenshot:tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.png, dom:tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.html, healing:211154ea828544dab24dcdef83ad9633, healing:a8de4c7e09504392abd69e18f54cf976, healing:33e0f922b9b14d338606e6ec8747c917, healing:0acb48f1072544a696cd2fd842ec4ff5</p>
+<p><img src="evidence/tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.png" alt="Screenshot of test TC-5B2846AE-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314760C3B0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.html">page snapshot</a> | <a href="logs/f24b3d321c724efd8cf77e7a5f01f677.txt">log</a></p>
+</details>
+<details>
+<summary>TC-5B2846AE-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (4 event(s): no_candidate, rejected, rejected, rejected).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:9b36f7f2fdba441ca0f6326b467a048c, screenshot:tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.png, dom:tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.html, healing:f3f1b00fc4424c389e056e703d668e27, healing:ae2538be599e4595b03fa07071d7b121, healing:0b3c1e9d1d0444f6a4a125e173c1eaa5, healing:1f71a0c4056b44249b450cc36e75adcd</p>
+<p><img src="evidence/tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.png" alt="Screenshot of test TC-5B2846AE-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231477C57F0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.html">page snapshot</a> | <a href="logs/9b36f7f2fdba441ca0f6326b467a048c.txt">log</a></p>
+</details>
+<details>
+<summary>TC-AB096D5B-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:983f5496c9b4475aa2b5e0900ff680db, screenshot:tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.png, dom:tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.html, healing:98982dbc07f84c7eb5477f698ec96def, healing:ca44c93f1a8c4625b38df6f9e6967559</p>
+<p><img src="evidence/tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.png" alt="Screenshot of test TC-AB096D5B-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314760D4C0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.html">page snapshot</a> | <a href="logs/983f5496c9b4475aa2b5e0900ff680db.txt">log</a></p>
+</details>
+<details>
+<summary>TC-AB096D5B-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:5eee6fd9c2d040878636d97db7adefa2, screenshot:tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.png, dom:tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.html, healing:d0f3ef2e325e408f9f4d946c188fe516, healing:58121c691b4f4b90aa49cdd0c1d27772</p>
+<p><img src="evidence/tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.png" alt="Screenshot of test TC-AB096D5B-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231477C5CD0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.html">page snapshot</a> | <a href="logs/5eee6fd9c2d040878636d97db7adefa2.txt">log</a></p>
+</details>
+<details>
+<summary>TC-AB096D5B-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:043b82ab454341458465f18faa7a4955, screenshot:tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.png, dom:tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.html, healing:bb00bc99558540a58a8c9d9f5e29a37b, healing:b3b0e19403544043a2a1172b1ce05b6f</p>
+<p><img src="evidence/tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.png" alt="Screenshot of test TC-AB096D5B-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231473CABD0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.html">page snapshot</a> | <a href="logs/043b82ab454341458465f18faa7a4955.txt">log</a></p>
+</details>
+<details>
+<summary>TC-B63F4FBB-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page. Self-healing was attempted (2 event(s): no_candidate, no_candidate).</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:9b84ba43a6164608b4fc72a3f28b11a8, screenshot:tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.png, dom:tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.html, healing:298455928f52416893f8d6517b425ab4, healing:938838949a484d47b37b9af23b66147b</p>
+<p><img src="evidence/tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.png" alt="Screenshot of test TC-B63F4FBB-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314783B590&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.html">page snapshot</a> | <a href="logs/9b84ba43a6164608b4fc72a3f28b11a8.txt">log</a></p>
+</details>
+<details>
+<summary>TC-B63F4FBB-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page.</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:2173638470464e9ebb2359623e57c72d, screenshot:tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.png, dom:tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.html</p>
+<p><img src="evidence/tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.png" alt="Screenshot of test TC-B63F4FBB-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231478EEC00&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.html">page snapshot</a> | <a href="logs/2173638470464e9ebb2359623e57c72d.txt">log</a></p>
+</details>
+<details>
+<summary>TC-B63F4FBB-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page.</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:5197d3a5bbcb43c5bb8bcd86cfd486e1, screenshot:tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.png, dom:tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.html</p>
+<p><img src="evidence/tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.png" alt="Screenshot of test TC-B63F4FBB-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231473CB7A0&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.html">page snapshot</a> | <a href="logs/5197d3a5bbcb43c5bb8bcd86cfd486e1.txt">log</a></p>
+</details>
+<details>
+<summary>TC-D2433ADB-01: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page.</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:8eaf71a941f54b449d78da1d73f71b22, screenshot:tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.png, dom:tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.html</p>
+<p><img src="evidence/tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.png" alt="Screenshot of test TC-D2433ADB-01 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147346630&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.html">page snapshot</a> | <a href="logs/8eaf71a941f54b449d78da1d73f71b22.txt">log</a></p>
+</details>
+<details>
+<summary>TC-D2433ADB-02: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page.</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:ca67cdd343ab45f993f95aa495537785, screenshot:tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.png, dom:tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.html</p>
+<p><img src="evidence/tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.png" alt="Screenshot of test TC-D2433ADB-02 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147659F10&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.html">page snapshot</a> | <a href="logs/ca67cdd343ab45f993f95aa495537785.txt">log</a></p>
+</details>
+<details>
+<summary>TC-D2433ADB-03: locator (confidence 0.90, rules)</summary>
+<p><strong>Cause:</strong> The element &#x27;add_backpack&#x27; on page &#x27;shop&#x27; was not found: the stored locator no longer matches the page.</p>
+<p><strong>Next step:</strong> Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.</p>
+<p class="muted">Cluster CL-95c25919; evidence: log:d2af3cddac774771b43bc3e7c7e6dc07, screenshot:tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.png, dom:tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.html</p>
+<p><img src="evidence/tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.png" alt="Screenshot of test TC-D2433ADB-03 at failure"></p>
+<pre>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314762DF70&gt;
+name = &#x27;add_backpack&#x27;
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry[&quot;primary&quot;], *entry[&quot;fallbacks&quot;]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError(&quot;no locator strategy matched for &quot; + name + &quot; on page shop&quot;)
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</pre>
+<p><a href="evidence/tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.html">page snapshot</a> | <a href="logs/d2af3cddac774771b43bc3e7c7e6dc07.txt">log</a></p>
+</details>
+<h2 id="healing">Self-healing</h2>
+<table>
+<caption>Self-healing events (proposed events need human approval)</caption>
+<thead><tr><th scope="col">Step</th><th scope="col">Method</th><th scope="col">Outcome</th><th scope="col">Confidence</th><th scope="col">Approved</th></tr></thead>
+<tbody>
+<tr><td>tests/test_tc_1c7a3d37_01.py::test_tc_1c7a3d37_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_1c7a3d37_01.py::test_tc_1c7a3d37_01#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_1c7a3d37_02.py::test_tc_1c7a3d37_02#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_1c7a3d37_02.py::test_tc_1c7a3d37_02#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_1c7a3d37_03.py::test_tc_1c7a3d37_03#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_1c7a3d37_03.py::test_tc_1c7a3d37_03#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_215a6fb0_01.py::test_tc_215a6fb0_01#shop.remove_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_215a6fb0_01.py::test_tc_215a6fb0_01#shop.remove_backpack</td><td>similarity</td><td>proposed</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_01.py::test_tc_36e92d70_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_01.py::test_tc_36e92d70_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_01.py::test_tc_36e92d70_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_01.py::test_tc_36e92d70_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_02.py::test_tc_36e92d70_02#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_02.py::test_tc_36e92d70_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_02.py::test_tc_36e92d70_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_02.py::test_tc_36e92d70_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_03.py::test_tc_36e92d70_03#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_03.py::test_tc_36e92d70_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_03.py::test_tc_36e92d70_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_36e92d70_03.py::test_tc_36e92d70_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_01.py::test_tc_3779d5ee_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_01.py::test_tc_3779d5ee_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_01.py::test_tc_3779d5ee_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_01.py::test_tc_3779d5ee_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_02.py::test_tc_3779d5ee_02#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_02.py::test_tc_3779d5ee_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_02.py::test_tc_3779d5ee_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_02.py::test_tc_3779d5ee_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_03.py::test_tc_3779d5ee_03#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_03.py::test_tc_3779d5ee_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_03.py::test_tc_3779d5ee_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_3779d5ee_03.py::test_tc_3779d5ee_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_01.py::test_tc_550347ec_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_01.py::test_tc_550347ec_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_01.py::test_tc_550347ec_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_01.py::test_tc_550347ec_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_02.py::test_tc_550347ec_02#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_02.py::test_tc_550347ec_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_02.py::test_tc_550347ec_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_02.py::test_tc_550347ec_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_03.py::test_tc_550347ec_03#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_03.py::test_tc_550347ec_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_03.py::test_tc_550347ec_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_550347ec_03.py::test_tc_550347ec_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_01.py::test_tc_5b2846ae_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_01.py::test_tc_5b2846ae_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_01.py::test_tc_5b2846ae_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_01.py::test_tc_5b2846ae_01#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_02.py::test_tc_5b2846ae_02#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_02.py::test_tc_5b2846ae_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_02.py::test_tc_5b2846ae_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_02.py::test_tc_5b2846ae_02#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_03.py::test_tc_5b2846ae_03#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_03.py::test_tc_5b2846ae_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_03.py::test_tc_5b2846ae_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_5b2846ae_03.py::test_tc_5b2846ae_03#shop.add_backpack</td><td>similarity</td><td>rejected</td><td>0.65</td><td>no</td></tr>
+<tr><td>tests/test_tc_ab096d5b_01.py::test_tc_ab096d5b_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_ab096d5b_01.py::test_tc_ab096d5b_01#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_ab096d5b_02.py::test_tc_ab096d5b_02#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_ab096d5b_02.py::test_tc_ab096d5b_02#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_ab096d5b_03.py::test_tc_ab096d5b_03#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_ab096d5b_03.py::test_tc_ab096d5b_03#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_b63f4fbb_01.py::test_tc_b63f4fbb_01#shop.add_backpack</td><td>fallback</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+<tr><td>tests/test_tc_b63f4fbb_01.py::test_tc_b63f4fbb_01#shop.add_backpack</td><td>similarity</td><td>no_candidate</td><td>0.00</td><td>no</td></tr>
+</tbody>
+</table>
+<h2 id="trace">Traceability</h2>
+<table>
+<caption>Requirement to test case to script to result</caption>
+<thead><tr><th scope="col">Requirement</th><th scope="col">Test case</th><th scope="col">Script</th><th scope="col">Status</th><th scope="col">Failure category</th></tr></thead>
+<tbody>
+<tr><td>REQ-019BAFBA</td><td>TC-019BAFBA-01</td><td>tests/test_tc_019bafba_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-019BAFBA</td><td>TC-019BAFBA-02</td><td>tests/test_tc_019bafba_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-019BAFBA</td><td>TC-019BAFBA-03</td><td>tests/test_tc_019bafba_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-1542276C</td><td>TC-1542276C-01</td><td>tests/test_tc_1542276c_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-1542276C</td><td>TC-1542276C-02</td><td>tests/test_tc_1542276c_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-1542276C</td><td>TC-1542276C-03</td><td>tests/test_tc_1542276c_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-1C7A3D37</td><td>TC-1C7A3D37-01</td><td>tests/test_tc_1c7a3d37_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-1C7A3D37</td><td>TC-1C7A3D37-02</td><td>tests/test_tc_1c7a3d37_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-1C7A3D37</td><td>TC-1C7A3D37-03</td><td>tests/test_tc_1c7a3d37_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-215A6FB0</td><td>TC-215A6FB0-01</td><td>tests/test_tc_215a6fb0_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-215A6FB0</td><td>TC-215A6FB0-02</td><td>tests/test_tc_215a6fb0_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-215A6FB0</td><td>TC-215A6FB0-03</td><td>tests/test_tc_215a6fb0_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-36E92D70</td><td>TC-36E92D70-01</td><td>tests/test_tc_36e92d70_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-36E92D70</td><td>TC-36E92D70-02</td><td>tests/test_tc_36e92d70_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-36E92D70</td><td>TC-36E92D70-03</td><td>tests/test_tc_36e92d70_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-3779D5EE</td><td>TC-3779D5EE-01</td><td>tests/test_tc_3779d5ee_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-3779D5EE</td><td>TC-3779D5EE-02</td><td>tests/test_tc_3779d5ee_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-3779D5EE</td><td>TC-3779D5EE-03</td><td>tests/test_tc_3779d5ee_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-458CCB5E</td><td>TC-458CCB5E-01</td><td>tests/test_tc_458ccb5e_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-458CCB5E</td><td>TC-458CCB5E-02</td><td>tests/test_tc_458ccb5e_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-458CCB5E</td><td>TC-458CCB5E-03</td><td>tests/test_tc_458ccb5e_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-4C589A83</td><td>TC-4C589A83-01</td><td>tests/test_tc_4c589a83_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-4C589A83</td><td>TC-4C589A83-02</td><td>tests/test_tc_4c589a83_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-4C589A83</td><td>TC-4C589A83-03</td><td>tests/test_tc_4c589a83_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-550347EC</td><td>TC-550347EC-01</td><td>tests/test_tc_550347ec_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-550347EC</td><td>TC-550347EC-02</td><td>tests/test_tc_550347ec_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-550347EC</td><td>TC-550347EC-03</td><td>tests/test_tc_550347ec_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-5B2846AE</td><td>TC-5B2846AE-01</td><td>tests/test_tc_5b2846ae_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-5B2846AE</td><td>TC-5B2846AE-02</td><td>tests/test_tc_5b2846ae_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-5B2846AE</td><td>TC-5B2846AE-03</td><td>tests/test_tc_5b2846ae_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-786DC9DA</td><td>TC-786DC9DA-01</td><td>tests/test_tc_786dc9da_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-786DC9DA</td><td>TC-786DC9DA-02</td><td>tests/test_tc_786dc9da_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-786DC9DA</td><td>TC-786DC9DA-03</td><td>tests/test_tc_786dc9da_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-9881818E</td><td>TC-9881818E-01</td><td>tests/test_tc_9881818e_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-9881818E</td><td>TC-9881818E-02</td><td>tests/test_tc_9881818e_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-9881818E</td><td>TC-9881818E-03</td><td>tests/test_tc_9881818e_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-AB096D5B</td><td>TC-AB096D5B-01</td><td>tests/test_tc_ab096d5b_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-AB096D5B</td><td>TC-AB096D5B-02</td><td>tests/test_tc_ab096d5b_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-AB096D5B</td><td>TC-AB096D5B-03</td><td>tests/test_tc_ab096d5b_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-B63F4FBB</td><td>TC-B63F4FBB-01</td><td>tests/test_tc_b63f4fbb_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-B63F4FBB</td><td>TC-B63F4FBB-02</td><td>tests/test_tc_b63f4fbb_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-B63F4FBB</td><td>TC-B63F4FBB-03</td><td>tests/test_tc_b63f4fbb_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-BB99F1B7</td><td>TC-BB99F1B7-01</td><td>tests/test_tc_bb99f1b7_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-BB99F1B7</td><td>TC-BB99F1B7-02</td><td>tests/test_tc_bb99f1b7_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-BB99F1B7</td><td>TC-BB99F1B7-03</td><td>tests/test_tc_bb99f1b7_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-C3BFFA7E</td><td>TC-C3BFFA7E-01</td><td>tests/test_tc_c3bffa7e_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-C3BFFA7E</td><td>TC-C3BFFA7E-02</td><td>tests/test_tc_c3bffa7e_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-C3BFFA7E</td><td>TC-C3BFFA7E-03</td><td>tests/test_tc_c3bffa7e_03.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-D2433ADB</td><td>TC-D2433ADB-01</td><td>tests/test_tc_d2433adb_01.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-D2433ADB</td><td>TC-D2433ADB-02</td><td>tests/test_tc_d2433adb_02.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-D2433ADB</td><td>TC-D2433ADB-03</td><td>tests/test_tc_d2433adb_03.py</td><td>FAILED</td><td>locator</td></tr>
+<tr><td>REQ-E95ED90D</td><td>TC-E95ED90D-01</td><td>tests/test_tc_e95ed90d_01.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-E95ED90D</td><td>TC-E95ED90D-02</td><td>tests/test_tc_e95ed90d_02.py</td><td>PASSED</td><td>-</td></tr>
+<tr><td>REQ-E95ED90D</td><td>TC-E95ED90D-03</td><td>tests/test_tc_e95ed90d_03.py</td><td>PASSED</td><td>-</td></tr>
+</tbody>
+</table>
+<h2 id="notes">Notes and limits</h2>
+<ul><li>Figures come from the stored data of run 8f9a11fc774142b683d80014029a8117 and source run 25f30ec846da4206b7367d7f451c8424.</li><li>A metric shown as n/a could not be computed from the stored data.</li><li>Some or all AI output comes from the deterministic mock provider, not a live model.</li></ul>
+</body>
+</html>

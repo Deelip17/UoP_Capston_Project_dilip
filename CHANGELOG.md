@@ -7,6 +7,7 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 ## [1.0.0-rc1] - 2026-11-16
 
 ### Added
+- Unit 6 slice U6-11: `UNIT6_HANDOFF.md`, `UNIT6_SCREENSHOT_GUIDE.md` (shot list, coverage matrix, two prompts for the document writers) and `UNIT6_EVIDENCE_BRIEF.md`; evidence for the end-to-end run (`evidence/unit06/E10_pipeline/`), the Dashboard (`E11_dashboard/`), the deployment checks and the tag.
 - Unit 6 slice U6-10: `Dockerfile` (Python 3.12, Chromium, report extras, non-root user, mock provider by default), `.dockerignore`, `docs/user-guide/DEPLOYMENT.md` (methods and choice, variables, install, build and run commands), a CI job that builds the image and runs the pipeline inside it, and tests that keep the guide and the settings in step.
 - Unit 6 slice U6-9: `aitaf run` runs the whole pipeline (analyze, generate, human gate or `--approve-all`, script, execute, diagnose, report, dashboard), with `--demo-shop` and `--mutation` for a self-contained demonstration; `aitaf approve-heal` closes the approval gap between an execution run and the stored locators; `integration.yml` runs the real-browser tests on pull requests.
 - Unit 6 slice U6-7: `aitaf dashboard` writes a static page (`dashboard.html`, `dashboard.csv`, three charts) over every stored run: pass rate, coverage, executability, healing, accuracy, latency, cost and the trend. `Repository.list_runs_with_results`.

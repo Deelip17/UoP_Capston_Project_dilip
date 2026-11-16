@@ -1,0 +1,31 @@
+E15 deployment verification in CI (generated 16 Nov 2026 from the GitHub API)
+Commit 86a6095 (tag v1.0.0-rc1)
+
+CI run #47: success  https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43800603157
+  job test (ubuntu-latest): success
+  job security: success
+  job test (windows-latest): success
+  job lint: success
+  job build: success
+Integration run #8: success  https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43800603134
+  job integration (ubuntu, chromium): success
+  job docker image (build and demo run): success
+      step Set up job: success
+      step Check out source: success
+      step Build the image (no push): success
+      step Command line works inside the image: success
+      step Whole pipeline on the demo shop inside the container (mock provider): success
+      step Keep the output: success
+      step Post Check out source: success
+      step Complete job: success
+Release run #3: success  https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43801491896
+  job verify: success
+  job release: success
+
+Release workflow run #3: success  https://github.com/Deelip17/UoP_Capston_Project_dilip/actions/runs/43801491896
+
+GitHub Release: https://github.com/Deelip17/UoP_Capston_Project_dilip/releases/tag/v1.0.0-rc1 (prerelease=True)
+Assets: aitaf-1.0.0rc1-py3-none-any.whl, aitaf-v1.0.0-rc1-evidence.zip
+
+Deployment files: Dockerfile, .dockerignore, docs/user-guide/DEPLOYMENT.md (the .env template is in its section 3), .github/workflows/integration.yml .github/workflows/integration.yml (job 'docker')
+Local Docker build was not run on the author's machine; the image build and the in-container pipeline run are verified by CI only.

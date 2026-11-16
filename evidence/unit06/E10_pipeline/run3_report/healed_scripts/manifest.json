@@ -1,0 +1,542 @@
+[
+  {
+    "script_id": "SCR-TC-019BAFBA-01",
+    "tc_id": "TC-019BAFBA-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_019bafba_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-019BAFBA-02",
+    "tc_id": "TC-019BAFBA-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_019bafba_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-019BAFBA-03",
+    "tc_id": "TC-019BAFBA-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_019bafba_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-9881818E-01",
+    "tc_id": "TC-9881818E-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_9881818e_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-9881818E-02",
+    "tc_id": "TC-9881818E-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_9881818e_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-9881818E-03",
+    "tc_id": "TC-9881818E-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_9881818e_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-36E92D70-01",
+    "tc_id": "TC-36E92D70-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_36e92d70_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-36E92D70-02",
+    "tc_id": "TC-36E92D70-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_36e92d70_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-36E92D70-03",
+    "tc_id": "TC-36E92D70-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_36e92d70_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-BB99F1B7-01",
+    "tc_id": "TC-BB99F1B7-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_bb99f1b7_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-BB99F1B7-02",
+    "tc_id": "TC-BB99F1B7-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_bb99f1b7_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-BB99F1B7-03",
+    "tc_id": "TC-BB99F1B7-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_bb99f1b7_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-E95ED90D-01",
+    "tc_id": "TC-E95ED90D-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_e95ed90d_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-E95ED90D-02",
+    "tc_id": "TC-E95ED90D-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_e95ed90d_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-E95ED90D-03",
+    "tc_id": "TC-E95ED90D-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_e95ed90d_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-215A6FB0-01",
+    "tc_id": "TC-215A6FB0-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_215a6fb0_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-215A6FB0-02",
+    "tc_id": "TC-215A6FB0-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_215a6fb0_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-215A6FB0-03",
+    "tc_id": "TC-215A6FB0-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_215a6fb0_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-B63F4FBB-01",
+    "tc_id": "TC-B63F4FBB-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_b63f4fbb_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-B63F4FBB-02",
+    "tc_id": "TC-B63F4FBB-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_b63f4fbb_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-B63F4FBB-03",
+    "tc_id": "TC-B63F4FBB-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_b63f4fbb_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-AB096D5B-01",
+    "tc_id": "TC-AB096D5B-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_ab096d5b_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-AB096D5B-02",
+    "tc_id": "TC-AB096D5B-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_ab096d5b_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-AB096D5B-03",
+    "tc_id": "TC-AB096D5B-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_ab096d5b_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-D2433ADB-01",
+    "tc_id": "TC-D2433ADB-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_d2433adb_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-D2433ADB-02",
+    "tc_id": "TC-D2433ADB-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_d2433adb_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-D2433ADB-03",
+    "tc_id": "TC-D2433ADB-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_d2433adb_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-5B2846AE-01",
+    "tc_id": "TC-5B2846AE-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_5b2846ae_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-5B2846AE-02",
+    "tc_id": "TC-5B2846AE-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_5b2846ae_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-5B2846AE-03",
+    "tc_id": "TC-5B2846AE-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_5b2846ae_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-3779D5EE-01",
+    "tc_id": "TC-3779D5EE-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_3779d5ee_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-3779D5EE-02",
+    "tc_id": "TC-3779D5EE-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_3779d5ee_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-3779D5EE-03",
+    "tc_id": "TC-3779D5EE-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_3779d5ee_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-458CCB5E-01",
+    "tc_id": "TC-458CCB5E-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_458ccb5e_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-458CCB5E-02",
+    "tc_id": "TC-458CCB5E-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_458ccb5e_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-458CCB5E-03",
+    "tc_id": "TC-458CCB5E-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_458ccb5e_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-786DC9DA-01",
+    "tc_id": "TC-786DC9DA-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_786dc9da_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-786DC9DA-02",
+    "tc_id": "TC-786DC9DA-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_786dc9da_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-786DC9DA-03",
+    "tc_id": "TC-786DC9DA-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_786dc9da_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-1C7A3D37-01",
+    "tc_id": "TC-1C7A3D37-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_1c7a3d37_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-1C7A3D37-02",
+    "tc_id": "TC-1C7A3D37-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_1c7a3d37_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-1C7A3D37-03",
+    "tc_id": "TC-1C7A3D37-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_1c7a3d37_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-C3BFFA7E-01",
+    "tc_id": "TC-C3BFFA7E-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_c3bffa7e_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-C3BFFA7E-02",
+    "tc_id": "TC-C3BFFA7E-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_c3bffa7e_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-C3BFFA7E-03",
+    "tc_id": "TC-C3BFFA7E-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_c3bffa7e_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-550347EC-01",
+    "tc_id": "TC-550347EC-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_550347ec_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-550347EC-02",
+    "tc_id": "TC-550347EC-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_550347ec_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-550347EC-03",
+    "tc_id": "TC-550347EC-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_550347ec_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-1542276C-01",
+    "tc_id": "TC-1542276C-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_1542276c_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-1542276C-02",
+    "tc_id": "TC-1542276C-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_1542276c_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-1542276C-03",
+    "tc_id": "TC-1542276C-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_1542276c_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-4C589A83-01",
+    "tc_id": "TC-4C589A83-01",
+    "framework": "playwright",
+    "path": "tests/test_tc_4c589a83_01.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-4C589A83-02",
+    "tc_id": "TC-4C589A83-02",
+    "framework": "playwright",
+    "path": "tests/test_tc_4c589a83_02.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  },
+  {
+    "script_id": "SCR-TC-4C589A83-03",
+    "tc_id": "TC-4C589A83-03",
+    "framework": "playwright",
+    "path": "tests/test_tc_4c589a83_03.py",
+    "validation_result": "passed",
+    "model": "mock-1",
+    "prompt_version": "sg-v2",
+    "ai_label": "ai-generated"
+  }
+]

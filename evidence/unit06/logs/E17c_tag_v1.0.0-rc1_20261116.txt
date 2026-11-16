@@ -1,0 +1,15 @@
+E17c annotated tag v1.0.0-rc1 on develop (git show)
+
+tag v1.0.0-rc1
+Tagger:     Deelip17 <deelip17@gmail.com>
+TaggerDate: Sun Nov 15 23:00:50 2026 -0500
+
+Release candidate 1: full pipeline, dashboard, evaluation harness, deployment pack (Unit 6)
+
+commit 86a60954056f529c73c13a0b4065e5d641467571
+Author:     Deelip17 <deelip17@gmail.com>
+AuthorDate: Sun Nov 15 22:51:15 2026 -0500
+Commit:     Deelip17 <deelip17@gmail.com>
+CommitDate: Sun Nov 15 22:51:15 2026 -0500
+
+    Release 1.0.0-rc1: package version, changelog section, NFR references in the deployment pack

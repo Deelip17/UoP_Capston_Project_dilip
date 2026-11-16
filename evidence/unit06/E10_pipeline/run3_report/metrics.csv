@@ -1,0 +1,11 @@
+key,label,value,unit,basis,provider
+pass_rate,Pass rate,0.5555555555555556,ratio,passed tests over executed tests (skipped tests excluded),mock
+requirement_coverage_ratio,Requirement coverage,0.9,ratio,requirements with at least one approved test case over all requirements,mock
+script_executability_rate,Script executability,1.0,ratio,scripts whose test ran to a pass or a fail (no error) over scripts generated,mock
+healing_success_rate,Healing success rate,0.05,ratio,steps with a proposed locator over steps that asked for healing,mock
+classification_accuracy,Classification accuracy,,ratio,failures whose category equals the supplied label over labelled failures,mock
+generation_latency_ms_median,Generation latency (median),772.624299992458,ms,"analyze and generate steps of the three generation components, LLM time included",mock
+llm_latency_ms_median,LLM call latency (median),2.4050500069279224,ms,"gateway calls to the provider (mock or live, see the provider label)",mock
+non_llm_latency_ms_p95,Non-LLM latency (p95),,ms,"report rendering samples, nearest-rank 95th percentile",mock
+api_cost_usd,API cost,0.0,usd,sum of token costs of the runs involved (zero for the mock provider),mock
+api_cost_usd_per_run,API cost per run,0.0,usd,API cost divided by the 2 run(s) involved,mock

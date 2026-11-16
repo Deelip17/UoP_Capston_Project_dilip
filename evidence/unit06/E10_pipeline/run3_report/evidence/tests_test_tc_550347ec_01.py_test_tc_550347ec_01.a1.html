@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<title>Demo Shop - Basket</title>
+<style>body{font-family:Arial,sans-serif;max-width:640px;margin:2rem auto;color:#222}nav{margin-bottom:1rem}.btn{padding:.4rem .9rem;background:#1b5e9b;color:#fff;border:0;border-radius:4px;cursor:pointer}.field{display:block;margin:.3rem 0 1rem;padding:.4rem;width:18rem}.error{color:#b00020}li{margin:.6rem 0}</style>
+</head>
+<body>
+<h1>Your cart</h1>
+<ul>
+<li><span class="name">Backpack</span> <span class="price">$39.00</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="backpack" style=""><button id="remove-backpack" class="btn btn-remove" data-qa="remove-bp" type="submit">Remove Backpack</button></form></li>
+<li><span class="name">Desk Lamp</span> <span class="price">$24.50</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="lamp" style=""><button id="remove-lamp" class="btn btn-remove-lamp" data-qa="remove-lamp" type="submit">Remove Desk Lamp</button></form></li>
+<li><span class="name">Notebook</span> <span class="price">$6.90</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="notebook" style=""><button id="remove-notebook" class="btn btn-remove-notebook" data-qa="remove-notebook" type="submit">Remove Notebook</button></form></li>
+<li><span class="name">Backpack</span> <span class="price">$39.00</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="backpack" style=""><button id="remove-backpack" class="btn btn-remove" data-qa="remove-bp" type="submit">Remove Backpack</button></form></li>
+<li><span class="name">Desk Lamp</span> <span class="price">$24.50</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="lamp" style=""><button id="remove-lamp" class="btn btn-remove-lamp" data-qa="remove-lamp" type="submit">Remove Desk Lamp</button></form></li>
+<li><span class="name">Notebook</span> <span class="price">$6.90</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="notebook" style=""><button id="remove-notebook" class="btn btn-remove-notebook" data-qa="remove-notebook" type="submit">Remove Notebook</button></form></li>
+<li><span class="name">Backpack</span> <span class="price">$39.00</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="backpack" style=""><button id="remove-backpack" class="btn btn-remove" data-qa="remove-bp" type="submit">Remove Backpack</button></form></li>
+<li><span class="name">Desk Lamp</span> <span class="price">$24.50</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="lamp" style=""><button id="remove-lamp" class="btn btn-remove-lamp" data-qa="remove-lamp" type="submit">Remove Desk Lamp</button></form></li>
+<li><span class="name">Notebook</span> <span class="price">$6.90</span>
+<form method="post" action="/cart/remove" style="display:inline"><input type="hidden" name="sku" value="notebook" style=""><button id="remove-notebook" class="btn btn-remove-notebook" data-qa="remove-notebook" type="submit">Remove Notebook</button></form></li>
+</ul>
+<form method="get" action="/checkout"><button id="checkout-button" class="btn btn-checkout" data-qa="go-checkout" type="submit">Proceed to checkout</button></form>
+
+
+</body></html>

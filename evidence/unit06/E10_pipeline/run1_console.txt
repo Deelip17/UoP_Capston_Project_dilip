@@ -1,0 +1,371 @@
+
+== analyze
+run 4ef7d05c88624b1885c0e61093d9f86f (mock-generated output, review before use)
+READY    REQ-019BAFBA  High    shop_requirements.md#1
+READY    REQ-9881818E  High    shop_requirements.md#2
+READY    REQ-36E92D70  High    shop_requirements.md#3
+READY    REQ-BB99F1B7  Medium  shop_requirements.md#4
+READY    REQ-E95ED90D  Low     shop_requirements.md#5
+READY    REQ-215A6FB0  Medium  shop_requirements.md#6
+READY    REQ-B63F4FBB  Medium  shop_requirements.md#8
+READY    REQ-AB096D5B  Medium  shop_requirements.md#9
+READY    REQ-D2433ADB  Medium  shop_requirements.md#10
+READY    REQ-5B2846AE  Medium  shop_requirements.md#11
+READY    REQ-3779D5EE  High    shop_requirements.md#12
+READY    REQ-458CCB5E  High    shop_requirements.md#13
+READY    REQ-786DC9DA  High    shop_requirements.md#14
+READY    REQ-1C7A3D37  High    shop_requirements.md#15
+READY    REQ-C3BFFA7E  High    shop_requirements.md#16
+READY    REQ-550347EC  High    shop_requirements.md#17
+READY    REQ-1542276C  Medium  shop_requirements.md#19
+READY    REQ-4C589A83  Low     shop_requirements.md#20
+FLAGGED  REQ-63C0E2FE  Low     shop_requirements.md#7
+           - vague wording: 'easy'
+FLAGGED  REQ-5826BFE9  High    shop_requirements.md#18
+           - vague wording: 'fast'
+summary: 18 ready, 2 flagged, 0 rejected
+
+== generate
+run 4ef7d05c88624b1885c0e61093d9f86f (mock-generated output, review before use)
+TC-019BAFBA-01  M  Pending   Verify that a system can allow a registered customer to log in with an email address and a password
+TC-019BAFBA-02  M  Pending   Reject invalid input when a system tries to allow a registered customer to log in with an email address and a password
+TC-019BAFBA-03  M  Pending   Check boundary values when a system tries to allow a registered customer to log in with an email address and a password
+TC-9881818E-01  M  Pending   Verify that a system can show the message "Invalid email or password" and keep the product list closed when the credentials are wrong
+TC-9881818E-02  M  Pending   Reject invalid input when a system tries to show the message "Invalid email or password" and keep the product list closed when the credentials are wrong
+TC-9881818E-03  M  Pending   Check boundary values when a system tries to show the message "Invalid email or password" and keep the product list closed when the credentials are wrong
+TC-36E92D70-01  M  Pending   Verify that a system can not show the product list, the cart or the checkout page to a visitor who is not logged in
+TC-36E92D70-02  M  Pending   Reject invalid input when a system tries to not show the product list, the cart or the checkout page to a visitor who is not logged in
+TC-36E92D70-03  M  Pending   Check boundary values when a system tries to not show the product list, the cart or the checkout page to a visitor who is not logged in
+TC-BB99F1B7-01  S  Pending   Verify that a system can show a product list in which every product has a name and a price in dollars
+TC-BB99F1B7-02  S  Pending   Reject invalid input when a system tries to show a product list in which every product has a name and a price in dollars
+TC-BB99F1B7-03  S  Pending   Check boundary values when a system tries to show a product list in which every product has a name and a price in dollars
+TC-E95ED90D-01  C  Pending   Verify that a system can show exactly three products: Backpack, Desk Lamp and Notebook
+TC-E95ED90D-02  C  Pending   Reject invalid input when a system tries to show exactly three products: Backpack, Desk Lamp and Notebook
+TC-E95ED90D-03  C  Pending   Check boundary values when a system tries to show exactly three products: Backpack, Desk Lamp and Notebook
+TC-215A6FB0-01  S  Pending   Verify that a user can The product list shall contain an add button for every product
+TC-215A6FB0-02  S  Pending   Reject invalid input when a user tries to The product list shall contain an add button for every product
+TC-215A6FB0-03  S  Pending   Check boundary values when a user tries to The product list shall contain an add button for every product
+TC-B63F4FBB-01  S  Pending   Verify that a system can add a product to the cart when the customer selects its add button
+TC-B63F4FBB-02  S  Pending   Reject invalid input when a system tries to add a product to the cart when the customer selects its add button
+TC-B63F4FBB-03  S  Pending   Check boundary values when a system tries to add a product to the cart when the customer selects its add button
+TC-AB096D5B-01  S  Pending   Verify that a system can show each product in the cart with its name and price
+TC-AB096D5B-02  S  Pending   Reject invalid input when a system tries to show each product in the cart with its name and price
+TC-AB096D5B-03  S  Pending   Check boundary values when a system tries to show each product in the cart with its name and price
+TC-D2433ADB-01  S  Pending   Verify that a system can remove a product from the cart when the customer selects its remove button
+TC-D2433ADB-02  S  Pending   Reject invalid input when a system tries to remove a product from the cart when the customer selects its remove button
+TC-D2433ADB-03  S  Pending   Check boundary values when a system tries to remove a product from the cart when the customer selects its remove button
+TC-5B2846AE-01  S  Pending   Verify that a system can show the message "Your cart is empty" when the cart holds no products
+TC-5B2846AE-02  S  Pending   Reject invalid input when a system tries to show the message "Your cart is empty" when the cart holds no products
+TC-5B2846AE-03  S  Pending   Check boundary values when a system tries to show the message "Your cart is empty" when the cart holds no products
+TC-3779D5EE-01  M  Pending   Verify that a system can provide a checkout button in a cart that holds at least one product
+TC-3779D5EE-02  M  Pending   Reject invalid input when a system tries to provide a checkout button in a cart that holds at least one product
+TC-3779D5EE-03  M  Pending   Check boundary values when a system tries to provide a checkout button in a cart that holds at least one product
+TC-458CCB5E-01  M  Pending   Verify that a system can require a full name before an order can be placed
+TC-458CCB5E-02  M  Pending   Reject invalid input when a system tries to require a full name before an order can be placed
+TC-458CCB5E-03  M  Pending   Check boundary values when a system tries to require a full name before an order can be placed
+TC-786DC9DA-01  M  Pending   Verify that a system can refuse an order when the full name is longer than 80 characters
+TC-786DC9DA-02  M  Pending   Reject invalid input when a system tries to refuse an order when the full name is longer than 80 characters
+TC-786DC9DA-03  M  Pending   Check boundary values when a system tries to refuse an order when the full name is longer than 80 characters
+TC-1C7A3D37-01  M  Pending   Verify that a system can refuse an order when the cart is empty
+TC-1C7A3D37-02  M  Pending   Reject invalid input when a system tries to refuse an order when the cart is empty
+TC-1C7A3D37-03  M  Pending   Check boundary values when a system tries to refuse an order when the cart is empty
+TC-C3BFFA7E-01  M  Pending   Verify that a system can show a confirmation message after a successful order
+TC-C3BFFA7E-02  M  Pending   Reject invalid input when a system tries to show a confirmation message after a successful order
+TC-C3BFFA7E-03  M  Pending   Check boundary values when a system tries to show a confirmation message after a successful order
+TC-550347EC-01  M  Pending   Verify that a system can empty the cart after an order is placed
+TC-550347EC-02  M  Pending   Reject invalid input when a system tries to empty the cart after an order is placed
+TC-550347EC-03  M  Pending   Check boundary values when a system tries to empty the cart after an order is placed
+TC-1542276C-01  S  Pending   Verify that a system can provide a link back to the product list on the confirmation page
+TC-1542276C-02  S  Pending   Reject invalid input when a system tries to provide a link back to the product list on the confirmation page
+TC-1542276C-03  S  Pending   Check boundary values when a system tries to provide a link back to the product list on the confirmation page
+TC-4C589A83-01  C  Pending   Verify that a system can refuse a request to add a product that is not in the catalogue
+TC-4C589A83-02  C  Pending   Reject invalid input when a system tries to refuse a request to add a product that is not in the catalogue
+TC-4C589A83-03  C  Pending   Check boundary values when a system tries to refuse a request to add a product that is not in the catalogue
+SKIPPED  REQ-63C0E2FE: flagged as ambiguous; clarify before generation
+SKIPPED  REQ-5826BFE9: flagged as ambiguous; clarify before generation
+summary: 54 test cases, 54 scenarios, 2 skipped, 0 duplicates removed, 0 data values replaced, 0 coverage gaps
+all new cases are Pending; approve with: aitaf review --approve TC_ID
+
+approval: 54 test case(s) approved automatically (--approve-all)
+
+== script
+run 4ef7d05c88624b1885c0e61093d9f86f (mock-generated output, review before use)
+SCR-TC-019BAFBA-01  tests/test_tc_019bafba_01.py
+SCR-TC-019BAFBA-02  tests/test_tc_019bafba_02.py
+SCR-TC-019BAFBA-03  tests/test_tc_019bafba_03.py
+SCR-TC-9881818E-01  tests/test_tc_9881818e_01.py
+SCR-TC-9881818E-02  tests/test_tc_9881818e_02.py
+SCR-TC-9881818E-03  tests/test_tc_9881818e_03.py
+SCR-TC-36E92D70-01  tests/test_tc_36e92d70_01.py
+SCR-TC-36E92D70-02  tests/test_tc_36e92d70_02.py
+SCR-TC-36E92D70-03  tests/test_tc_36e92d70_03.py
+SCR-TC-BB99F1B7-01  tests/test_tc_bb99f1b7_01.py
+SCR-TC-BB99F1B7-02  tests/test_tc_bb99f1b7_02.py
+SCR-TC-BB99F1B7-03  tests/test_tc_bb99f1b7_03.py
+SCR-TC-E95ED90D-01  tests/test_tc_e95ed90d_01.py
+SCR-TC-E95ED90D-02  tests/test_tc_e95ed90d_02.py
+SCR-TC-E95ED90D-03  tests/test_tc_e95ed90d_03.py
+SCR-TC-215A6FB0-01  tests/test_tc_215a6fb0_01.py
+SCR-TC-215A6FB0-02  tests/test_tc_215a6fb0_02.py
+SCR-TC-215A6FB0-03  tests/test_tc_215a6fb0_03.py
+SCR-TC-B63F4FBB-01  tests/test_tc_b63f4fbb_01.py
+SCR-TC-B63F4FBB-02  tests/test_tc_b63f4fbb_02.py
+SCR-TC-B63F4FBB-03  tests/test_tc_b63f4fbb_03.py
+SCR-TC-AB096D5B-01  tests/test_tc_ab096d5b_01.py
+SCR-TC-AB096D5B-02  tests/test_tc_ab096d5b_02.py
+SCR-TC-AB096D5B-03  tests/test_tc_ab096d5b_03.py
+SCR-TC-D2433ADB-01  tests/test_tc_d2433adb_01.py
+SCR-TC-D2433ADB-02  tests/test_tc_d2433adb_02.py
+SCR-TC-D2433ADB-03  tests/test_tc_d2433adb_03.py
+SCR-TC-5B2846AE-01  tests/test_tc_5b2846ae_01.py
+SCR-TC-5B2846AE-02  tests/test_tc_5b2846ae_02.py
+SCR-TC-5B2846AE-03  tests/test_tc_5b2846ae_03.py
+SCR-TC-3779D5EE-01  tests/test_tc_3779d5ee_01.py
+SCR-TC-3779D5EE-02  tests/test_tc_3779d5ee_02.py
+SCR-TC-3779D5EE-03  tests/test_tc_3779d5ee_03.py
+SCR-TC-458CCB5E-01  tests/test_tc_458ccb5e_01.py
+SCR-TC-458CCB5E-02  tests/test_tc_458ccb5e_02.py
+SCR-TC-458CCB5E-03  tests/test_tc_458ccb5e_03.py
+SCR-TC-786DC9DA-01  tests/test_tc_786dc9da_01.py
+SCR-TC-786DC9DA-02  tests/test_tc_786dc9da_02.py
+SCR-TC-786DC9DA-03  tests/test_tc_786dc9da_03.py
+SCR-TC-1C7A3D37-01  tests/test_tc_1c7a3d37_01.py
+SCR-TC-1C7A3D37-02  tests/test_tc_1c7a3d37_02.py
+SCR-TC-1C7A3D37-03  tests/test_tc_1c7a3d37_03.py
+SCR-TC-C3BFFA7E-01  tests/test_tc_c3bffa7e_01.py
+SCR-TC-C3BFFA7E-02  tests/test_tc_c3bffa7e_02.py
+SCR-TC-C3BFFA7E-03  tests/test_tc_c3bffa7e_03.py
+SCR-TC-550347EC-01  tests/test_tc_550347ec_01.py
+SCR-TC-550347EC-02  tests/test_tc_550347ec_02.py
+SCR-TC-550347EC-03  tests/test_tc_550347ec_03.py
+SCR-TC-1542276C-01  tests/test_tc_1542276c_01.py
+SCR-TC-1542276C-02  tests/test_tc_1542276c_02.py
+SCR-TC-1542276C-03  tests/test_tc_1542276c_03.py
+SCR-TC-4C589A83-01  tests/test_tc_4c589a83_01.py
+SCR-TC-4C589A83-02  tests/test_tc_4c589a83_02.py
+SCR-TC-4C589A83-03  tests/test_tc_4c589a83_03.py
+summary: 54 scripts written (playwright), 0 rejected, 12 locators, static validation passed for every saved file
+run them with: pytest reports\_ev\r1\scripts --base-url http://127.0.0.1:59251
+
+== execute
+run e3ecdecf17ad49589e00348228641c82 (playwright headless, python 3.12.10, Windows 11, workers 1, timeout 5000 ms, retries 0)
+PASSED   TC-019BAFBA-01  274 ms  attempts=1
+PASSED   TC-019BAFBA-02  211 ms  attempts=1
+PASSED   TC-019BAFBA-03  195 ms  attempts=1
+PASSED   TC-1542276C-01  477 ms  attempts=1
+PASSED   TC-1542276C-02  476 ms  attempts=1
+PASSED   TC-1542276C-03  481 ms  attempts=1
+FAILED   TC-1C7A3D37-01  261 ms  attempts=1  screenshot=tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.png
+FAILED   TC-1C7A3D37-02  248 ms  attempts=1  screenshot=tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.png
+FAILED   TC-1C7A3D37-03  241 ms  attempts=1  screenshot=tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.png
+FAILED   TC-215A6FB0-01  435 ms  attempts=1  screenshot=tests_test_tc_215a6fb0_01.py_test_tc_215a6fb0_01.a1.png
+FAILED   TC-215A6FB0-02  422 ms  attempts=1  screenshot=tests_test_tc_215a6fb0_02.py_test_tc_215a6fb0_02.a1.png
+FAILED   TC-215A6FB0-03  407 ms  attempts=1  screenshot=tests_test_tc_215a6fb0_03.py_test_tc_215a6fb0_03.a1.png
+FAILED   TC-36E92D70-01  258 ms  attempts=1  screenshot=tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.png
+FAILED   TC-36E92D70-02  236 ms  attempts=1  screenshot=tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.png
+FAILED   TC-36E92D70-03  239 ms  attempts=1  screenshot=tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.png
+FAILED   TC-3779D5EE-01  235 ms  attempts=1  screenshot=tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.png
+FAILED   TC-3779D5EE-02  239 ms  attempts=1  screenshot=tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.png
+FAILED   TC-3779D5EE-03  236 ms  attempts=1  screenshot=tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.png
+PASSED   TC-458CCB5E-01  475 ms  attempts=1
+PASSED   TC-458CCB5E-02  496 ms  attempts=1
+PASSED   TC-458CCB5E-03  486 ms  attempts=1
+FAILED   TC-4C589A83-01  417 ms  attempts=1  screenshot=tests_test_tc_4c589a83_01.py_test_tc_4c589a83_01.a1.png
+FAILED   TC-4C589A83-02  395 ms  attempts=1  screenshot=tests_test_tc_4c589a83_02.py_test_tc_4c589a83_02.a1.png
+FAILED   TC-4C589A83-03  411 ms  attempts=1  screenshot=tests_test_tc_4c589a83_03.py_test_tc_4c589a83_03.a1.png
+FAILED   TC-550347EC-01  234 ms  attempts=1  screenshot=tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.png
+FAILED   TC-550347EC-02  245 ms  attempts=1  screenshot=tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.png
+FAILED   TC-550347EC-03  285 ms  attempts=1  screenshot=tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.png
+FAILED   TC-5B2846AE-01  245 ms  attempts=1  screenshot=tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.png
+FAILED   TC-5B2846AE-02  238 ms  attempts=1  screenshot=tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.png
+FAILED   TC-5B2846AE-03  249 ms  attempts=1  screenshot=tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.png
+PASSED   TC-786DC9DA-01  493 ms  attempts=1
+PASSED   TC-786DC9DA-02  487 ms  attempts=1
+PASSED   TC-786DC9DA-03  582 ms  attempts=1
+PASSED   TC-9881818E-01  80 ms  attempts=1
+PASSED   TC-9881818E-02  80 ms  attempts=1
+PASSED   TC-9881818E-03  79 ms  attempts=1
+FAILED   TC-AB096D5B-01  245 ms  attempts=1  screenshot=tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.png
+FAILED   TC-AB096D5B-02  230 ms  attempts=1  screenshot=tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.png
+FAILED   TC-AB096D5B-03  234 ms  attempts=1  screenshot=tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.png
+FAILED   TC-B63F4FBB-01  222 ms  attempts=1  screenshot=tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.png
+FAILED   TC-B63F4FBB-02  233 ms  attempts=1  screenshot=tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.png
+FAILED   TC-B63F4FBB-03  240 ms  attempts=1  screenshot=tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.png
+PASSED   TC-BB99F1B7-01  415 ms  attempts=1
+PASSED   TC-BB99F1B7-02  430 ms  attempts=1
+PASSED   TC-BB99F1B7-03  391 ms  attempts=1
+PASSED   TC-C3BFFA7E-01  504 ms  attempts=1
+PASSED   TC-C3BFFA7E-02  485 ms  attempts=1
+PASSED   TC-C3BFFA7E-03  454 ms  attempts=1
+FAILED   TC-D2433ADB-01  234 ms  attempts=1  screenshot=tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.png
+FAILED   TC-D2433ADB-02  235 ms  attempts=1  screenshot=tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.png
+FAILED   TC-D2433ADB-03  241 ms  attempts=1  screenshot=tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.png
+FAILED   TC-E95ED90D-01  411 ms  attempts=1  screenshot=tests_test_tc_e95ed90d_01.py_test_tc_e95ed90d_01.a1.png
+FAILED   TC-E95ED90D-02  380 ms  attempts=1  screenshot=tests_test_tc_e95ed90d_02.py_test_tc_e95ed90d_02.a1.png
+FAILED   TC-E95ED90D-03  414 ms  attempts=1  screenshot=tests_test_tc_e95ed90d_03.py_test_tc_e95ed90d_03.a1.png
+summary: 21 passed, 33 failed, 0 errors, 0 skipped; evidence in <repo>\repos\UoP_Capston_Project_dilip\reports\_ev\r1\runs\e3ecdecf17ad49589e00348228641c82
+
+== diagnose
+run e3ecdecf17ad49589e00348228641c82 (mock-generated output, review before use)
+TC-1C7A3D37-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:89bf1c39c24f456a9e57a25dec148c86, screenshot:tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.png, dom:tests_test_tc_1c7a3d37_01.py_test_tc_1c7a3d37_01.a1.html
+TC-1C7A3D37-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:3914e8cfc688431cb97318f1c912b746, screenshot:tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.png, dom:tests_test_tc_1c7a3d37_02.py_test_tc_1c7a3d37_02.a1.html
+TC-1C7A3D37-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:710359bb69794d86a4ce0b03a75a3b0c, screenshot:tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.png, dom:tests_test_tc_1c7a3d37_03.py_test_tc_1c7a3d37_03.a1.html
+TC-215A6FB0-01  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:91b19d823de24932b97d4f08b40adc35, screenshot:tests_test_tc_215a6fb0_01.py_test_tc_215a6fb0_01.a1.png, dom:tests_test_tc_215a6fb0_01.py_test_tc_215a6fb0_01.a1.html
+TC-215A6FB0-02  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:0176222236354930826ac070772a9efd, screenshot:tests_test_tc_215a6fb0_02.py_test_tc_215a6fb0_02.a1.png, dom:tests_test_tc_215a6fb0_02.py_test_tc_215a6fb0_02.a1.html
+TC-215A6FB0-03  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:ab06f191177742c2ba010b180f546b13, screenshot:tests_test_tc_215a6fb0_03.py_test_tc_215a6fb0_03.a1.png, dom:tests_test_tc_215a6fb0_03.py_test_tc_215a6fb0_03.a1.html
+TC-36E92D70-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:be2d0a3213e148d3ac910e14b574cc9b, screenshot:tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.png, dom:tests_test_tc_36e92d70_01.py_test_tc_36e92d70_01.a1.html
+TC-36E92D70-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:00dc5440ff15447fa6fd2d80c7d509aa, screenshot:tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.png, dom:tests_test_tc_36e92d70_02.py_test_tc_36e92d70_02.a1.html
+TC-36E92D70-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:2cd4e439617e46b5a966d69b6a12763f, screenshot:tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.png, dom:tests_test_tc_36e92d70_03.py_test_tc_36e92d70_03.a1.html
+TC-3779D5EE-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:2944afae4769477b87f12173182823d3, screenshot:tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.png, dom:tests_test_tc_3779d5ee_01.py_test_tc_3779d5ee_01.a1.html
+TC-3779D5EE-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:ec8f48f14377454593da83a762246b23, screenshot:tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.png, dom:tests_test_tc_3779d5ee_02.py_test_tc_3779d5ee_02.a1.html
+TC-3779D5EE-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:3723a9e5c5a24b34bbf26109a66f4b38, screenshot:tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.png, dom:tests_test_tc_3779d5ee_03.py_test_tc_3779d5ee_03.a1.html
+TC-4C589A83-01  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:8bf33ce0a17c41fbae04b7d29671115f, screenshot:tests_test_tc_4c589a83_01.py_test_tc_4c589a83_01.a1.png, dom:tests_test_tc_4c589a83_01.py_test_tc_4c589a83_01.a1.html
+TC-4C589A83-02  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:4a7cacf558ec4b47a6bd88637a0f4ba4, screenshot:tests_test_tc_4c589a83_02.py_test_tc_4c589a83_02.a1.png, dom:tests_test_tc_4c589a83_02.py_test_tc_4c589a83_02.a1.html
+TC-4C589A83-03  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:abffb5f9351641a494cd46d23a340c6d, screenshot:tests_test_tc_4c589a83_03.py_test_tc_4c589a83_03.a1.png, dom:tests_test_tc_4c589a83_03.py_test_tc_4c589a83_03.a1.html
+TC-550347EC-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:bd19597ebbe54132b8ac190ce39d5914, screenshot:tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.png, dom:tests_test_tc_550347ec_01.py_test_tc_550347ec_01.a1.html
+TC-550347EC-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:554fb7845c404d6589ab49408f7dca2a, screenshot:tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.png, dom:tests_test_tc_550347ec_02.py_test_tc_550347ec_02.a1.html
+TC-550347EC-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:81a97b2228c744c2a4330a061add767a, screenshot:tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.png, dom:tests_test_tc_550347ec_03.py_test_tc_550347ec_03.a1.html
+TC-5B2846AE-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:9548e1725544461cb8e903bb03061221, screenshot:tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.png, dom:tests_test_tc_5b2846ae_01.py_test_tc_5b2846ae_01.a1.html
+TC-5B2846AE-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:8bc72e4184d24486a1697d636827778d, screenshot:tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.png, dom:tests_test_tc_5b2846ae_02.py_test_tc_5b2846ae_02.a1.html
+TC-5B2846AE-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:c9391f77f84643758993f61529491c26, screenshot:tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.png, dom:tests_test_tc_5b2846ae_03.py_test_tc_5b2846ae_03.a1.html
+TC-AB096D5B-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:13402786ed35473cbfad3b4293608a43, screenshot:tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.png, dom:tests_test_tc_ab096d5b_01.py_test_tc_ab096d5b_01.a1.html
+TC-AB096D5B-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:cd845f45c77c4aa8b1e34acd5bdce076, screenshot:tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.png, dom:tests_test_tc_ab096d5b_02.py_test_tc_ab096d5b_02.a1.html
+TC-AB096D5B-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:a5821bb2e23b488884ba71d9a3b03b21, screenshot:tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.png, dom:tests_test_tc_ab096d5b_03.py_test_tc_ab096d5b_03.a1.html
+TC-B63F4FBB-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:fc0a368b45b048cba98f0bceab7eadef, screenshot:tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.png, dom:tests_test_tc_b63f4fbb_01.py_test_tc_b63f4fbb_01.a1.html
+TC-B63F4FBB-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:9a4d18d9a74b441b8cf2e12edf48eb03, screenshot:tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.png, dom:tests_test_tc_b63f4fbb_02.py_test_tc_b63f4fbb_02.a1.html
+TC-B63F4FBB-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:af598af9fa3141f0931ee4b10c59fd68, screenshot:tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.png, dom:tests_test_tc_b63f4fbb_03.py_test_tc_b63f4fbb_03.a1.html
+TC-D2433ADB-01  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:b9d77e0ef1eb4d71912c2b6fca3406f8, screenshot:tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.png, dom:tests_test_tc_d2433adb_01.py_test_tc_d2433adb_01.a1.html
+TC-D2433ADB-02  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:4299022922104110a98d58cc8bf1e52a, screenshot:tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.png, dom:tests_test_tc_d2433adb_02.py_test_tc_d2433adb_02.a1.html
+TC-D2433ADB-03  locator           conf=0.90  CL-95c25919  [rules]
+    cause: The element 'add_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:2272d8600bb94ec795429cc051888702, screenshot:tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.png, dom:tests_test_tc_d2433adb_03.py_test_tc_d2433adb_03.a1.html
+TC-E95ED90D-01  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:e9d6e49bd84c44e4922f674989891014, screenshot:tests_test_tc_e95ed90d_01.py_test_tc_e95ed90d_01.a1.png, dom:tests_test_tc_e95ed90d_01.py_test_tc_e95ed90d_01.a1.html
+TC-E95ED90D-02  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:05a1dd5bf5bb4cc8b47e1611c76e7b83, screenshot:tests_test_tc_e95ed90d_02.py_test_tc_e95ed90d_02.a1.png, dom:tests_test_tc_e95ed90d_02.py_test_tc_e95ed90d_02.a1.html
+TC-E95ED90D-03  locator           conf=0.90  CL-ecc45172  [rules]
+    cause: The element 'remove_backpack' on page 'shop' was not found: the stored locator no longer matches the page.
+    next: Run with --heal and review the proposed locator, or update the locator in the page object; if the element was removed on purpose, update the test.
+    evidence: log:bdbfe62cac4e432e80e14838f6b594dc, screenshot:tests_test_tc_e95ed90d_03.py_test_tc_e95ed90d_03.a1.png, dom:tests_test_tc_e95ed90d_03.py_test_tc_e95ed90d_03.a1.html
+summary: 33 failures analysed in 2 cluster(s); locator=33; 0 model call(s)
+
+== report
+run e3ecdecf17ad49589e00348228641c82 (provider: mock)
+Tests: 54 (21 passed, 33 failed, 0 error, 0 skipped)
+Pass rate: 38.9%
+Requirement coverage: 90.0%
+Script executability: 100.0%
+Healing success rate: n/a
+Classification accuracy: n/a
+Generation latency (median): 714 ms
+LLM call latency (median): 2 ms
+Non-LLM latency (p95): n/a
+API cost: $0.0000
+API cost per run: $0.0000
+wrote reports\_ev\r1\runs\e3ecdecf17ad49589e00348228641c82\report.html
+wrote reports\_ev\r1\runs\e3ecdecf17ad49589e00348228641c82\report.md
+wrote reports\_ev\r1\runs\e3ecdecf17ad49589e00348228641c82\metrics.json
+wrote reports\_ev\r1\runs\e3ecdecf17ad49589e00348228641c82\metrics.csv
+
+== dashboard
+1 run(s) with results
+the trend needs at least 3 runs
+wrote reports\_ev\r1\dashboard\dashboard.html
+wrote reports\_ev\r1\dashboard\dashboard.csv
+wrote reports\_ev\r1\dashboard\charts\pass_rate_trend.png
+wrote reports\_ev\r1\dashboard\charts\quality_trend.png
+wrote reports\_ev\r1\dashboard\charts\cost_and_latency.png
+
+pipeline finished; output in reports\_ev\r1

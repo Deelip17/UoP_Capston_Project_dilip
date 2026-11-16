@@ -1,0 +1,1042 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="33" skipped="0" tests="54" time="101.955" timestamp="2026-11-15T23:14:49.394788-05:00" hostname="LUS-5CG4363BTN"><testcase classname="tests.test_tc_019bafba_01" name="test_tc_019bafba_01" time="7.825" /><testcase classname="tests.test_tc_019bafba_02" name="test_tc_019bafba_02" time="2.143" /><testcase classname="tests.test_tc_019bafba_03" name="test_tc_019bafba_03" time="1.864" /><testcase classname="tests.test_tc_1542276c_01" name="test_tc_1542276c_01" time="1.932" /><testcase classname="tests.test_tc_1542276c_02" name="test_tc_1542276c_02" time="2.080" /><testcase classname="tests.test_tc_1542276c_03" name="test_tc_1542276c_03" time="2.141" /><testcase classname="tests.test_tc_1c7a3d37_01" name="test_tc_1c7a3d37_01" time="1.643"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_1c7a3d37_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_1c7a3d37_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231474A6450&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_1c7a3d37_02" name="test_tc_1c7a3d37_02" time="1.605"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_1c7a3d37_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_1c7a3d37_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147346C60&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_1c7a3d37_03" name="test_tc_1c7a3d37_03" time="1.906"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_1c7a3d37_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_1c7a3d37_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147526030&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_215a6fb0_01" name="test_tc_215a6fb0_01" time="1.725"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_215a6fb0_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_215a6fb0_01.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147256780&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_215a6fb0_02" name="test_tc_215a6fb0_02" time="1.667"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_215a6fb0_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_215a6fb0_02.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231475AB500&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_215a6fb0_03" name="test_tc_215a6fb0_03" time="1.758"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_215a6fb0_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_215a6fb0_03.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314762DF40&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_36e92d70_01" name="test_tc_36e92d70_01" time="1.688"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_36e92d70_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_36e92d70_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147524650&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_36e92d70_02" name="test_tc_36e92d70_02" time="1.614"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_36e92d70_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_36e92d70_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147346E10&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_36e92d70_03" name="test_tc_36e92d70_03" time="1.632"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_36e92d70_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_36e92d70_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314736FD40&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_3779d5ee_01" name="test_tc_3779d5ee_01" time="1.615"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_3779d5ee_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_3779d5ee_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314760CBC0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_3779d5ee_02" name="test_tc_3779d5ee_02" time="1.556"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_3779d5ee_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_3779d5ee_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147799700&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_3779d5ee_03" name="test_tc_3779d5ee_03" time="1.557"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_3779d5ee_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_3779d5ee_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231475A9C10&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_458ccb5e_01" name="test_tc_458ccb5e_01" time="1.746" /><testcase classname="tests.test_tc_458ccb5e_02" name="test_tc_458ccb5e_02" time="1.783" /><testcase classname="tests.test_tc_458ccb5e_03" name="test_tc_458ccb5e_03" time="1.768" /><testcase classname="tests.test_tc_4c589a83_01" name="test_tc_4c589a83_01" time="1.712"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_4c589a83_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_4c589a83_01.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314762E480&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_4c589a83_02" name="test_tc_4c589a83_02" time="1.823"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_4c589a83_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_4c589a83_02.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314736FB30&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_4c589a83_03" name="test_tc_4c589a83_03" time="1.768"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_4c589a83_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_4c589a83_03.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314744EC00&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_550347ec_01" name="test_tc_550347ec_01" time="1.591"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_550347ec_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_550347ec_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231475A9C70&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_550347ec_02" name="test_tc_550347ec_02" time="1.606"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_550347ec_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_550347ec_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314744F980&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_550347ec_03" name="test_tc_550347ec_03" time="1.631"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_550347ec_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_550347ec_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231477997F0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_5b2846ae_01" name="test_tc_5b2846ae_01" time="1.562"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_5b2846ae_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_5b2846ae_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231474A6ED0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_5b2846ae_02" name="test_tc_5b2846ae_02" time="1.556"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_5b2846ae_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_5b2846ae_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314760C3B0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_5b2846ae_03" name="test_tc_5b2846ae_03" time="1.536"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_5b2846ae_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_5b2846ae_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231477C57F0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_786dc9da_01" name="test_tc_786dc9da_01" time="1.754" /><testcase classname="tests.test_tc_786dc9da_02" name="test_tc_786dc9da_02" time="1.737" /><testcase classname="tests.test_tc_786dc9da_03" name="test_tc_786dc9da_03" time="1.837" /><testcase classname="tests.test_tc_9881818e_01" name="test_tc_9881818e_01" time="1.352" /><testcase classname="tests.test_tc_9881818e_02" name="test_tc_9881818e_02" time="1.398" /><testcase classname="tests.test_tc_9881818e_03" name="test_tc_9881818e_03" time="1.343" /><testcase classname="tests.test_tc_ab096d5b_01" name="test_tc_ab096d5b_01" time="1.661"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_ab096d5b_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_ab096d5b_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314760D4C0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_ab096d5b_02" name="test_tc_ab096d5b_02" time="1.593"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_ab096d5b_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_ab096d5b_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231477C5CD0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_ab096d5b_03" name="test_tc_ab096d5b_03" time="1.629"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_ab096d5b_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_ab096d5b_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231473CABD0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_b63f4fbb_01" name="test_tc_b63f4fbb_01" time="1.643"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_b63f4fbb_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_b63f4fbb_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314783B590&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_b63f4fbb_02" name="test_tc_b63f4fbb_02" time="1.554"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_b63f4fbb_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_b63f4fbb_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231478EEC00&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_b63f4fbb_03" name="test_tc_b63f4fbb_03" time="1.579"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_b63f4fbb_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_b63f4fbb_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231473CB7A0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_bb99f1b7_01" name="test_tc_bb99f1b7_01" time="1.749" /><testcase classname="tests.test_tc_bb99f1b7_02" name="test_tc_bb99f1b7_02" time="1.696" /><testcase classname="tests.test_tc_bb99f1b7_03" name="test_tc_bb99f1b7_03" time="1.685" /><testcase classname="tests.test_tc_c3bffa7e_01" name="test_tc_c3bffa7e_01" time="1.782" /><testcase classname="tests.test_tc_c3bffa7e_02" name="test_tc_c3bffa7e_02" time="1.826" /><testcase classname="tests.test_tc_c3bffa7e_03" name="test_tc_c3bffa7e_03" time="1.962" /><testcase classname="tests.test_tc_d2433adb_01" name="test_tc_d2433adb_01" time="1.684"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_d2433adb_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_d2433adb_01.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147346630&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_d2433adb_02" name="test_tc_d2433adb_02" time="1.578"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_d2433adb_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_d2433adb_02.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147659F10&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_d2433adb_03" name="test_tc_d2433adb_03" time="1.586"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_d2433adb_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('cart_link')
+&gt;       screen.click('add_backpack')
+
+tests\test_tc_d2433adb_03.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002314762DF70&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_e95ed90d_01" name="test_tc_e95ed90d_01" time="2.310"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_e95ed90d_01(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'demo.user@example.test')
+        screen.type('password', 'demo.user@example.test')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_e95ed90d_01.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x0000023147658E60&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_e95ed90d_02" name="test_tc_e95ed90d_02" time="1.725"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_e95ed90d_02(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'not-an-email')
+        screen.type('password', 'not-an-email')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_e95ed90d_02.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231478EDA60&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_tc_e95ed90d_03" name="test_tc_e95ed90d_03" time="1.734"><failure message="LookupError: no locator strategy matched for remove_backpack on page shop">page = &lt;Page url='http://127.0.0.1:55688/cart/add'&gt;
+base_url = 'http://127.0.0.1:55688'
+
+    def test_tc_e95ed90d_03(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+        screen.type('username', 'synthetic-value')
+        screen.type('password', 'synthetic-value')
+        screen.click('login_button')
+        screen.click('add_backpack')
+        screen.click('add_lamp')
+        screen.click('add_notebook')
+&gt;       screen.assert_visible('remove_backpack')
+
+tests\test_tc_e95ed90d_03.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x00000231478386B0&gt;
+name = 'remove_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for remove_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase></testsuite></testsuites>
