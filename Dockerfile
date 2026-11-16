@@ -12,6 +12,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /app
 
+# Playwright's bundled Node needs libatomic before it can install the browser's own packages
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libatomic1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Dependencies first so the layer is reused when only the source changes
 COPY requirements.txt requirements-report.txt ./
 RUN python -m pip install -r requirements.txt -r requirements-report.txt \
