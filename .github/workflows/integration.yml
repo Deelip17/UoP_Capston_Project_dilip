@@ -63,7 +63,12 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
       - name: Build the image (no push)
-        run: docker build -t aitaf:ci .
+        run: |
+          if ! docker build --progress=plain -t aitaf:ci . > build.log 2>&1; then
+            tail -n 40 build.log
+            echo "::error title=docker build failed::$(tail -n 12 build.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')"
+            exit 1
+          fi
       - name: Command line works inside the image
         run: docker run --rm aitaf:ci --help
       - name: Whole pipeline on the demo shop inside the container (mock provider)
