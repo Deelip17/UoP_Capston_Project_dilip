@@ -74,9 +74,14 @@ jobs:
       - name: Whole pipeline on the demo shop inside the container (mock provider)
         run: |
           mkdir -p out && chmod 777 out
-          docker run --rm --ipc=host -v "$PWD/out:/app/reports" aitaf:ci run \
+          if ! docker run --rm --ipc=host -v "$PWD/out:/app/reports" aitaf:ci run \
             --input data/requirements/shop_requirements.md --db reports/aitaf.db \
-            --out-dir reports/pipeline --demo-shop --approve-all
+            --out-dir reports/pipeline --demo-shop --approve-all > run.log 2>&1; then
+            tail -n 40 run.log
+            echo "::error title=pipeline in container failed::$(tail -n 14 run.log | cut -c1-300 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')"
+            exit 1
+          fi
+          tail -n 5 run.log
           test -f out/pipeline/dashboard/dashboard.html
       - name: Keep the output
         if: always()
