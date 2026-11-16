@@ -26,8 +26,9 @@ _LOOPBACK = frozenset({"127.0.0.1", "localhost"})
 
 
 class _State:
-    def __init__(self) -> None:
-        self.logged_in = False
+    def __init__(self, open_login: bool = False) -> None:
+        self.open_login = open_login
+        self.logged_in = open_login
         self.cart: list[str] = []
         self.lock = threading.Lock()
 
@@ -94,7 +95,9 @@ def _handler_for(state: _State, mutations: tuple[str, ...]) -> type[BaseHTTPRequ
                 return
             with state.lock:
                 if path == "/login":
-                    ok = form.get("username") == DEMO_USER and form.get("password") == DEMO_PASSWORD
+                    ok = state.open_login or (
+                        form.get("username") == DEMO_USER and form.get("password") == DEMO_PASSWORD
+                    )
                     state.logged_in = ok
                     if ok:
                         self._page("products")
@@ -140,14 +143,21 @@ class ShopServer:
     """Run the shop on a free loopback port; use as a context manager."""
 
     def __init__(
-        self, mutations: Iterable[str] = (), host: str = "127.0.0.1", port: int = 0
+        self,
+        mutations: Iterable[str] = (),
+        host: str = "127.0.0.1",
+        port: int = 0,
+        open_login: bool = False,
     ) -> None:
+        """``open_login`` accepts any credentials, like a test environment with sign-in
+        switched off, so a measurement of generated scripts does not depend on a password."""
         if host not in _LOOPBACK:
             raise ValueError("the sample shop only binds to the loopback address")
         self._mutations = tuple(mutations)
         for mutation_id in self._mutations:
             get_mutation(mutation_id)  # KeyError for an unknown mutation, before binding
         self._host = host
+        self._open_login = open_login
         self._requested_port = port
         self._httpd: ThreadingHTTPServer | None = None
         self._thread: threading.Thread | None = None
@@ -163,7 +173,7 @@ class ShopServer:
         return f"http://{self._host}:{self.port}"
 
     def start(self) -> None:
-        handler = _handler_for(_State(), self._mutations)
+        handler = _handler_for(_State(self._open_login), self._mutations)
         self._httpd = ThreadingHTTPServer((self._host, self._requested_port), handler)
         self._thread = threading.Thread(target=self._httpd.serve_forever, daemon=True)
         self._thread.start()

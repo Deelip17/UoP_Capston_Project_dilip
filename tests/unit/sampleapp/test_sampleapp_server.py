@@ -152,3 +152,21 @@ def test_server_stops_and_releases_the_port() -> None:
 @pytest.mark.whitebox
 def test_demo_credentials_are_synthetic() -> None:
     assert DEMO_USER.endswith("@example.com")
+
+
+@pytest.mark.blackbox
+def test_open_login_mode_accepts_any_credentials_and_opens_the_products_page() -> None:
+    with ShopServer(open_login=True) as shop:
+        status, html = get(f"{shop.url}/products")  # no login needed
+        assert status == 200 and "add-backpack" in ids_of(html)
+        _, after = post(f"{shop.url}/login", {"username": "anyone", "password": "x"})
+        assert "add-backpack" in ids_of(after)
+
+
+@pytest.mark.blackbox
+def test_default_mode_still_refuses_wrong_credentials() -> None:
+    with ShopServer() as shop:
+        _, html = post(f"{shop.url}/login", {"username": "anyone", "password": "x"})
+        assert "Invalid email or password" in html
+        _, products = get(f"{shop.url}/products")
+        assert "add-backpack" not in ids_of(products)

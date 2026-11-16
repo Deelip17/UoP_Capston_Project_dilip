@@ -13,6 +13,9 @@ def main(argv: list[str] | None = None) -> int:
     serve = commands.add_parser("serve", help="start the sample shop on the loopback address")
     serve.add_argument("--port", type=int, default=8765)
     serve.add_argument("--mutation", action="append", default=[], metavar="ID")
+    serve.add_argument(
+        "--open-login", action="store_true", help="accept any credentials (sign-in switched off)"
+    )
     snap = commands.add_parser("snapshot", help="write DOM snapshots of all pages")
     snap.add_argument("--out", default="data/dom/shop")
     snap.add_argument("--mutation", action="append", default=[], metavar="ID")
@@ -26,7 +29,7 @@ def main(argv: list[str] | None = None) -> int:
             for path in write_snapshots(args.out, args.mutation):
                 print(path)
         else:
-            with ShopServer(args.mutation, port=args.port) as shop:
+            with ShopServer(args.mutation, port=args.port, open_login=args.open_login) as shop:
                 print(f"Demo shop at {shop.url}; log in as {DEMO_USER} / {DEMO_PASSWORD}")
                 print("Press Ctrl+C to stop it")
                 try:

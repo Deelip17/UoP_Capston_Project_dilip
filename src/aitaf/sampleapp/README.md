@@ -13,7 +13,7 @@ The local web shop that serves as the system under test, with locators that can 
 ## Use
 
 ```text
-python -m aitaf.sampleapp serve --port 8765 [--mutation M-login_submit-id]
+python -m aitaf.sampleapp serve --port 8765 [--mutation M-login_submit-id] [--open-login]
 python -m aitaf.sampleapp snapshot --out data/dom/shop
 python -m aitaf.sampleapp list
 ```
@@ -21,6 +21,8 @@ python -m aitaf.sampleapp list
 Log in as `demo@example.com` / `demo-pass`. The 20 requirements the shop satisfies are in `data/requirements/shop_requirements.md`.
 
 ## Tests
+
+`--open-login` accepts any credentials, like a test environment with sign-in switched off; the evaluation of generated scripts uses it so that a result does not depend on a password (generated files may not hold credentials).
 
 `tests/unit/sampleapp/`: every baseline locator resolves to exactly one element; every mutation breaks its own locator, damages no other element and leaves the element findable by the ground-truth attribute; the committed DOM fixtures match the application; the server journey (login, add, remove, checkout) runs over real HTTP.
 

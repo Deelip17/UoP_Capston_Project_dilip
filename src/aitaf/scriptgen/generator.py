@@ -22,9 +22,15 @@ from aitaf.core.metrics import Metrics, timed
 from aitaf.core.models import Locator, LocatorStrategy, Script, TestCase, TestData
 from aitaf.core.storage import Repository
 from aitaf.scriptgen import templates
+from aitaf.scriptgen.catalogue import PageCatalogue
 from aitaf.scriptgen.files import safe_write
 from aitaf.scriptgen.plan import PlanSchema, StrategySchema
-from aitaf.scriptgen.prompts import PROMPT_VERSION, build_prompt, build_reask_prompt
+from aitaf.scriptgen.prompts import (
+    PROMPT_VERSION,
+    PROMPT_VERSION_CATALOGUE,
+    build_prompt,
+    build_reask_prompt,
+)
 from aitaf.scriptgen.validator import assert_valid, validate_script
 
 COMPONENT = "script_generator"
@@ -86,6 +92,7 @@ class ScriptGenerator:
         allowed_hosts: frozenset[str],
         output_dir: Path,
         metrics: Metrics | None = None,
+        catalogue: PageCatalogue | None = None,
     ) -> None:
         host = (urlparse(base_url).hostname or "").lower()
         hosts = frozenset(h.lower() for h in allowed_hosts)
@@ -100,9 +107,25 @@ class ScriptGenerator:
         self._hosts = hosts
         self._out = Path(output_dir)
         self._metrics = metrics
+        self._catalogue = catalogue
+        self._block: str | None = None
+        self._version = PROMPT_VERSION
+        if catalogue is not None:
+            block = catalogue.render_block()
+            matched = find_injection(block)
+            if matched:
+                raise PolicyError(
+                    f"page snapshots contain possible prompt injection ({', '.join(matched)})"
+                )
+            if mask(block, keep_synthetic=True).text != block:
+                raise PolicyError("page snapshots contain data that masking would alter (NFR-10)")
+            self._block = block
+            self._version = PROMPT_VERSION_CATALOGUE
 
     def generate(
-        self, cases: list[TestCase], test_data: list[TestData] | None = None
+        self,
+        cases: list[TestCase],
+        test_data: list[TestData] | None = None,
     ) -> ScriptGenerationResult:
         with timed(self._metrics, COMPONENT, "generate") as probe:
             result = self._generate(cases, test_data)
@@ -110,7 +133,9 @@ class ScriptGenerator:
             return result
 
     def _generate(
-        self, cases: list[TestCase], test_data: list[TestData] | None
+        self,
+        cases: list[TestCase],
+        test_data: list[TestData] | None,
     ) -> ScriptGenerationResult:
         result = ScriptGenerationResult()
         data = {d.tc_id: d for d in test_data or []}
@@ -124,15 +149,17 @@ class ScriptGenerator:
                 _log.warning("rejected %s: %s", case.tc_id, reason)
                 result.rejected.append((case.tc_id, [reason]))
                 continue
-            plan, model = self._extract(mask(record, keep_synthetic=True).text)
+            plan, model, problems = self._extract(mask(record, keep_synthetic=True).text)
+            if problems:
+                _log.warning("rejected %s: plan not grounded in the pages", case.tc_id)
+                result.rejected.append((case.tc_id, problems))
+                continue
             ident = templates.identifier(case.tc_id)
             suffix = 1
             while ident in used:
                 suffix += 1
                 ident = f"{templates.identifier(case.tc_id)}_{suffix}"
-            source = templates.render_test(
-                self._framework, case, plan, ident, model, PROMPT_VERSION
-            )
+            source = templates.render_test(self._framework, case, plan, ident, model, self._version)
             problems = validate_script(source, self._hosts)
             if problems:
                 _log.warning("rejected %s: failed static validation", case.tc_id)
@@ -146,19 +173,26 @@ class ScriptGenerator:
         self._write_all(accepted, result)
         return result
 
-    def _extract(self, record: str) -> tuple[PlanSchema, str]:
-        prompt = build_prompt(record)
+    def _extract(self, record: str) -> tuple[PlanSchema, str, list[str]]:
+        """Plan, model and grounding problems (empty unless a catalogue rejected the plan)."""
+        prompt = build_prompt(record, self._block)
         for attempt in range(2):
             response = self._gateway.complete(
-                LlmRequest(component=COMPONENT, prompt_version=PROMPT_VERSION, prompt=prompt)
+                LlmRequest(component=COMPONENT, prompt_version=self._version, prompt=prompt)
             )
             try:
-                return validate_llm_json(response.text, PlanSchema), response.model
+                plan = validate_llm_json(response.text, PlanSchema)
             except LlmValidationError as exc:
                 _log.warning("script plan invalid (attempt %d): %s", attempt + 1, exc)
                 if attempt == 1:
                     raise
-                prompt = build_reask_prompt(record, str(exc))
+                prompt = build_reask_prompt(record, str(exc), self._block)
+                continue
+            problems = self._catalogue.check_plan(plan) if self._catalogue else []
+            if not problems or attempt == 1:
+                return plan, response.model, problems
+            _log.warning("script plan not grounded (attempt 1): %s", "; ".join(problems))
+            prompt = build_reask_prompt(record, "; ".join(problems), self._block)
         raise AssertionError("unreachable")  # pragma: no cover
 
     def _write_all(self, accepted: list[_Accepted], result: ScriptGenerationResult) -> None:
@@ -175,7 +209,7 @@ class ScriptGenerator:
                     primary=_strategy(loc.primary),
                     fallbacks=[_strategy(f) for f in loc.fallbacks],
                     model=item.model,
-                    prompt_version=PROMPT_VERSION,
+                    prompt_version=self._version,
                 )
 
         files: dict[str, str] = {
@@ -202,7 +236,7 @@ class ScriptGenerator:
                     path=rel,
                     validation_result="passed",
                     model=item.model,
-                    prompt_version=PROMPT_VERSION,
+                    prompt_version=self._version,
                 )
             )
 

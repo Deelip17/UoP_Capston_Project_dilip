@@ -315,6 +315,24 @@ def test_script_command_scripts_only_approved_cases(
 
 
 @pytest.mark.blackbox
+def test_script_command_with_pages_uses_only_elements_found_on_the_pages(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = tmp_path / "aitaf.db"
+    first_id = prepare_cases(db, capsys)
+    assert main(["review", "--db", str(db), "--approve", first_id]) == 0
+    capsys.readouterr()
+    out_dir = tmp_path / "gen"
+    pages = Path(__file__).resolve().parents[2] / "data" / "dom" / "shop"
+    args = ["script", "--db", str(db), "--out-dir", str(out_dir), "--pages", str(pages)]
+    assert main(args) == 0
+    assert "1 scripts written" in capsys.readouterr().out
+    repo_file = (out_dir / "locators" / "shop_locators.py").read_text(encoding="utf-8")
+    assert "('id', '" in repo_file  # built from the pages
+    assert main([*args[:-1], str(tmp_path / "missing")]) == 1
+
+
+@pytest.mark.blackbox
 def test_script_command_with_nothing_approved_writes_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

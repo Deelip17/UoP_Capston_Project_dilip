@@ -63,7 +63,7 @@ from aitaf.healing import (
 )
 from aitaf.reporting import build_report, format_value, write_report
 from aitaf.scriptgen import COMPONENT as SCRIPT_COMPONENT
-from aitaf.scriptgen import ScriptGenerator, mock_script_responder
+from aitaf.scriptgen import PageCatalogue, ScriptGenerator, mock_script_responder
 
 STAGES: dict[str, str] = {
     "analyze": "Requirement Analyzer: turn requirements into structured records",
@@ -125,6 +125,12 @@ def build_parser() -> argparse.ArgumentParser:
                 "--no-review",
                 action="store_true",
                 help="also script Pending cases (Rejected cases are never scripted)",
+            )
+            stage.add_argument(
+                "--pages",
+                metavar="DIR",
+                help="baseline HTML snapshots of the application: the model may use only "
+                "the elements found there (page catalogue)",
             )
     _add_execute_options(commands.choices["execute"])
     _add_diagnose_options(commands.choices["diagnose"])
@@ -323,6 +329,7 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
         cases = cases_for_scripting(repo, run_id, review_mode=not args.no_review)
         hosts = frozenset({"localhost", "127.0.0.1", *args.allow_host})
         metrics = Metrics(repo)
+        catalogue = PageCatalogue.from_snapshots(args.pages) if args.pages else None
         generator = ScriptGenerator(
             _gateway(settings, repo, metrics),
             repo,
@@ -331,6 +338,7 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
             allowed_hosts=hosts,
             output_dir=Path(args.out_dir),
             metrics=metrics,
+            catalogue=catalogue,
         )
         result = generator.generate(cases, repo.list_test_data(run_id))
     finally:
