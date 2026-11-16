@@ -5,6 +5,7 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 ## [Unreleased]
 
 ### Added
+- Unit 7 slice U7-3: acceptance tests, one per functional requirement (`tests/acceptance/` and `tests/system/test_acceptance_browser.py`, marker `acceptance`), and the generator `aitaf.quality.acceptance_matrix` that writes `docs/project-management/ACCEPTANCE_MATRIX.md` (34 of 39 requirements met, 5 partly met).
 - Unit 7 slice U7-2: system tests `tests/system/` (marker `system`, run with `pytest -m system` and in `integration.yml`): ten scenarios on the demo shop in Chromium: happy path, healing on a changed page, human gate, provider outage, hostile and invalid input, blocked host, killed run, repeatability, approving a repair.
 
 ### Fixed

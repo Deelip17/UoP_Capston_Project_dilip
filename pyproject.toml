@@ -27,6 +27,7 @@ markers = [
   "blackbox: behaviour tests through the public API (Unit 5 Part B evidence)",
   "whitebox: branch and validator tests exercising internals (Unit 5 Part B evidence)",
   "integration: needs a real browser (Chromium); excluded by default, run with -m integration",
+  "acceptance: one check per functional requirement, run by the author as customer (Unit 7)",
   "system: the whole pipeline end to end in a real browser (Unit 7); excluded by default, run with -m system",
 ]
 
