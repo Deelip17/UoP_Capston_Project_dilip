@@ -54,5 +54,5 @@ strict = true
 files = ["src"]
 
 [[tool.mypy.overrides]]
-module = ["pandas", "pandas.*"]
+module = ["pandas", "pandas.*", "matplotlib", "matplotlib.*"]
 ignore_missing_imports = true
