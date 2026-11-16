@@ -113,3 +113,63 @@ def test_role_is_taken_from_an_explicit_role_attribute_first() -> None:
     dom = parse_dom('<a role="button" href="/x">Sign in</a>')
     expected = ElementSignature(tag="button", attrs={}, text="Sign in")
     assert validate_candidate(expected, dom, dom.elements[0], "click").passed
+
+
+# ------------------------------------------------------------ intent guard (D-002)
+
+
+def expected_of(html: str) -> ElementSignature:
+    dom = parse_dom(html)
+    return signature_of(dom, next(e for e in dom.elements if e.tag == "button"))
+
+
+@pytest.mark.blackbox
+def test_a_candidate_with_the_opposite_action_is_rejected() -> None:
+    """A "remove" button must not be repaired to an "add" button (found in Unit 6)."""
+    expected = expected_of('<button id="remove-backpack" type="submit">Remove</button>')
+    page = parse_dom('<button id="add-backpack" type="submit">Add to cart</button>')
+    result = validate_candidate(expected, page, button_in(page), "click")
+    assert not result.passed
+    assert any("intent mismatch" in reason for reason in result.reasons)
+
+
+@pytest.mark.blackbox
+def test_the_guard_works_from_the_locator_words_without_visible_text() -> None:
+    expected = ElementSignature(tag="button", attrs={"id": "add_backpack"})
+    page = parse_dom('<button id="remove-backpack" type="submit">Remove</button>')
+    result = validate_candidate(expected, page, button_in(page), "click")
+    assert any("intent mismatch" in reason for reason in result.reasons)
+
+
+@pytest.mark.whitebox
+@pytest.mark.parametrize(
+    ("wanted", "found"),
+    [
+        ("open-menu", "close-menu"),
+        ("show-details", "hide-details"),
+        ("enable-sound", "disable-sound"),
+        ("login-button", "logout-button"),
+        ("create-item", "delete-item"),
+    ],
+)
+def test_other_opposite_pairs_are_caught(wanted: str, found: str) -> None:
+    expected = ElementSignature(tag="button", attrs={"id": wanted})
+    page = parse_dom(f'<button id="{found}" type="button">x</button>')
+    result = validate_candidate(expected, page, button_in(page), "click")
+    assert any("intent mismatch" in reason for reason in result.reasons)
+
+
+@pytest.mark.whitebox
+def test_the_same_intent_with_a_new_id_is_not_flagged() -> None:
+    expected = expected_of('<button id="add-backpack" type="submit">Add to cart</button>')
+    page = parse_dom('<button id="buy-backpack" class="btn-add" type="submit">Add to cart</button>')
+    result = validate_candidate(expected, page, button_in(page), "click")
+    assert not any("intent mismatch" in reason for reason in result.reasons)
+
+
+@pytest.mark.whitebox
+def test_a_candidate_naming_both_words_is_not_flagged() -> None:
+    expected = ElementSignature(tag="button", attrs={"id": "add-item"})
+    page = parse_dom('<button id="add-or-remove-item" type="button">Add or remove</button>')
+    result = validate_candidate(expected, page, button_in(page), "click")
+    assert not any("intent mismatch" in reason for reason in result.reasons)

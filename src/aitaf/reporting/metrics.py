@@ -21,7 +21,6 @@ GENERATION_COMPONENTS = frozenset(
 )
 LLM_COMPONENT = "llm_gateway"
 RENDER_COMPONENT = "reporting_engine"
-_RAN = ("passed", "failed")
 
 
 def percentile(values: Iterable[float], fraction: float) -> float | None:
@@ -48,6 +47,17 @@ def _ratio(numerator: int, denominator: int) -> float | None:
 def _pass_rate(results: list[TestResult]) -> float | None:
     counted = [r for r in results if r.status != "skipped"]
     return _ratio(sum(1 for r in counted if r.status == "passed"), len(counted))
+
+
+def _ran_as_designed(result: TestResult) -> bool:
+    """A script ran as designed if it passed, or failed on an assertion.
+
+    A missing locator (LookupError) or a runtime error means the script itself did not work
+    on the page, so it is not counted as executable (same rule as the Unit 6 evaluation).
+    """
+    if result.status == "passed":
+        return True
+    return result.status == "failed" and result.error_type.rsplit(".", 1)[-1] == "AssertionError"
 
 
 def _healing(repo: Repository, run_id: str) -> float | None:
@@ -96,7 +106,7 @@ def compute_metrics(
         }
         coverage = _ratio(len(approved), len(requirements))
         scripts = {s.tc_id for s in repo.list_scripts(source_run_id)}
-        ran = {r.tc_id for r in results if r.status in _RAN}
+        ran = {r.tc_id for r in results if _ran_as_designed(r)}
         executability = _ratio(len(scripts & ran), len(scripts))
 
     generation = [
@@ -128,14 +138,16 @@ def compute_metrics(
             "Script executability",
             executability,
             "ratio",
-            "scripts whose test ran to a pass or a fail (no error) over scripts generated",
+            "scripts whose test passed or failed on an assertion (no missing element and no "
+            "runtime error) over scripts generated",
         ),
         MetricValue(
             "healing_success_rate",
-            "Healing success rate",
+            "Healing repairs proposed",
             _healing(repo, run_id),
             "ratio",
-            "steps with a proposed locator over steps that asked for healing",
+            "steps with a proposed locator over steps that asked for healing "
+            "(proposed, not verified)",
         ),
         MetricValue(
             "classification_accuracy",
@@ -177,6 +189,7 @@ def compute_metrics(
             "API cost per run",
             cost / len(runs),
             "usd",
-            f"API cost divided by the {len(runs)} run(s) involved",
+            f"API cost divided by the {len(runs)} run(s) involved "
+            "(the analysis run and the execution run when both exist)",
         ),
     ]

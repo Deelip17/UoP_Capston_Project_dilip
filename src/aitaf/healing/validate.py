@@ -8,6 +8,7 @@ passing for the wrong reason.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from aitaf.core.healing import ElementSignature
@@ -19,6 +20,46 @@ CONTEXT_MATCH = 0.3
 _NON_TEXT_INPUTS = frozenset(
     {"checkbox", "radio", "button", "submit", "reset", "image", "file", "hidden", "range", "color"}
 )
+
+
+_OPPOSITES = (
+    ("add", "remove"),
+    ("open", "close"),
+    ("show", "hide"),
+    ("enable", "disable"),
+    ("login", "logout"),
+    ("signin", "signout"),
+    ("increase", "decrease"),
+    ("start", "stop"),
+    ("create", "delete"),
+    ("expand", "collapse"),
+    ("next", "previous"),
+    ("accept", "reject"),
+)
+_INTENT_ATTRS = ("id", "name", "class", "data-qa", "data-testid", "aria-label", "title", "value")
+_WORDS = re.compile(r"[a-z]+")
+
+
+def _intent_words(attrs: dict[str, str], text: str) -> set[str]:
+    """Lower-case words from the identifying attributes and the visible text."""
+    parts = [attrs.get(name, "") for name in _INTENT_ATTRS] + [text]
+    return set(_WORDS.findall(" ".join(parts).lower().replace("_", " ")))
+
+
+def _intent_conflict(expected: ElementSignature, candidate: DomElement) -> str | None:
+    """Reject a candidate that does the opposite of the original (add versus remove, ...).
+
+    Found in Unit 6: a "remove" button was repaired to the "add" button because their ids
+    look alike. The check fires only if the original names one word of a pair, the
+    candidate names the other, and neither names both.
+    """
+    wanted = _intent_words(expected.attrs, expected.text)
+    found = _intent_words(candidate.attrs, candidate_text(candidate))
+    for left, right in _OPPOSITES:
+        for have, other in ((left, right), (right, left)):
+            if have in wanted and other not in wanted and other in found and have not in found:
+                return f"intent mismatch: expected '{have}', found '{other}'"
+    return None
 
 
 @dataclass(frozen=True)
@@ -85,6 +126,10 @@ def validate_candidate(
     context = context_score(expected, dom, candidate)
     if context is not None and context < CONTEXT_MATCH:
         reasons.append(f"context mismatch: score {context:.2f} below {CONTEXT_MATCH}")
+
+    conflict = _intent_conflict(expected, candidate)
+    if conflict:
+        reasons.append(conflict)
 
     problem = _action_problem(action, candidate)
     if problem:

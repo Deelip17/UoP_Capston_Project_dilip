@@ -1,0 +1,28 @@
+# Defect log (ADR-048)
+
+Every entry comes from a real finding and names the commit or the stated limitation. Severity: **high** wrong or misleading result, **medium** misleading wording or missing information, **low** noise. Figures published in the Unit 6 documents stay as published; a fix that changes a metric definition is recorded here and in the changelog (Unit 6 values are shown for comparison).
+
+## Defects
+
+| ID | Found | Found by | Description | Severity | Status | Fix | Regression test |
+|---|---|---|---|---|---|---|---|
+| D-001 | Unit 6, 16 Nov | Reading the report against the evaluation | The report and the Dashboard counted a script as "executable" if its test passed or failed with any error other than a runtime error, so a missing locator counted as executable (100%) while the evaluation figure was 38.9% (mock) and 33.3% (live) | high | fixed (Unit 7) | `script_executability_rate` now counts only a pass or a failure on an assertion, the rule the evaluation uses; Unit 6 value 100.0% kept as published | `tests/unit/reporting/test_report_metrics.py::test_a_script_is_executable_only_if_it_passed_or_failed_on_an_assertion` |
+| D-002 | Unit 6, 16 Nov | Demonstration run and the absent-element control of the healing evaluation | The healer proposed a replacement with the opposite action (a "remove" locator repaired to the "add" button, confidence 0.65; and in the control `add_backpack` repaired to `remove-backpack`) because the ids look alike | high | fixed (Unit 7) | Validation rejects a candidate whose identifying words name the opposite of the original (add/remove, open/close, show/hide, enable/disable, login/logout, create/delete and others). Healing evaluation re-run (seed 42, `evaluation/results/healing_u7_intent_guard.csv`): success 86.5% (32/37) unchanged; false-heal rate 2.1% (1/47) became 0.0% (0/47); control rejection 90% became 100%. **Not independent: the guard was written after seeing this case** | `tests/unit/healing/test_validate.py` (intent tests) |
+| D-003 | Unit 6, 16 Nov | Self-review of the report (Q1) | The report summary did not state the main problem; a reader had to scroll to the failure analysis | medium | fixed (Unit 7) | A "Main problem" line (largest category and cluster) under the summary in the HTML and Markdown reports | `tests/unit/reporting/test_report.py::test_the_summary_states_the_main_problem_in_both_formats` |
+| D-004 | Unit 6, 16 Nov | Self-review of the report (Q2) | Log excerpts carried raw object reprs with memory addresses (`<ShopPage object at 0x...>`) | low | fixed (Unit 7) | Excerpts in HTML and Markdown drop the address; the full log file stays unchanged as evidence | `tests/unit/reporting/test_report.py::test_object_addresses_are_removed_from_log_excerpts_but_kept_in_the_log_file` |
+| D-005 | Unit 6, 16 Nov | Self-review of the report (Q4) | "Healing success rate" counted steps with a proposed locator, not verified repairs, and "API cost per run" divided by two runs without saying which | medium | fixed (Unit 7) | Label "Healing repairs proposed" with the basis "proposed, not verified"; the cost basis names the analysis run and the execution run | `tests/unit/reporting/test_report_metrics.py::test_healing_and_cost_labels_say_what_they_count` |
+| D-006 | Unit 6, 16 Nov | CI: `aitaf run` inside the container | `execute` failed ("pytest could not find its config file") because the evidence folder was a relative path and pytest runs from inside the scripts folder | high | fixed (Unit 6) | `RunConfig` makes the scripts and evidence folders absolute (commit 47ed15f) | `tests/unit/execution/test_allowlist_and_config.py::test_relative_folders_are_made_absolute_so_pytest_can_find_its_files` |
+| D-007 | Unit 6, 16 Nov | Release workflow on the first `v1.0.0-rc1` tag | The release guard refused the tag: the package version was still 0.5.0 and the changelog had no `1.0.0-rc1` section | medium | fixed (Unit 6) | Version `1.0.0-rc1`, changelog section, tag re-created at 86a6095 | `tests/unit/quality/test_release.py` |
+| D-008 | Unit 6, 16 Nov | CI lint job on three commits | mypy failed in CI (optional charts library and pandas stubs missing there) while it passed locally | low | fixed (Unit 6) | mypy override for both libraries (commit 90cc1ed) | CI lint job |
+
+## Known limitations (not fixed; stated in the documents)
+
+| ID | Limitation | Reason | Planned |
+|---|---|---|---|
+| L-001 | Selenium scripts never ran in a real browser (FR-13, FR-17 partly) | Time; Playwright was the evaluated driver | Future work |
+| L-002 | The Dashboard shows no code coverage and has no link to each run report (FR-33 partly) | Dashboard was a minimal slice | Should tier of Unit 7, else future work |
+| L-003 | The Dashboard uses the latest analysis run as the source of coverage, executability and cost for every run | The repository does not link an execution run to its analysis run | Future work |
+| L-004 | Text rewordings are repaired in 2 of 7 trials | The healer refuses a candidate whose visible text changed; a deliberate safety rule | Kept |
+| L-005 | The classifier's hold-out recall for locator failures drops to 75% because the two label sets disagree on raw "waiting for locator" timeouts | Labelling consistency, not tuned away (ADR-043) | Independent second labeller |
+| L-006 | Script executability against the 80% target is not met (38.9% mock, 33.3% live) | The mock and a small live model write steps that do not fit every page | Larger evaluation, better prompts |
+| L-007 | Docker was verified only by CI (image build and in-container pipeline run) | Docker is not installed on the author's machine | Optional local run |

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Collection
 
-from aitaf.reporting.model import ReportData, format_value
+from aitaf.reporting.model import ReportData, clean_log, format_value
 from aitaf.reporting.render_html import LOG_EXCERPT, linkable
 
 
@@ -25,6 +25,7 @@ def render_markdown(data: ReportData, available: Collection[str] | None = None) 
         "",
         data.summary_line,
         "",
+        *([f"**{_cell(data.main_problem)}**", ""] if data.main_problem else []),
         f"Run {data.run.run_id} on {_cell(data.run.environment)}; "
         f"generated {data.generated_at:%Y-%m-%d %H:%M} UTC.",
         "",
@@ -75,7 +76,7 @@ def render_markdown(data: ReportData, available: Collection[str] | None = None) 
         if linkable(t.screenshot, available):
             lines += ["", f"![Screenshot of test {t.tc_id} at failure](evidence/{t.screenshot})"]
         if t.log.strip():
-            excerpt = t.log.strip()[-LOG_EXCERPT:].replace("```", "'''")
+            excerpt = clean_log(t.log.strip())[-LOG_EXCERPT:].replace("```", "'''")
             lines += ["", "```text", excerpt, "```"]
         links = []
         if linkable(t.dom_snapshot, available):

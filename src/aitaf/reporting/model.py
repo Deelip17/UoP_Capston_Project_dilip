@@ -7,12 +7,28 @@ so the two files cannot disagree. Figures are formatted in one function
 
 from __future__ import annotations
 
+import re
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime
 
 from aitaf.core.models import FailureAnalysis, HealingEvent, Run
 
 _ratio_units = {"ratio"}
+_OBJECT_REPR = re.compile(r"<([A-Za-z_][\w.]*) object at 0x[0-9A-Fa-f]+>")
+_CATEGORY_NAME = {
+    "locator": "locator failures",
+    "assertion_defect": "assertion defects",
+    "timing_flaky": "timing or flaky failures",
+    "environment": "environment failures",
+    "test_data": "test-data failures",
+    "unknown": "unclassified failures",
+}
+
+
+def clean_log(text: str) -> str:
+    """Drop memory addresses from default object reprs (``<Page object at 0x...>``) in excerpts."""
+    return _OBJECT_REPR.sub(r"<\1 object>", text)
 
 
 @dataclass(frozen=True)
@@ -117,6 +133,20 @@ class ReportData:
             f"Tests: {self.total} ({self.passed} passed, {self.failed} failed, "
             f"{self.errors} error, {self.skipped} skipped)"
         )
+
+    @property
+    def main_problem(self) -> str | None:
+        """The largest failure category and cluster in one line; None without analysed failures."""
+        if not self.analyses:
+            return None
+        counts = Counter(a.category for a in self.analyses)
+        category, count = min(counts.items(), key=lambda item: (-item[1], item[0]))
+        name = _CATEGORY_NAME.get(category, category.replace("_", " "))
+        line = f"Main problem: {name} ({count} of {len(self.analyses)} analysed failures)"
+        if self.clusters:
+            cluster, members = max(self.clusters.items(), key=lambda item: len(item[1]))
+            line += f"; largest cluster {cluster} has {len(members)} test(s)"
+        return line + "."
 
     @property
     def has_ai_text(self) -> bool:

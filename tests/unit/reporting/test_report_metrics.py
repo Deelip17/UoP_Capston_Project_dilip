@@ -9,7 +9,7 @@ never zero.
 from __future__ import annotations
 
 import pytest
-from pipeline_records import EXEC, SOURCE, audit, seeded_repo
+from pipeline_records import EXEC, SOURCE, audit, result, run, script, seeded_repo
 
 from aitaf.core.storage import InMemoryRepository
 from aitaf.reporting.metrics import compute_metrics, percentile, provider_label
@@ -34,8 +34,8 @@ def test_requirement_coverage_counts_requirements_with_an_approved_case() -> Non
 
 @pytest.mark.blackbox
 def test_script_executability_counts_scripts_that_ran_without_error() -> None:
-    """O2: TC-1 passed and TC-2 failed (both ran); TC-3 errored; TC-4 never ran."""
-    assert values()["script_executability_rate"] == 0.5
+    """O2 (D-001): only TC-1 passed; TC-2 missed a locator, TC-3 errored, TC-4 never ran."""
+    assert values()["script_executability_rate"] == 0.25
 
 
 @pytest.mark.blackbox
@@ -141,3 +141,36 @@ def test_the_provider_label_says_whether_numbers_came_from_mock_or_live_calls() 
 
     empty.create_run(run("r"))
     assert provider_label(empty, ["r"]) == "none"
+
+
+# ------------------------------------------------- executability and labels (D-001, D-005)
+
+
+def executability_repo() -> InMemoryRepository:
+    repo = InMemoryRepository()
+    repo.create_run(run(SOURCE))
+    repo.create_run(run(EXEC))
+    for tc_id in ("TC-1", "TC-2", "TC-3", "TC-4"):
+        repo.add_script(SOURCE, script(tc_id))
+    repo.add_result(result("TC-1", "passed"))
+    repo.add_result(result("TC-2", "failed", error_type="AssertionError", error_text="x"))
+    repo.add_result(result("TC-3", "failed", error_type="LookupError", error_text="no locator"))
+    repo.add_result(result("TC-4", "error", error_type="RuntimeError", error_text="boom"))
+    return repo
+
+
+@pytest.mark.blackbox
+def test_a_script_is_executable_only_if_it_passed_or_failed_on_an_assertion() -> None:
+    """D-001: a missing locator (LookupError) or a runtime error is not an executable script."""
+    found = {m.key: m for m in compute_metrics(executability_repo(), EXEC, SOURCE)}
+    assert found["script_executability_rate"].value == 0.5
+    assert "assertion" in found["script_executability_rate"].basis
+
+
+@pytest.mark.blackbox
+def test_healing_and_cost_labels_say_what_they_count() -> None:
+    """D-005: proposed repairs are not verified repairs; the cost divides by the runs involved."""
+    found = {m.key: m for m in compute_metrics(seeded_repo(), EXEC, SOURCE)}
+    assert found["healing_success_rate"].label == "Healing repairs proposed"
+    assert "not verified" in found["healing_success_rate"].basis
+    assert "analysis run and the execution run" in found["api_cost_usd_per_run"].basis

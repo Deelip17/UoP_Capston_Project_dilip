@@ -354,3 +354,58 @@ def test_a_renderer_that_fails_or_writes_nothing_is_reported(data, tmp_path: Pat
 @pytest.mark.whitebox
 def test_unused_helpers_stay_importable() -> None:
     assert analysis("TC-1", "locator").category == "locator" and audit("c", EXEC, True).mock
+
+
+# --------------------------------------------------- main problem and noisy logs (D-003, D-004)
+
+
+@pytest.mark.blackbox
+def test_the_summary_states_the_main_problem_in_both_formats(data) -> None:  # type: ignore[no-untyped-def]
+    assert data.main_problem is not None
+    assert data.main_problem.startswith("Main problem: locator failures (1 of 2 analysed failures)")
+    html = html_of(data)
+    assert html.index("Main problem") > html.index('id="summary"')
+    assert html.index("Main problem") < html.index('id="metrics"')
+    assert "Main problem" in render_markdown(data)
+
+
+@pytest.mark.whitebox
+def test_without_analysed_failures_there_is_no_main_problem() -> None:
+    repo = seeded_repo()
+    data = build_report(repo, EXEC, SOURCE)
+    data.analyses = []
+    assert data.main_problem is None
+    assert "Main problem" not in render_html(data)
+
+
+@pytest.mark.blackbox
+def test_object_addresses_are_removed_from_log_excerpts_but_kept_in_the_log_file(
+    tmp_path: Path,
+) -> None:
+    repo = seeded_repo()
+    repo.add_result(
+        result("TC-9", "failed", log="LookupError on <ShopPage object at 0x000001A5B54A8170> ok")
+    )
+    data = build_report(repo, EXEC, SOURCE)
+    assert "0x000001A5B54A8170" not in render_html(data)
+    assert "0x000001A5B54A8170" not in render_markdown(data)
+    assert "<ShopPage object>" in render_html(data).replace("&lt;", "<").replace("&gt;", ">")
+    evidence = tmp_path / "evidence"
+    evidence.mkdir()
+    files = write_report(data, tmp_path / "out", evidence)
+    raw = [
+        p for p in (tmp_path / "out").rglob("*.txt") if "0x000001A5B54A8170" in p.read_text("utf-8")
+    ]
+    assert files.html.exists() and raw
+
+
+@pytest.mark.whitebox
+def test_clean_log_only_touches_default_object_reprs() -> None:
+    from aitaf.reporting.model import clean_log
+
+    assert (
+        clean_log("<a.B object at 0xABC123> and <C object at 0x1>") == "<a.B object> and <C object>"
+    )
+    assert clean_log("address 0x1F is not a repr, nor <tag> or <b at 0x9>") == (
+        "address 0x1F is not a repr, nor <tag> or <b at 0x9>"
+    )

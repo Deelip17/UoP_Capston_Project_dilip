@@ -12,7 +12,7 @@ import re
 from collections.abc import Collection
 from html import escape
 
-from aitaf.reporting.model import ReportData, ReportTest, format_value
+from aitaf.reporting.model import ReportData, ReportTest, clean_log, format_value
 
 PALETTE = {
     "text": "#1a1a1a",
@@ -119,7 +119,7 @@ def _failure(t: ReportTest, available: Collection[str] | None) -> str:
             f'alt="Screenshot of test {escape(t.tc_id)} at failure"></p>'
         )
     if t.log.strip():
-        parts.append(f"<pre>{escape(t.log.strip()[-LOG_EXCERPT:])}</pre>")
+        parts.append(f"<pre>{escape(clean_log(t.log.strip())[-LOG_EXCERPT:])}</pre>")
     links = []
     if linkable(t.dom_snapshot, available):
         links.append(f'<a href="evidence/{escape(t.dom_snapshot)}">page snapshot</a>')
@@ -127,6 +127,11 @@ def _failure(t: ReportTest, available: Collection[str] | None) -> str:
     parts.append("<p>" + " | ".join(links) + "</p>")
     parts.append("</details>")
     return "\n".join(parts)
+
+
+def _main_problem_html(data: ReportData) -> str:
+    problem = data.main_problem
+    return f"<p><strong>{escape(problem)}</strong></p>\n" if problem else ""
 
 
 def render_html(data: ReportData, available: Collection[str] | None = None) -> str:
@@ -177,6 +182,7 @@ def render_html(data: ReportData, available: Collection[str] | None = None) -> s
         f"<title>{escape(data.title)}</title>\n<style>{_css()}</style>\n</head>\n<body>\n"
         f"<h1>{escape(data.title)}</h1>\n"
         f'<h2 id="summary">Summary</h2>\n<p>{escape(data.summary_line)}</p>\n'
+        f"{_main_problem_html(data)}"
         f"<p>Run {escape(data.run.run_id)} on {escape(data.run.environment)}; "
         f"generated {data.generated_at:%Y-%m-%d %H:%M} UTC.</p>\n"
         f"<p>Provider: {escape(data.provider)}</p>\n"
