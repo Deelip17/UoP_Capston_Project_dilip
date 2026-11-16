@@ -91,7 +91,7 @@ If Doc 1 cannot hold all of A2 and A3, keep figures 8, 9, 10, 11, 12, 14, 15 and
 | **A2** key code of the main modules with a short explanation | Handoff sections 2 and 3; figures 8 to 13 | 8 to 13 (18, 19 optional) | Needs screenshots |
 | **A3** inter-module communication (API requests, database, UI-backend) | Handoff section 3 (A3 list); figures 14 to 17 | 14 to 17 | Needs screenshots |
 | **B1** at least two quantitative metrics with screenshots | Handoff section 4; `RESULTS.md`; healing, classification, generation, latency, coverage, cost | 20 to 22 | Needs screenshots |
-| **B2** at least one qualitative metric with screenshots | Rubric and rating sheet (E14). **Human review still to do**; the AI draft rows are not a review | 27 | **Blocked on you** |
+| **B2** at least one qualitative metric with screenshots | Rubric and rating sheet (E14). **Your self-review (R1 rows) still to do**; the `AI1` draft rows are not part of the result | 27 | **Blocked on you** |
 | **B3** results table, chart and interpretation | Handoff section 4 table (measured against target), charts 23 to 25; 3 to 5 sentences each, honest about O2 not met and the tuned rules | 23 to 25 | Needs screenshots |
 | **C1** deployment methods and the choice | `DEPLOYMENT.md` section 1; handoff section 5; REF-023, REF-025 | 30 | Ready |
 | **C2** configuration management | Handoff section 5; `Settings`, `.env.example`, pinned requirements, CI, tags; REF-022 and Summers Ch. 8 | 29, 31, 35 | Ready |
@@ -135,12 +135,12 @@ Structure and format:
 - Total 1,300 to 1,450 words excluding references and title (the instruction file allows up to 1,500); double-spaced Times New Roman 12 pt; screenshots inside the document as numbered figures with the captions from the guide, each labelled mock or live.
 - Sections in this order: A1, A2, A3, B1, B2, B3, C1, C2, C3, using the headings of the assignment. Suggested budget: Part A 500, Part B 500, Part C 400 words.
 - A1: the three-run example with the caveat stated in the handoff (the extra passes rest on one unreviewed repair). A2: one sentence per code figure. A3: the five communication paths listed in the handoff.
-- B1: at least two quantitative metrics with their numerators and denominators (healing, classification, generation, latency, coverage; cost). B2: report the qualitative method; if the human ratings sheet is still empty or only holds the AI1 draft rows, say plainly that the review is pending and do NOT report AI1 scores as results. B3: the measured-versus-target table from section 4 of the guide, two charts, and 3 to 5 sentences of interpretation each, including that O2 is not met and that the 88.0% classification figure is not independent.
+- B1: at least two quantitative metrics with their numerators and denominators (healing, classification, generation, latency, coverage; cost). B2: report the qualitative metric as a **self-review by the author** (reviewer R1) of the report and the Dashboard, using only the rows with reviewer code R1 in evaluation/qualitative/ratings.csv: the method from RUBRIC.md, the median and range per question, one reviewer, and the limit that the reviewer is also the author. Ignore every row with reviewer code AI1 (an AI-assisted draft, not part of the result). If there are no R1 rows yet, write 'the self-review is pending' and insert a visible placeholder; never invent scores. B3: the measured-versus-target table from section 4 of the guide, two charts, and 3 to 5 sentences of interpretation each, including that O2 is not met and that the 88.0% classification figure is not independent.
 - C1 to C3: the comparison of methods and the choice from DEPLOYMENT.md, configuration management, prerequisites, variables, install, build and deployment commands. State that the Docker image was built and run by CI, not on the author's machine.
 
 Rules:
 - Quote only issues and challenges that appear in PROGRESS_LOG.md. Do not invent results, numbers, quotes or references.
-- Follow the "Do not claim" list in the handoff exactly (in particular: do not use the report's or Dashboard's "script executability" figure for O2; do not present healing as improving the pass rate; do not call the AI1 rows a review).
+- Follow the "Do not claim" list in the handoff exactly (in particular: do not use the report's or Dashboard's "script executability" figure for O2; do not present healing as improving the pass rate; do not use the AI1 rows; the qualitative result is the author's R1 self-review only).
 - First person singular, academic tone, past tense for what was built. Mark anything you are unsure about instead of guessing.
 
 Deliver: the .docx, then a short report with (a) word count per part and total, (b) a checklist showing where A1 to C3 are covered, (c) figures used and any missing (use a visible placeholder "[Figure n: expected file name]" for a missing image), (d) any statement you could not support from the sources. I will review and edit the document myself before submitting.
@@ -151,7 +151,7 @@ Deliver: the .docx, then a short report with (a) word count per part and total, 
 ```text
 Written for: Cowork, preparing the Unit 6 assignment document 2 (Part D: Chapters 4, 5 and 6 of the Capstone template) for the MSIT Capstone.
 
-Task: write Chapters 4, 5 and 6 as a Word document, using only the sources below.
+Task: write Chapters 4, 5 and 6 as a Word document, using only the sources below. Also write **Author notes** as a separate short page after the document (not part of the word count): what you assumed, every statement or number you want me to verify, anything you could not support from the sources, decisions still open (O-10, O-14, O-16), and what I must check before submitting.
 
 Read first (in this order):
 1. 01_UNIT_INSTRUCTIONS/Unit06_Integration_Feature_Completion_Evaluation.md (Part D and the rubric) and the Capstone report template in the workspace (use its chapter and section numbering and headings)
@@ -159,11 +159,12 @@ Read first (in this order):
 3. docs/project-management/UNIT6_SCREENSHOT_GUIDE.md sections 3 and 4 (coverage and objectives)
 4. docs/project-management/PROGRESS_LOG.md (the only source of issues and challenges), evaluation/results/RESULTS.md and the CSV files, evaluation/LABELLING_GUIDE.md
 5. knowledge/PROJECT_DECISIONS.md (ADR-042, ADR-043 on evaluation integrity), knowledge/RESEARCH_FRAME.md section 4, the Chapters 1 to 3 notes in final-report/ if present
-6. evidence/EVIDENCE_REGISTER.md and the images in evidence/unit06/screenshots/
+6. evidence/EVIDENCE_REGISTER.md, the images in evidence/unit06/screenshots/ and evaluation/qualitative/ratings.csv with RUBRIC.md (use only rows with reviewer code R1; ignore AI1 rows)
 7. reference-library/MASTER_REFERENCES.md: REF-020 to REF-025, Summers (2020) Chapter 8, and earlier-unit sources only as allowed by the author's decision O-10 (if O-10 is not recorded, use course readings only and say so)
 
 Structure and format:
 - 5,200 to 5,800 words (the instruction file allows 4,500 to 6,000), with the template's numbering. Chapter 4 (implementation and results): the integrated system, the evaluation design, the results per objective O1 to O8 with tables and charts. Chapter 5 (discussion): what the results mean, what worked and what did not (O2 not met and why; healing and its false heals; classification and the labelling-consistency limit; the hold-out design), threats to validity (one demo application, one author labelling, one live run of one small model, mock rows measure the pipeline), comparison with the course readings. Chapter 6 (conclusion and future work): contributions, limitations from the do-not-claim list, future work (more applications, independent labellers, Selenium in a real browser, Dashboard code coverage, a larger live evaluation).
+- Report the qualitative metric (objective evidence for report and Dashboard readability) as the author's **self-review** (reviewer R1): state that there is one reviewer who is also the author and what that means for validity in the threats to validity section. If there are no R1 rows yet, say it is pending and list it in the Author notes.
 - Figures and tables: reuse the figures of document 1 where useful, with captions that say mock or live.
 
 Rules:
@@ -171,13 +172,13 @@ Rules:
 - Quote only issues and challenges from PROGRESS_LOG.md. Do not invent results, references or quotes; no legal, privacy or compliance conclusions (refer to the Data Privacy Officer).
 - Do not claim anything on the do-not-claim list. First person singular, academic tone. Mark anything you are unsure about.
 
-Deliver: the .docx, then (a) word count per chapter and total, (b) a checklist of objectives O1 to O8 and where each is discussed, (c) figures used and any missing, (d) any statement you could not support from the sources. I will review and edit the document myself before submitting (ADR-009).
+Deliver: the .docx, then (a) word count per chapter and total, (b) a checklist of objectives O1 to O8 and where each is discussed, (c) figures used and any missing, (d) any statement you could not support from the sources, (e) the Author notes page. I will review and edit the document myself before submitting (ADR-009).
 ```
 
 ## 6. Before you submit
 
 1. All "Doc 1" screenshots exist in `evidence/unit06/screenshots/`, are readable at Word page width and have no bookmarks, user name or local path. Check every image yourself.
 2. Each figure has a caption, is referred to in the text, and generated outputs say mock or live.
-3. Complete the qualitative review (a human) and replace or relabel the `AI1` draft rows before B2 is written.
+3. Do the qualitative self-review yourself (reviewer code R1, 15 minutes, your own scores and comments) and delete the `AI1` draft rows before B2 is written.
 4. Commit `.env.example`; make sure the screenshot of it shows no real key.
 5. Read both documents against the "Do not claim" list in the handoff; you are responsible for the content (ADR-009). Fill the title pages and check the word counts.

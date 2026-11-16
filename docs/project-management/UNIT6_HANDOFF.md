@@ -70,7 +70,7 @@ Raw data and the generated tables are in `evaluation/results/` (`RESULTS.md`, CS
 
 **Live Requirement Analyzer.** With prompt `ra-v1` the live model flagged 17 of 18 clear requirements as ambiguous. Prompt `ra-v2` (an ambiguities rule; its example is unrelated to the shop requirements) gave 18 ready, 1 flagged and 1 rejected (model output invalid twice). It was tuned on the same 20 requirements, so this is a development-set result.
 
-**B2 qualitative metric.** `evaluation/qualitative/RUBRIC.md` defines the rubric (clarity, completeness, actionability; five questions, 1 to 5, with comments). `ratings.csv` holds **five AI-assisted draft rows (reviewer `AI1`) that are not a human review** and must not be reported as the qualitative metric. The author (and, if available, up to two volunteer peers with consent) still has to rate the report (E11) and the Dashboard (E11b). Until then, state B2 as "method defined, review pending".
+**B2 qualitative metric.** `evaluation/qualitative/RUBRIC.md` defines the rubric (clarity, completeness, actionability; five questions, 1 to 5, with comments). `ratings.csv` holds **five AI-assisted draft rows (reviewer `AI1`) that are not a human review** and must not be reported as the qualitative metric. The author rates the report (E11) and the Dashboard (E11b) as a **self-review** (reviewer `R1`, role "author, self-review"); up to two volunteer peers with consent would make it stronger. Until the `R1` rows exist, state B2 as "method defined, self-review pending"; once they exist, report them as a self-review and state the single-reviewer limit.
 
 ## 5. Deployment and configuration (Part C facts)
 
@@ -128,7 +128,7 @@ External sources in Chapter 5.2 follow the author's decision O-10. No invented r
 - That script executability meets its target. It does not (38.9% mock, 33.3% live, target 80%). **Do not use the report's or the Dashboard's "script executability" figure (100%) for O2**: it counts a script as executable if its test passed or failed, so a missing locator counted as executable. Use the evaluation figure in `RESULTS.md`.
 - That healing improved the pass rate: the nine extra passes in the demonstration rest on one unreviewed repair that looks wrong.
 - A classification accuracy of 88.0% as independent: it was tuned on the same 50 failures. Independent figures are 66.0% (first rules, first 50), 75.4% and 80.7% (hold-out). The labels were written by the author alone.
-- A qualitative score: the five `AI1` rows are an AI-assisted draft, not a review.
+- A qualitative score from the `AI1` rows: they are an AI-assisted draft and are not part of the result. The qualitative result is the author's own `R1` self-review, once recorded; it must be called a self-review.
 - That the Docker image was built or run on the author's machine; only CI did.
 - That Selenium runs in a real browser, or that the Dashboard shows code coverage.
 - That the demo shop is a production application; it is a local demonstration with open login and 37 seeded mutations.
