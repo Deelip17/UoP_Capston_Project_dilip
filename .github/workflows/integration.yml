@@ -43,7 +43,7 @@ jobs:
       - name: Install Chromium
         run: python -m playwright install --with-deps chromium
       - name: Integration tests
-        run: python -m pytest -m integration --no-cov -q
+        run: python -m pytest -m "integration or system" --no-cov -q
       - name: Keep evidence on failure
         if: failure()
         uses: actions/upload-artifact@v4

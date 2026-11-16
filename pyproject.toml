@@ -22,11 +22,12 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "tests/support"]
-addopts = "-ra --strict-markers -m \"not integration\""
+addopts = "-ra --strict-markers -m \"not integration and not system\""
 markers = [
   "blackbox: behaviour tests through the public API (Unit 5 Part B evidence)",
   "whitebox: branch and validator tests exercising internals (Unit 5 Part B evidence)",
   "integration: needs a real browser (Chromium); excluded by default, run with -m integration",
+  "system: the whole pipeline end to end in a real browser (Unit 7); excluded by default, run with -m system",
 ]
 
 [tool.coverage.run]

@@ -99,6 +99,26 @@ def _output_note(settings: Settings) -> str:
     )
 
 
+def _run_note(settings: Settings, repo: Repository, run_id: str) -> str:
+    """The output label, corrected by what the audit shows: calls that fell back to the mock."""
+    base = _output_note(settings)
+    if settings.llm_provider == "mock":
+        return base
+    audits = repo.list_audits(run_id)
+    fell_back = sum(1 for audit in audits if audit.status == "fallback")
+    if not audits or fell_back == 0:
+        return base
+    if fell_back == len(audits):
+        return (
+            f"mock-generated output: the live provider failed on all {len(audits)} call(s) "
+            "and the mock answered (see the audit), review before use"
+        )
+    return (
+        f"AI-generated output from {settings.llm_model} via OpenAI; {fell_back} of "
+        f"{len(audits)} call(s) fell back to the mock (see the audit), review before use"
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="aitaf", description="AI-powered test automation framework (capstone prototype)"
@@ -294,10 +314,11 @@ def _analyze(settings: Settings, args: argparse.Namespace) -> int:
             repo.finish_run(run_id, RunStatus.FAILED, datetime.now(UTC))
             raise
         repo.finish_run(run_id, RunStatus.COMPLETED, datetime.now(UTC))
+        note = _run_note(settings, repo, run_id)
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_output_note(settings)})")
+    print(f"run {run_id} ({note})")
     for record in result.ready:
         print(f"READY    {record.req_id}  {record.risk.value:<6}  {record.source_ref}")
     for record in result.flagged:
@@ -332,10 +353,11 @@ def _generate(settings: Settings, args: argparse.Namespace) -> int:
         ).generate(requirements)
         if args.export_dir:
             export_cases(result.cases, Path(args.export_dir))
+        note = _run_note(settings, repo, run_id)
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_output_note(settings)})")
+    print(f"run {run_id} ({note})")
     for case in result.cases:
         print(f"{case.tc_id}  {case.priority}  {case.review_status.value:<8}  {case.title}")
     for req_id, reason in result.skipped:
@@ -371,10 +393,11 @@ def _script(settings: Settings, args: argparse.Namespace) -> int:
             catalogue=catalogue,
         )
         result = generator.generate(cases, repo.list_test_data(run_id))
+        note = _run_note(settings, repo, run_id)
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_output_note(settings)})")
+    print(f"run {run_id} ({note})")
     for script in result.scripts:
         print(f"{script.script_id}  {script.path}")
     for tc_id, reasons in result.rejected:
@@ -408,10 +431,11 @@ def _diagnose(settings: Settings, args: argparse.Namespace) -> int:
             gateway, repo, metrics=metrics, evidence_dir=Path(args.evidence) / run_id
         )
         outcome = analyzer.analyze(run_id)
+        note = _run_note(settings, repo, run_id)
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_output_note(settings)})")
+    print(f"run {run_id} ({note})")
     if not outcome.analyses:
         print("no failed tests to analyse")
         return EXIT_OK
@@ -699,10 +723,11 @@ def _heal(settings: Settings, args: argparse.Namespace) -> int:
             )
         )
         repo.finish_run(run_id, RunStatus.COMPLETED, datetime.now(UTC))
+        note = _run_note(settings, repo, run_id)
     finally:
         repo.close()
 
-    print(f"run {run_id} ({_output_note(settings)})")
+    print(f"run {run_id} ({note})")
     print(f"failure: {_KIND_LABELS[result.kind]} ({args.error})")
     shown = " ".join(f'{k}="{v}"' for k, v in baseline.attrs.items() if k in ("id", "type", "name"))
     print(f'baseline: {baseline.tag} {shown} text="{baseline.text}" (from --before)')

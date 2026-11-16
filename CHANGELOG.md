@@ -4,7 +4,11 @@ Format: Keep a Changelog. Versions follow Semantic Versioning.
 
 ## [Unreleased]
 
+### Added
+- Unit 7 slice U7-2: system tests `tests/system/` (marker `system`, run with `pytest -m system` and in `integration.yml`): ten scenarios on the demo shop in Chromium: happy path, healing on a changed page, human gate, provider outage, hostile and invalid input, blocked host, killed run, repeatability, approving a repair.
+
 ### Fixed
+- Defect D-009: when the live provider failed, the output label still said "AI-generated output from <model>"; it now says the mock answered, or how many calls fell back (found by the system scenario S4).
 - Unit 7 slice U7-1 (defects D-001 to D-005, see `docs/project-management/DEFECT_LOG.md`): script executability in the report and the Dashboard now counts only a pass or an assertion failure (it counted a missing locator as executable); the healer rejects a candidate with the opposite action of the original (add versus remove and similar pairs); the report summary states the main problem; log excerpts no longer show object memory addresses; the healing and cost metrics say what they count ("Healing repairs proposed").
 
 ## [1.0.0-rc1] - 2026-11-16

@@ -550,3 +550,63 @@ def test_metrics_command_for_an_unknown_run_fails_clearly(
     capsys.readouterr()
     assert main(["metrics", "--db", str(db), "--run", "nope"]) == 1
     assert "no metrics" in capsys.readouterr().err
+
+
+# ---------------------------------------------- label after a provider outage (D-009)
+
+
+class _FailingFirst:
+    """Primary provider that fails ``failures`` times, then answers like the mock."""
+
+    name = "openai"
+
+    def __init__(self, failures: int, responders=None) -> None:  # type: ignore[no-untyped-def]
+        from aitaf.core.llm import MockProvider
+
+        self._failures = failures
+        self._inner = MockProvider(responders=responders)
+
+    def complete(self, req):  # type: ignore[no-untyped-def]
+        from aitaf.core.errors import LlmTransientError
+
+        if self._failures > 0:
+            self._failures -= 1
+            raise LlmTransientError("simulated outage")
+        return self._inner.complete(req)
+
+
+def _analyze_live_with(failures: int, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from aitaf.core.llm import MockProvider
+
+    def fake_build(settings: Settings, responders=None, openai_client=None):  # type: ignore[no-untyped-def]
+        return _FailingFirst(failures, responders), MockProvider(responders=responders)
+
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-placeholder-value")
+    monkeypatch.setenv("LLM_MODEL", "gpt-test")
+    monkeypatch.setattr("aitaf.cli.build_providers", fake_build)
+    assert (
+        main(["analyze", "--input", str(DATA / "sample_plain.txt"), "--db", str(tmp_path / "a.db")])
+        == 0
+    )
+
+
+@pytest.mark.blackbox
+def test_output_is_not_labelled_live_when_every_call_fell_back_to_the_mock(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """D-009 (NFR-30): a run whose every model call failed must say the mock answered."""
+    _analyze_live_with(1000, tmp_path, monkeypatch)
+    out = capsys.readouterr().out
+    assert "AI-generated output from gpt-test" not in out
+    assert "live provider failed" in out and "mock" in out
+
+
+@pytest.mark.blackbox
+def test_output_says_how_many_calls_fell_back_when_only_some_did(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _analyze_live_with(1, tmp_path, monkeypatch)
+    out = capsys.readouterr().out
+    assert "AI-generated output from gpt-test" in out
+    assert "1 of 2 call(s) fell back to the mock" in out
