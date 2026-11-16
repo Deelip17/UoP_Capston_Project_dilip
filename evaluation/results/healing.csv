@@ -1,0 +1,48 @@
+trial_id,trial_type,mutation_id,element,mutation_kind,locator_kind,healed,correct,proposed,confidence,elapsed_ms,reason
+H-001,mutation,M-username-id,username,id,id,True,True,id=user-email,0.9158,1.147,
+H-002,mutation,M-username-class,username,class,css,True,True,id=username,0.9158,0.904,
+H-003,mutation,M-username-xpath,username,xpath,xpath,True,True,id=username,0.7526,0.554,
+H-004,mutation,M-password-id,password,id,id,True,True,id=user-secret,0.9158,0.452,
+H-005,mutation,M-password-class,password,class,css,True,True,id=password,0.9158,0.436,
+H-006,mutation,M-password-xpath,password,xpath,xpath,True,True,id=password,0.7526,0.462,
+H-007,mutation,M-login_submit-id,login_submit,id,id,True,True,id=signin-btn,0.92,0.578,
+H-008,mutation,M-login_submit-class,login_submit,class,css,True,True,id=login-button,0.92,0.698,
+H-009,mutation,M-login_submit-xpath,login_submit,xpath,xpath,True,True,id=login-button,0.8914,0.587,
+H-010,mutation,M-login_submit-text,login_submit,text,text,True,True,id=login-button,0.8846,0.496,
+H-011,mutation,M-add_backpack-id,add_backpack,id,id,True,True,id=buy-backpack,0.92,1.182,
+H-012,mutation,M-add_backpack-class,add_backpack,class,css,True,True,id=add-backpack,0.92,1.41,
+H-013,mutation,M-add_backpack-xpath,add_backpack,xpath,xpath,True,True,id=add-backpack,0.9018,1.391,
+H-014,mutation,M-add_backpack-text,add_backpack,text,text,True,True,id=add-backpack,0.8688,2.078,
+H-015,mutation,M-cart_link-id,cart_link,id,id,True,True,id=basket-link,0.92,1.221,
+H-016,mutation,M-cart_link-class,cart_link,class,css,True,True,id=cart-link,0.92,1.174,
+H-017,mutation,M-cart_link-xpath,cart_link,xpath,xpath,True,True,id=cart-link,0.8914,1.354,
+H-018,mutation,M-cart_link-text,cart_link,text,text,False,False,,0.0,1.315,no candidate passed validation; the step still fails
+H-019,mutation,M-remove_item-id,remove_item,id,id,True,True,id=delete-backpack,0.92,0.62,
+H-020,mutation,M-remove_item-class,remove_item,class,css,True,True,id=remove-backpack,0.92,0.585,
+H-021,mutation,M-remove_item-xpath,remove_item,xpath,xpath,True,True,id=remove-backpack,0.9018,0.606,
+H-022,mutation,M-remove_item-text,remove_item,text,text,False,False,,0.0,0.58,no candidate passed validation; the step still fails
+H-023,mutation,M-checkout_button-id,checkout_button,id,id,True,True,id=pay-button,0.92,0.624,
+H-024,mutation,M-checkout_button-class,checkout_button,class,css,True,True,id=checkout-button,0.92,0.698,
+H-025,mutation,M-checkout_button-xpath,checkout_button,xpath,xpath,True,True,id=checkout-button,0.8914,0.879,
+H-026,mutation,M-checkout_button-text,checkout_button,text,text,False,False,,0.0,1.425,no candidate passed validation; the step still fails
+H-027,mutation,M-ship_name-id,ship_name,id,id,True,True,id=recipient,0.9158,0.867,
+H-028,mutation,M-ship_name-class,ship_name,class,css,True,True,id=ship-name,0.9158,0.64,
+H-029,mutation,M-ship_name-xpath,ship_name,xpath,xpath,True,True,id=ship-name,0.7526,0.854,
+H-030,mutation,M-place_order-id,place_order,id,id,True,True,id=confirm-order,0.92,0.914,
+H-031,mutation,M-place_order-class,place_order,class,css,True,True,id=place-order,0.92,0.557,
+H-032,mutation,M-place_order-xpath,place_order,xpath,xpath,True,True,id=place-order,0.8914,0.975,
+H-033,mutation,M-place_order-text,place_order,text,text,False,False,,0.0,0.54,no candidate passed validation; the step still fails
+H-034,mutation,M-confirmation-id,confirmation,id,id,True,True,id=order-complete,0.9025,0.588,
+H-035,mutation,M-confirmation-class,confirmation,class,css,True,True,id=confirmation,0.9025,0.447,
+H-036,mutation,M-confirmation-xpath,confirmation,xpath,xpath,True,True,id=confirmation,0.7825,0.438,
+H-037,mutation,M-confirmation-text,confirmation,text,text,False,False,,0.0,0.381,no candidate passed validation; the step still fails
+C-001,control,control-username-on-products,username,absent,id,False,True,,0.0,1.394,no candidate passed validation; the step still fails
+C-002,control,control-password-on-products,password,absent,id,False,True,,0.0,0.922,no candidate passed validation; the step still fails
+C-003,control,control-login_submit-on-products,login_submit,absent,id,False,True,,0.0,0.998,no candidate passed validation; the step still fails
+C-004,control,control-add_backpack-on-cart,add_backpack,absent,id,True,False,id=remove-backpack,0.6518,0.61,
+C-005,control,control-cart_link-on-cart,cart_link,absent,id,False,True,,0.0,0.942,no candidate passed validation; the step still fails
+C-006,control,control-remove_item-on-checkout,remove_item,absent,id,False,True,,0.0,0.66,no candidate passed validation; the step still fails
+C-007,control,control-checkout_button-on-checkout,checkout_button,absent,id,False,True,,0.0,0.484,no candidate passed validation; the step still fails
+C-008,control,control-ship_name-on-confirmation,ship_name,absent,id,False,True,,0.0,0.267,no candidate passed validation; the step still fails
+C-009,control,control-place_order-on-confirmation,place_order,absent,id,False,True,,0.0,0.323,no candidate passed validation; the step still fails
+C-010,control,control-confirmation-on-login,confirmation,absent,id,False,True,,0.0,0.519,no candidate passed validation; the step still fails

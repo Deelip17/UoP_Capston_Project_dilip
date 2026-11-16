@@ -40,6 +40,8 @@ from aitaf.core.models import (
 from aitaf.core.storage import Repository, SqliteRepository
 from aitaf.diagnosis import COMPONENT as DIAGNOSIS_COMPONENT
 from aitaf.diagnosis import FailureAnalyzer, mock_failure_responder
+from aitaf.evaluation.commands import add_arguments as add_evaluation_arguments
+from aitaf.evaluation.commands import run as run_evaluation
 from aitaf.execution import ExecutionEngine, RunConfig
 from aitaf.execution.pdf import render_html_to_pdf
 from aitaf.execution.runner import describe_environment
@@ -135,6 +137,11 @@ def build_parser() -> argparse.ArgumentParser:
     _add_execute_options(commands.choices["execute"])
     _add_diagnose_options(commands.choices["diagnose"])
     _add_report_options(commands.choices["report"])
+    evaluate = commands.add_parser(
+        "evaluate", help="measure healing, classification and generation against ground truth"
+    )
+    evaluate.add_argument("--config", help="path to the JSON configuration file")
+    add_evaluation_arguments(evaluate)
     heal = commands.add_parser("heal", help="demonstrate locator healing on two DOM snapshots")
     heal.add_argument("--config", help="path to the JSON configuration file")
     heal.add_argument("--db", default="aitaf.db", help="SQLite database path")
@@ -702,6 +709,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "diagnose": lambda: _diagnose(settings, args),
         "report": lambda: _report(settings, args),
         "heal": lambda: _heal(settings, args),
+        "evaluate": lambda: run_evaluation(args, lambda repo: _gateway(settings, repo)),
         "metrics": lambda: _metrics(args),
     }
     handler = handlers.get(args.command)

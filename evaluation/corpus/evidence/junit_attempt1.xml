@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="50" skipped="0" tests="50" time="82.655" timestamp="2026-11-15T19:49:09.517008-05:00" hostname="LUS-5CG4363BTN"><testcase classname="tests.test_case_001" name="test_case_001" time="1.616"><failure message="LookupError: no locator strategy matched for username on page shop">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_001(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+&gt;       screen.type('username', 'someone@example.com')
+
+tests\test_case_001.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:41: in type
+    self._find(name).fill(value)
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD36F87EF0&gt;
+name = 'username'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for username on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_002" name="test_case_002" time="1.584"><failure message="LookupError: no locator strategy matched for password on page shop">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_002(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+&gt;       screen.type('password', 'secret-word')
+
+tests\test_case_002.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:41: in type
+    self._find(name).fill(value)
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD380B5610&gt;
+name = 'password'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for password on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_003" name="test_case_003" time="1.470"><failure message="LookupError: no locator strategy matched for login_submit on page shop">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_003(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+&gt;       screen.click('login_submit')
+
+tests\test_case_003.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD380CA840&gt;
+name = 'login_submit'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for login_submit on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_004" name="test_case_004" time="1.533"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_004(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/products')
+&gt;       screen.click('add_backpack')
+
+tests\test_case_004.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD36FC31D0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_005" name="test_case_005" time="1.429"><failure message="LookupError: no locator strategy matched for cart_link on page shop">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_005(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/products')
+&gt;       screen.click('cart_link')
+
+tests\test_case_005.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD380B55B0&gt;
+name = 'cart_link'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for cart_link on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_006" name="test_case_006" time="1.615"><failure message="LookupError: no locator strategy matched for add_backpack on page shop">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_006(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/products')
+&gt;       screen.assert_visible('add_backpack')
+
+tests\test_case_006.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD3819D8E0&gt;
+name = 'add_backpack'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for add_backpack on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_007" name="test_case_007" time="1.733"><failure message="LookupError: no locator strategy matched for ship_name on page shop">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_007(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/checkout')
+&gt;       screen.type('ship_name', 'A. Customer')
+
+tests\test_case_007.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:41: in type
+    self._find(name).fill(value)
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD381F6A20&gt;
+name = 'ship_name'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for ship_name on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_008" name="test_case_008" time="1.422"><failure message="LookupError: no locator strategy matched for place_order on page shop">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_008(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/checkout')
+&gt;       screen.click('place_order')
+
+tests\test_case_008.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:38: in click
+    self._find(name).click()
+    ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD380B5910&gt;
+name = 'place_order'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for place_order on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_009" name="test_case_009" time="1.345"><failure message="LookupError: no locator strategy matched for login_submit on page shop">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_009(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+&gt;       screen.assert_text('login_submit', 'Log in')
+
+tests\test_case_009.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:47: in assert_text
+    assert expected in self._find(name).inner_text()
+                       ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD36FC36E0&gt;
+name = 'login_submit'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for login_submit on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_010" name="test_case_010" time="1.379"><failure message="LookupError: no locator strategy matched for username on page shop">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_010(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/')
+&gt;       screen.assert_visible('username')
+
+tests\test_case_010.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD38255910&gt;
+name = 'username'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for username on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_011" name="test_case_011" time="1.521"><failure message="LookupError: no locator strategy matched for cart_link on page shop">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_011(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/products')
+&gt;       screen.assert_text('cart_link', 'View shopping cart')
+
+tests\test_case_011.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:47: in assert_text
+    assert expected in self._find(name).inner_text()
+                       ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD382C2B40&gt;
+name = 'cart_link'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for cart_link on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_012" name="test_case_012" time="1.364"><failure message="LookupError: no locator strategy matched for place_order on page shop">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_012(page, base_url):
+        screen = ShopPage(page, base_url)
+        screen.open('/checkout')
+&gt;       screen.assert_visible('place_order')
+
+tests\test_case_012.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\shop_page.py:50: in assert_visible
+    assert self._find(name).is_visible()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;pages.shop_page.ShopPage object at 0x000002DD36FC2510&gt;
+name = 'place_order'
+
+    def _find(self, name):
+        entry = LOCATORS[name]
+        for strategy, value in [entry["primary"], *entry["fallbacks"]]:
+            candidate = self._page.locator(_selector(strategy, value))
+            if candidate.count() &gt; 0:
+                return candidate.first
+&gt;       raise LookupError("no locator strategy matched for " + name + " on page shop")
+E       LookupError: no locator strategy matched for place_order on page shop
+
+pages\shop_page.py:35: LookupError</failure></testcase><testcase classname="tests.test_case_013" name="test_case_013" time="1.354"><failure message="AssertionError: assert 'Welcome to the Demo Shop' == 'Sign in'&#10;  &#10;  - Sign in&#10;  + Welcome to the Demo Shop">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_013(page, base_url):
+        page.goto(base_url + '/')
+&gt;       assert page.inner_text('h1') == 'Sign in'
+E       AssertionError: assert 'Welcome to the Demo Shop' == 'Sign in'
+E         
+E         - Sign in
+E         + Welcome to the Demo Shop
+
+tests\test_case_013.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_014" name="test_case_014" time="1.325"><failure message="AssertionError: assert '$40.00' in 'Products\nView shopping cart\nBackpack $39.00 Add Backpack to cart\nDesk Lamp $24.50 Add Desk Lamp to cart\nNotebook $6.90 Add Notebook to cart'&#10; +  where 'Products\nView shopping cart\nBackpack $39.00 Add Backpack to cart\nDesk Lamp $24.50 Add Desk Lamp to cart\nNotebook $6.90 Add Notebook to cart' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/products'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_014(page, base_url):
+        page.goto(base_url + '/products')
+&gt;       assert '$40.00' in page.inner_text('body')
+E       AssertionError: assert '$40.00' in 'Products\nView shopping cart\nBackpack $39.00 Add Backpack to cart\nDesk Lamp $24.50 Add Desk Lamp to cart\nNotebook $6.90 Add Notebook to cart'
+E        +  where 'Products\nView shopping cart\nBackpack $39.00 Add Backpack to cart\nDesk Lamp $24.50 Add Desk Lamp to cart\nNotebook $6.90 Add Notebook to cart' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/products'&gt;.inner_text
+
+tests\test_case_014.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_015" name="test_case_015" time="1.434"><failure message="AssertionError: assert 3 == 4&#10; +  where 3 = count()&#10; +    where count = &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='li'&gt;.count&#10; +      where &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='li'&gt; = locator('li')&#10; +        where locator = &lt;Page url='http://127.0.0.1:58276/products'&gt;.locator">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_015(page, base_url):
+        page.goto(base_url + '/products')
+&gt;       assert page.locator('li').count() == 4
+E       AssertionError: assert 3 == 4
+E        +  where 3 = count()
+E        +    where count = &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='li'&gt;.count
+E        +      where &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='li'&gt; = locator('li')
+E        +        where locator = &lt;Page url='http://127.0.0.1:58276/products'&gt;.locator
+
+tests\test_case_015.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_016" name="test_case_016" time="1.389"><failure message="AssertionError: assert 'Demo Shop - Account access' == 'Demo Shop - Home'&#10;  &#10;  - Demo Shop - Home&#10;  + Demo Shop - Account access">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_016(page, base_url):
+        page.goto(base_url + '/')
+&gt;       assert page.title() == 'Demo Shop - Home'
+E       AssertionError: assert 'Demo Shop - Account access' == 'Demo Shop - Home'
+E         
+E         - Demo Shop - Home
+E         + Demo Shop - Account access
+
+tests\test_case_016.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_017" name="test_case_017" time="1.371"><failure message="AssertionError: assert 'nobody' == 'someone'&#10;  &#10;  - someone&#10;  + nobody">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_017(page, base_url):
+        page.goto(base_url + '/')
+        page.fill('input[name=username]', 'nobody')
+&gt;       assert page.input_value('input[name=username]') == 'someone'
+E       AssertionError: assert 'nobody' == 'someone'
+E         
+E         - someone
+E         + nobody
+
+tests\test_case_017.py:4: AssertionError</failure></testcase><testcase classname="tests.test_case_018" name="test_case_018" time="1.444"><failure message="AssertionError: assert 'Desk Lamp' not in 'Products\nV...book to cart'&#10;  &#10;  'Desk Lamp' is contained here:&#10;    k to cart&#10;    Desk Lamp $24.50 Add Desk Lamp to cart&#10;  ? +++++++++&#10;    Notebook $6.90 Add Notebook to cart">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_018(page, base_url):
+        page.goto(base_url + '/products')
+&gt;       assert 'Desk Lamp' not in page.inner_text('body')
+E       AssertionError: assert 'Desk Lamp' not in 'Products\nV...book to cart'
+E         
+E         'Desk Lamp' is contained here:
+E           k to cart
+E           Desk Lamp $24.50 Add Desk Lamp to cart
+E         ? +++++++++
+E           Notebook $6.90 Add Notebook to cart
+
+tests\test_case_018.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_019" name="test_case_019" time="1.399"><failure message="AssertionError: assert 'Log in' == 'Sign in'&#10;  &#10;  - Sign in&#10;  + Log in">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_019(page, base_url):
+        page.goto(base_url + '/')
+&gt;       assert page.inner_text('button') == 'Sign in'
+E       AssertionError: assert 'Log in' == 'Sign in'
+E         
+E         - Sign in
+E         + Log in
+
+tests\test_case_019.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_020" name="test_case_020" time="1.402"><failure message="AssertionError: assert 'Checkout' == 'Payment'&#10;  &#10;  - Payment&#10;  + Checkout">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_020(page, base_url):
+        page.goto(base_url + '/checkout')
+&gt;       assert page.inner_text('h1') == 'Payment'
+E       AssertionError: assert 'Checkout' == 'Payment'
+E         
+E         - Payment
+E         + Checkout
+
+tests\test_case_020.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_021" name="test_case_021" time="1.447"><failure message="AssertionError: assert 3 == 2&#10; +  where 3 = count()&#10; +    where count = &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='button'&gt;.count&#10; +      where &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='button'&gt; = locator('button')&#10; +        where locator = &lt;Page url='http://127.0.0.1:58276/products'&gt;.locator">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_021(page, base_url):
+        page.goto(base_url + '/products')
+&gt;       assert page.locator('button').count() == 2
+E       AssertionError: assert 3 == 2
+E        +  where 3 = count()
+E        +    where count = &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='button'&gt;.count
+E        +      where &lt;Locator frame=&lt;Frame name= url='http://127.0.0.1:58276/products'&gt; selector='button'&gt; = locator('button')
+E        +        where locator = &lt;Page url='http://127.0.0.1:58276/products'&gt;.locator
+
+tests\test_case_021.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_022" name="test_case_022" time="1.357"><failure message="AssertionError: assert False&#10; +  where False = is_visible('text=Forgot password?')&#10; +    where is_visible = &lt;Page url='http://127.0.0.1:58276/'&gt;.is_visible">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_022(page, base_url):
+        page.goto(base_url + '/')
+&gt;       assert page.is_visible('text=Forgot password?')
+E       AssertionError: assert False
+E        +  where False = is_visible('text=Forgot password?')
+E        +    where is_visible = &lt;Page url='http://127.0.0.1:58276/'&gt;.is_visible
+
+tests\test_case_022.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_023" name="test_case_023" time="1.485"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:1/&#10;Call log:&#10;  - navigating to &quot;http://127.0.0.1:1/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_023(page, base_url):
+&gt;       page.goto('http://127.0.0.1:1/')
+
+tests\test_case_023.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD38318590&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD38046840&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:1/
+E           Call log:
+E             - navigating to "http://127.0.0.1:1/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_024" name="test_case_024" time="1.386"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/&#10;Call log:&#10;  - navigating to &quot;http://127.0.0.1:9/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_024(page, base_url):
+&gt;       page.goto('http://127.0.0.1:9/')
+
+tests\test_case_024.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD36F87830&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD36FA3E20&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/
+E           Call log:
+E             - navigating to "http://127.0.0.1:9/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_025" name="test_case_025" time="1.328"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_FAILED at http://localhost:9/&#10;Call log:&#10;  - navigating to &quot;http://localhost:9/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_025(page, base_url):
+&gt;       page.goto('http://localhost:9/')
+
+tests\test_case_025.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD36E23E00&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD38351580&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_FAILED at http://localhost:9/
+E           Call log:
+E             - navigating to "http://localhost:9/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_026" name="test_case_026" time="1.251"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_FAILED at http://no-such-host.invalid/&#10;Call log:&#10;  - navigating to &quot;http://no-such-host.invalid/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_026(page, base_url):
+&gt;       page.goto('http://no-such-host.invalid/')
+
+tests\test_case_026.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD3819E4B0&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD382FA340&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_FAILED at http://no-such-host.invalid/
+E           Call log:
+E             - navigating to "http://no-such-host.invalid/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_027" name="test_case_027" time="1.508"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_FAILED at http://example.com/&#10;Call log:&#10;  - navigating to &quot;http://example.com/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_027(page, base_url):
+&gt;       page.goto('http://example.com/')
+
+tests\test_case_027.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD38374920&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD382FB4C0&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_FAILED at http://example.com/
+E           Call log:
+E             - navigating to "http://example.com/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_028" name="test_case_028" time="1.345"><failure message="AssertionError: assert 404 == 200&#10; +  where 404 = &lt;Response url='http://127.0.0.1:58276/missing' request=&lt;Request url='http://127.0.0.1:58276/missing' method='GET'&gt;&gt;.status">page = &lt;Page url='http://127.0.0.1:58276/missing'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_028(page, base_url):
+        response = page.goto(base_url + '/missing')
+&gt;       assert response.status == 200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = &lt;Response url='http://127.0.0.1:58276/missing' request=&lt;Request url='http://127.0.0.1:58276/missing' method='GET'&gt;&gt;.status
+
+tests\test_case_028.py:3: AssertionError</failure></testcase><testcase classname="tests.test_case_029" name="test_case_029" time="1.402"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:2/checkout&#10;Call log:&#10;  - navigating to &quot;http://127.0.0.1:2/checkout&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_029(page, base_url):
+&gt;       page.goto('http://127.0.0.1:2/checkout')
+
+tests\test_case_029.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD38375AC0&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3843BE20&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:2/checkout
+E           Call log:
+E             - navigating to "http://127.0.0.1:2/checkout", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_030" name="test_case_030" time="1.349"><failure message="playwright._impl._errors.Error: Page.goto: net::ERR_ABORTED at ftp://127.0.0.1/&#10;Call log:&#10;  - navigating to &quot;ftp://127.0.0.1/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_030(page, base_url):
+&gt;       page.goto('ftp://127.0.0.1/')
+
+tests\test_case_030.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD382C2150&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3827C9A0&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.Error: Page.goto: net::ERR_ABORTED at ftp://127.0.0.1/
+E           Call log:
+E             - navigating to "ftp://127.0.0.1/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: Error</failure></testcase><testcase classname="tests.test_case_031" name="test_case_031" time="1.431"><failure message="playwright._impl._errors.TimeoutError: Page.goto: Timeout 1ms exceeded.&#10;Call log:&#10;  - navigating to &quot;http://127.0.0.1:58276/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_031(page, base_url):
+        page.set_default_timeout(1)
+&gt;       page.goto(base_url + '/')
+
+tests\test_case_031.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD382C2A20&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3827DC60&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.goto: Timeout 1ms exceeded.
+E           Call log:
+E             - navigating to "http://127.0.0.1:58276/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_032" name="test_case_032" time="1.844"><failure message="playwright._impl._errors.TimeoutError: Page.wait_for_selector: Timeout 500ms exceeded.&#10;Call log:&#10;  - waiting for locator(&quot;#welcome-banner&quot;) to be visible">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_032(page, base_url):
+        page.goto(base_url + '/')
+&gt;       page.wait_for_selector('#welcome-banner', timeout=500)
+
+tests\test_case_032.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:21403: in wait_for_selector
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:464: in wait_for_selector
+    return await self._main_frame.wait_for_selector(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:418: in wait_for_selector
+    result = await self._channel.waitForSelector(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD383E7BC0&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3A5CCC20&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.wait_for_selector: Timeout 500ms exceeded.
+E           Call log:
+E             - waiting for locator("#welcome-banner") to be visible
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_033" name="test_case_033" time="1.915"><failure message="playwright._impl._errors.TimeoutError: Page.wait_for_url: Timeout 500ms exceeded.&#10;=========================== logs ===========================&#10;waiting for navigation to &quot;**/products&quot; until &quot;load&quot;&#10;============================================================">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_033(page, base_url):
+        page.goto(base_url + '/')
+&gt;       page.wait_for_url('**/products', timeout=500)
+
+tests\test_case_033.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:21479: in wait_for_url
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:713: in wait_for_url
+    return await self._main_frame.wait_for_url(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:356: in wait_for_url
+    await self.wait_for_navigation(url=url, wait_until=wait_until, timeout=timeout)
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: in run_async
+    return await func()
+           ^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:285: in rest
+    navigated_event: "channels.FrameNavigatedEvent" = await wait
+                                                      ^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\waiter.py:201: in wait_for_promise
+    raise rewrite_error_message(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\waiter.py:184: in wait_for_promise
+    result = await race([promise, *self._failures])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+awaitables = [&lt;Future pending cb=[_handled() at <user>\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwrigh...ite-packages\playwright\_impl\utils\tasks.py:33]&gt;, &lt;Future finished exception=TimeoutError('Timeout 500ms exceeded.')&gt;]
+
+    async def race(awaitables: Sequence[Awaitable[Any]]) -&gt; Any:
+        """`Promise.race(awaitables)`: the result, or the error, of the first awaitable
+        that settles. When several have settled, the first in the list wins.
+    
+        The coroutines in the list run as tasks, which are cancelled when the race ends.
+        A future or a task in the list runs on, as in JS. The errors of the losers are
+        marked as handled, as Promise.race() handles them.
+        """
+        futures: List["asyncio.Future[Any]"] = []
+        owned: List["asyncio.Future[Any]"] = []
+        for awaitable in awaitables:
+            if asyncio.isfuture(awaitable):
+                futures.append(awaitable)
+            else:
+                task: "asyncio.Future[Any]" = asyncio.ensure_future(awaitable)
+                futures.append(task)
+                owned.append(task)
+        for future in futures:
+            future.add_done_callback(_handled)
+        try:
+            await asyncio.wait(futures, return_when=asyncio.FIRST_COMPLETED)
+        finally:
+            winner = next((f for f in futures if f.done()), None)
+            for task in owned:
+                if task is not winner:
+                    task.cancel()
+        assert winner is not None
+&gt;       return winner.result()
+               ^^^^^^^^^^^^^^^
+E       playwright._impl._errors.TimeoutError: Page.wait_for_url: Timeout 500ms exceeded.
+E       =========================== logs ===========================
+E       waiting for navigation to "**/products" until "load"
+E       ============================================================
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\tasks.py:131: TimeoutError</failure></testcase><testcase classname="tests.test_case_034" name="test_case_034" time="1.419"><failure message="playwright._impl._errors.TimeoutError: Page.goto: Timeout 1ms exceeded.&#10;Call log:&#10;  - navigating to &quot;http://127.0.0.1:58276/&quot;, waiting until &quot;load&quot;">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_034(page, base_url):
+&gt;       page.goto(base_url + '/', timeout=1)
+
+tests\test_case_034.py:2: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:18561: in goto
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:600: in goto
+    return await self._main_frame.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:217: in goto
+    await self._channel.goto(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD38256EA0&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3A3742C0&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.goto: Timeout 1ms exceeded.
+E           Call log:
+E             - navigating to "http://127.0.0.1:58276/", waiting until "load"
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_035" name="test_case_035" time="1.720"><failure message="playwright._impl._errors.TimeoutError: Page.wait_for_selector: Timeout 400ms exceeded.&#10;Call log:&#10;  - waiting for locator(&quot;text=Loading...&quot;) to be visible">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_035(page, base_url):
+        page.goto(base_url + '/')
+&gt;       page.wait_for_selector('text=Loading...', state='visible', timeout=400)
+
+tests\test_case_035.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:21403: in wait_for_selector
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:464: in wait_for_selector
+    return await self._main_frame.wait_for_selector(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:418: in wait_for_selector
+    result = await self._channel.waitForSelector(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD384ACC20&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3A374B80&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.wait_for_selector: Timeout 400ms exceeded.
+E           Call log:
+E             - waiting for locator("text=Loading...") to be visible
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_036" name="test_case_036" time="1.657"><failure message="playwright._impl._errors.TimeoutError: Page.click: Timeout 300ms exceeded.&#10;Call log:&#10;  - waiting for locator(&quot;button#slow-save&quot;)">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_036(page, base_url):
+        page.goto(base_url + '/')
+&gt;       page.click('button#slow-save', timeout=300)
+
+tests\test_case_036.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:16300: in click
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:1125: in click
+    return await self._main_frame.click(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:587: in click
+    return await self._channel.click(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD3A3613D0&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD38416AC0&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.click: Timeout 300ms exceeded.
+E           Call log:
+E             - waiting for locator("button#slow-save")
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_037" name="test_case_037" time="1.924"><failure message="playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 400ms exceeded.">page = &lt;Page url='http://127.0.0.1:58276/products'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_037(page, base_url):
+        page.goto(base_url + '/products')
+&gt;       page.wait_for_function('document.querySelectorAll("li").length === 5', timeout=400)
+
+tests\test_case_037.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:21268: in wait_for_function
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:1609: in wait_for_function
+    return await self._main_frame.wait_for_function(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:1209: in wait_for_function
+    result = await self._channel.waitForFunction(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:398: in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD3A372930&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD38416840&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 400ms exceeded.
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_038" name="test_case_038" time="1.592"><failure message="playwright._impl._errors.TimeoutError: Page.fill: Timeout 300ms exceeded.&#10;Call log:&#10;  - waiting for locator(&quot;input[name=search]&quot;)">page = &lt;Page url='http://127.0.0.1:58276/'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_038(page, base_url):
+        page.goto(base_url + '/')
+&gt;       page.fill('input[name=search]', 'x', timeout=300)
+
+tests\test_case_038.py:3: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\sync_api\_generated.py:17731: in fill
+    self._sync(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\page.py:1229: in fill
+    return await self._main_frame.fill(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\frame.py:736: in fill
+    return await self._channel.fill(
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x000002DD3A3202F0&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x000002DD3846ACA0&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TimeoutError: Page.fill: Timeout 300ms exceeded.
+E           Call log:
+E             - waiting for locator("input[name=search]")
+
+..\..\..\..\..\repos\UoP_Capston_Project_dilip\.venv\Lib\site-packages\playwright\_impl\utils\zones.py:58: TimeoutError</failure></testcase><testcase classname="tests.test_case_039" name="test_case_039" time="1.529"><failure message="AssertionError: assert 'Thank you for your order' in 'Name required'&#10; +  where 'Name required' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_039(page, base_url):
+        page.goto(base_url + '/products')
+        page.click('text=Add Backpack to cart')
+        page.goto(base_url + '/checkout')
+        page.click('text=Place order')
+&gt;       assert 'Thank you for your order' in page.inner_text('body')
+E       AssertionError: assert 'Thank you for your order' in 'Name required'
+E        +  where 'Name required' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text
+
+tests\test_case_039.py:6: AssertionError</failure></testcase><testcase classname="tests.test_case_040" name="test_case_040" time="1.645"><failure message="AssertionError: assert 'Thank you for your order' in 'Name required'&#10; +  where 'Name required' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_040(page, base_url):
+        page.goto(base_url + '/products')
+        page.click('text=Add Backpack to cart')
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', 'N' * 81)
+        page.click('text=Place order')
+&gt;       assert 'Thank you for your order' in page.inner_text('body')
+E       AssertionError: assert 'Thank you for your order' in 'Name required'
+E        +  where 'Name required' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text
+
+tests\test_case_040.py:7: AssertionError</failure></testcase><testcase classname="tests.test_case_041" name="test_case_041" time="1.528"><failure message="AssertionError: assert 'Order placed' in 'Name required'&#10; +  where 'Name required' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_041(page, base_url):
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', '')
+        page.click('text=Place order')
+&gt;       assert 'Order placed' in page.inner_text('body')
+E       AssertionError: assert 'Order placed' in 'Name required'
+E        +  where 'Name required' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text
+
+tests\test_case_041.py:5: AssertionError</failure></testcase><testcase classname="tests.test_case_042" name="test_case_042" time="1.504"><failure message="AssertionError: assert False&#10; +  where False = is_visible('text=Thank you')&#10; +    where is_visible = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.is_visible">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_042(page, base_url):
+        page.goto(base_url + '/products')
+        page.click('text=Add Notebook to cart')
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', 'x' * 200)
+        page.click('text=Place order')
+&gt;       assert page.is_visible('text=Thank you')
+E       AssertionError: assert False
+E        +  where False = is_visible('text=Thank you')
+E        +    where is_visible = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.is_visible
+
+tests\test_case_042.py:7: AssertionError</failure></testcase><testcase classname="tests.test_case_043" name="test_case_043" time="1.536"><failure message="AssertionError: assert 'Order confirmed' in 'Name required'&#10; +  where 'Name required' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_043(page, base_url):
+        page.goto(base_url + '/products')
+        page.click('text=Add Desk Lamp to cart')
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', '   ')
+        page.click('text=Place order')
+&gt;       assert 'Order confirmed' in page.inner_text('body')
+E       AssertionError: assert 'Order confirmed' in 'Name required'
+E        +  where 'Name required' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text
+
+tests\test_case_043.py:7: AssertionError</failure></testcase><testcase classname="tests.test_case_044" name="test_case_044" time="1.734"><failure message="AssertionError: assert False&#10; +  where False = is_visible('text=Thank you')&#10; +    where is_visible = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.is_visible">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_044(page, base_url):
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', 'z' * 90)
+        page.click('text=Place order')
+&gt;       assert page.is_visible('text=Thank you')
+E       AssertionError: assert False
+E        +  where False = is_visible('text=Thank you')
+E        +    where is_visible = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.is_visible
+
+tests\test_case_044.py:5: AssertionError</failure></testcase><testcase classname="tests.test_case_045" name="test_case_045" time="1.641"><failure message="AssertionError: assert 'confirmed' in 'Name required'&#10; +  where 'Name required' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_045(page, base_url):
+        page.goto(base_url + '/products')
+        page.click('text=Add Backpack to cart')
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', '')
+        page.click('text=Place order')
+&gt;       assert 'confirmed' in page.inner_text('body')
+E       AssertionError: assert 'confirmed' in 'Name required'
+E        +  where 'Name required' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text
+
+tests\test_case_045.py:7: AssertionError</failure></testcase><testcase classname="tests.test_case_046" name="test_case_046" time="1.568"><failure message="AssertionError: assert 'Thank you for your order' in 'Name required'&#10; +  where 'Name required' = inner_text('body')&#10; +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text">page = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;
+base_url = 'http://127.0.0.1:58276'
+
+    def test_case_046(page, base_url):
+        page.goto(base_url + '/products')
+        page.click('text=Add Notebook to cart')
+        page.goto(base_url + '/checkout')
+        page.fill('input[name=name]', 'y' * 100)
+        page.click('text=Place order')
+&gt;       assert 'Thank you for your order' in page.inner_text('body')
+E       AssertionError: assert 'Thank you for your order' in 'Name required'
+E        +  where 'Name required' = inner_text('body')
+E        +    where inner_text = &lt;Page url='http://127.0.0.1:58276/checkout'&gt;.inner_text
+
+tests\test_case_046.py:7: AssertionError</failure></testcase><testcase classname="tests.test_case_047" name="test_case_047" time="1.271"><failure message="RuntimeError: unexpected state">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_047(page, base_url):
+&gt;       raise RuntimeError('unexpected state')
+E       RuntimeError: unexpected state
+
+tests\test_case_047.py:2: RuntimeError</failure></testcase><testcase classname="tests.test_case_048" name="test_case_048" time="1.242"><failure message="ZeroDivisionError: division by zero">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_048(page, base_url):
+&gt;       value = 1 / 0
+                ^^^^^
+E       ZeroDivisionError: division by zero
+
+tests\test_case_048.py:2: ZeroDivisionError</failure></testcase><testcase classname="tests.test_case_049" name="test_case_049" time="1.274"><failure message="KeyError: 'missing'">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_049(page, base_url):
+        settings = {}
+&gt;       settings['missing']
+E       KeyError: 'missing'
+
+tests\test_case_049.py:3: KeyError</failure></testcase><testcase classname="tests.test_case_050" name="test_case_050" time="1.548"><failure message="ValueError: invalid literal for int() with base 10: 'abc'">page = &lt;Page url='about:blank'&gt;, base_url = 'http://127.0.0.1:58276'
+
+    def test_case_050(page, base_url):
+&gt;       int('abc')
+E       ValueError: invalid literal for int() with base 10: 'abc'
+
+tests\test_case_050.py:2: ValueError</failure></testcase></testsuite></testsuites>

@@ -5,7 +5,8 @@ Rules, checked statically on every source file:
 * a component package (analyzer, generator, scriptgen, healing, ...) may import
   ``aitaf.core`` and itself, never another component's internals;
 * ``core`` may not import any component;
-* top-level modules (``cli``, ``__main__``) may wire components together;
+* top-level modules (``cli``, ``__main__``) and the ``evaluation`` tool package may wire
+  components together;
 * only ``core/llm`` imports the OpenAI SDK, only ``core/storage`` imports the
   database driver, and only the Execution Engine package imports Playwright or
   Selenium;
@@ -25,6 +26,9 @@ from pathlib import Path
 
 CORE = "core"
 EXEMPT_PACKAGES = frozenset({"quality"})
+# tools that run the components against each other, like cli.py: they may import any
+# component, but the vendor-library rules still apply to them
+WIRING_PACKAGES = frozenset({"evaluation"})
 VENDOR_OWNERS: dict[str, tuple[str, ...]] = {
     "openai": ("core", "llm"),
     "sqlite3": ("core", "storage"),
@@ -59,7 +63,7 @@ def _imported_modules(node: ast.AST) -> list[tuple[str, int]]:
 
 def _check_file(rel: Path, tree: ast.AST) -> list[Violation]:
     parts = rel.parts[:-1]
-    top = parts[0] if parts else None
+    top = parts[0] if parts and parts[0] not in WIRING_PACKAGES else None
     name = rel.as_posix()
     found: list[Violation] = []
     for node in ast.walk(tree):
